@@ -1442,6 +1442,35 @@ body {
   .cert-resume-grid {
     grid-template-columns: 1fr;
   }
+
+  .minimal-hero h1 {
+    font-size: 2rem;
+  }
+
+  .minimal-subtitle {
+    font-size: 1.125rem;
+  }
+
+  .minimal-bio {
+    font-size: 1rem;
+  }
+
+  .timeline-item {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .timeline-year {
+    font-size: 0.8125rem;
+  }
+
+  .minimal-container {
+    padding: 2rem 1.5rem;
+  }
+
+  .minimal-section {
+    margin-bottom: 3rem;
+  }
 }
 
 @media (max-width: 480px) {
