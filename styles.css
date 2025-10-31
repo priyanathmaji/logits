@@ -79,7 +79,8 @@ body {
 /* Navigation */
 .navbar {
   background: var(--bg-secondary);
-  box-shadow: 0 2px 8px var(--shadow);
+  box-shadow: 0 1px 3px var(--shadow);
+  border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -1631,8 +1632,8 @@ body {
 
 /* Navbar Minimal Adjustments */
 .navbar {
-  background: transparent;
-  box-shadow: none;
+  background: var(--bg-secondary);
+  box-shadow: 0 1px 3px var(--shadow);
   border-bottom: 1px solid var(--border);
 }
 
