@@ -1458,3 +1458,172 @@ body {
     font-size: 2rem;
   }
 }
+
+/* Minimalistic Design Styles */
+
+/* Minimalistic Container */
+.minimal-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+}
+
+/* Minimal Hero */
+.minimal-hero {
+  text-align: center;
+  margin-bottom: 6rem;
+  padding-bottom: 3rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.minimal-hero h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.minimal-subtitle {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+  font-weight: 400;
+}
+
+.minimal-bio {
+  font-size: 1.125rem;
+  color: var(--text-tertiary);
+  line-height: 1.8;
+  max-width: 600px;
+  margin: 0 auto 2rem;
+}
+
+/* Social Icons - Centered */
+.social-icons {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Minimal Section */
+.minimal-section {
+  margin-bottom: 5rem;
+}
+
+.minimal-section h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 2rem;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+}
+
+/* Minimal Skills */
+.minimal-skills {
+  margin-top: 1.5rem;
+}
+
+.skill-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.skill-item {
+  padding: 0.5rem 1rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+  transition: var(--transition);
+}
+
+.skill-item:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+  transform: translateY(-2px);
+}
+
+/* Minimal Timeline */
+.minimal-timeline {
+  position: relative;
+}
+
+.timeline-item {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  gap: 2rem;
+  margin-bottom: 3rem;
+  position: relative;
+}
+
+.timeline-year {
+  font-size: 0.875rem;
+  color: var(--text-tertiary);
+  font-weight: 500;
+  padding-top: 0.25rem;
+}
+
+.timeline-content h3 {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+}
+
+.timeline-company {
+  font-size: 0.9375rem;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.timeline-content p {
+  color: var(--text-secondary);
+  line-height: 1.6;
+  font-size: 0.9375rem;
+}
+
+/* Minimal Footer */
+.minimal-footer {
+  text-align: center;
+  padding: 3rem 2rem;
+  border-top: 1px solid var(--border);
+  margin-top: 6rem;
+}
+
+.minimal-footer p {
+  color: var(--text-tertiary);
+  font-size: 0.875rem;
+}
+
+/* Navbar Minimal Adjustments */
+.navbar {
+  background: transparent;
+  box-shadow: none;
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-menu {
+  gap: 2.5rem;
+}
+
+.nav-menu a {
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.nav-menu a::after {
+  bottom: -1.5rem;
+  height: 1px;
+}
+
+/* Clean up unnecessary animations */
+.hero,
+.stats,
+.cta-buttons {
+  display: none;
+}
