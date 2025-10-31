@@ -1577,16 +1577,20 @@ body {
   transform: translateY(-2px);
 }
 
-/* Minimal Timeline */
+/* Minimal Timeline - FORCE OVERRIDE */
 .minimal-timeline {
-  display: block;
+  display: block !important;
+  position: relative;
 }
 
 .minimal-timeline .timeline-item {
-  display: block;
+  display: block !important;
   margin-bottom: 3rem;
   padding-bottom: 2rem;
   border-bottom: 1px solid var(--border);
+  opacity: 1 !important;
+  transform: none !important;
+  padding-left: 0 !important;
 }
 
 .minimal-timeline .timeline-item:last-child {
@@ -1594,185 +1598,71 @@ body {
 }
 
 .minimal-timeline .timeline-year {
+  display: block !important;
   font-size: 0.875rem;
   color: var(--text-tertiary);
   font-weight: 500;
   margin-bottom: 0.5rem;
-  display: block;
 }
 
 .minimal-timeline .timeline-content {
-  display: block;
+  display: block !important;
+  background: transparent !important;
+  padding: 0 !important;
+  border: none !important;
+  transform: none !important;
 }
 
 .minimal-timeline .timeline-content h3 {
+  display: block !important;
   font-size: 1.125rem;
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 0.25rem;
-  display: block;
 }
 
 .minimal-timeline .timeline-company {
+  display: block !important;
   font-size: 0.9375rem;
   color: var(--accent);
   margin-bottom: 1rem;
   font-weight: 500;
-  display: block;
 }
 
 .minimal-timeline .timeline-content p {
+  display: block !important;
   color: var(--text-secondary);
   line-height: 1.6;
   font-size: 0.9375rem;
   margin-bottom: 0.5rem;
-  display: block;
 }
 
 .minimal-timeline .timeline-content h4 {
-  display: block;
-  margin-top: 1rem;
+  display: block !important;
 }
 
 .minimal-timeline .timeline-content div {
-  display: block;
+  display: block !important;
 }
 
-/* Override old timeline styles for minimal timeline */
+/* Remove old timeline decorations for minimal */
 .minimal-timeline::before {
-  display: none;
+  display: none !important;
 }
 
-.minimal-timeline .timeline-item:hover .timeline-content {
-  transform: none;
-  box-shadow: none;
-  border-color: transparent;
+.minimal-timeline .timeline-marker {
+  display: none !important;
 }
 
-/* Clean up unnecessary animations */
-.hero,
-.stats,
-.cta-buttons {
-  display: none;
+/* Minimal Footer */
+.minimal-footer {
+  text-align: center;
+  padding: 3rem 2rem;
+  border-top: 1px solid var(--border);
+  margin-top: 6rem;
 }
 
-/* Blog Categories */
-.blog-categories {
-  display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  margin: 2rem 0;
-  padding-bottom: 2rem;
-  border-bottom: 1px solid var(--border);
-}
-
-.category-btn {
-  padding: 0.5rem 1rem;
-  background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: var(--text-secondary);
+.minimal-footer p {
+  color: var(--text-tertiary);
   font-size: 0.875rem;
-  cursor: pointer;
-  transition: var(--transition);
-  font-weight: 500;
-}
-
-.category-btn:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-}
-
-.category-btn.active {
-  background: var(--accent);
-  border-color: var(--accent);
-  color: #fff;
-}
-
-/* Blog Series */
-.blog-series {
-  font-size: 0.8125rem;
-  color: var(--text-tertiary);
-  margin-top: 0.75rem;
-  font-style: italic;
-}
-
-.blog-series a {
-  color: var(--accent);
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.blog-series a:hover {
-  text-decoration: underline;
-}
-
-/* Series Section */
-.blog-series-section h2 {
-  font-size: 1.75rem;
-  margin-bottom: 1rem;
-  color: var(--text-primary);
-}
-
-.series-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  margin-top: 2rem;
-}
-
-.series-card {
-  background: var(--card-bg);
-  padding: 2rem;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  transition: var(--transition);
-}
-
-.series-card:hover {
-  border-color: var(--accent);
-  box-shadow: 0 8px 16px var(--shadow);
-}
-
-.series-card h3 {
-  font-size: 1.25rem;
-  margin-bottom: 0.75rem;
-  color: var(--text-primary);
-}
-
-.series-card > p {
-  color: var(--text-tertiary);
-  margin-bottom: 1.5rem;
-  line-height: 1.6;
-}
-
-.series-posts {
-  list-style: none;
-  padding: 0;
-}
-
-.series-posts li {
-  padding: 0.75rem 0;
-  border-bottom: 1px solid var(--border);
-}
-
-.series-posts li:last-child {
-  border-bottom: none;
-}
-
-.series-posts a {
-  color: var(--accent);
-  text-decoration: none;
-  font-weight: 500;
-  transition: var(--transition);
-}
-
-.series-posts a:hover {
-  color: var(--accent-hover);
-  text-decoration: underline;
-}
-
-.coming-soon {
-  color: var(--text-tertiary);
-  font-style: italic;
 }
