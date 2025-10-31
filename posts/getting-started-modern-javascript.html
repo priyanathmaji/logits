@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Getting Started with Modern JavaScript - Priyanath Maji</title>
+  <meta name="description" content="Learn the fundamentals of ES6+ features and how they can improve your code quality">
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="../index.html" class="nav-brand">Priyanath Maji</a>
+      <ul class="nav-menu">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="../projects.html">Projects</a></li>
+        <li><a href="../blog.html" class="active">Blog</a></li>
+        <li><a href="../contact.html">Contact</a></li>
+      </ul>
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+        <span class="sun-icon">☀️</span>
+        <span class="moon-icon">🌙</span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <article class="blog-post fade-in">
+      <a href="../blog.html" class="back-link">← Back to Blog</a>
+      
+      <header class="post-header">
+        <div class="post-meta">
+          <span class="post-date">January 15, 2025</span>
+          <span class="post-tag">Tutorial</span>
+        </div>
+        <h1>Getting Started with Modern JavaScript</h1>
+      </header>
+
+      <div class="post-content">
+        <h2>Introduction</h2>
+        <p>Modern JavaScript (ES6+) has revolutionized the way we write code. In this tutorial, we'll explore the most important features that every developer should know.</p>
+
+        <h2>Arrow Functions</h2>
+        <p>Arrow functions provide a more concise syntax for writing function expressions:</p>
+        <pre><code>// Traditional function
+function add(a, b) {
+  return a + b;
+}
+
+// Arrow function
+const add = (a, b) => a + b;</code></pre>
+
+        <h2>Destructuring</h2>
+        <p>Destructuring allows you to extract values from arrays or properties from objects:</p>
+        <pre><code>// Object destructuring
+const { name, age } = person;
+
+// Array destructuring
+const [first, second] = array;</code></pre>
+
+        <h2>Template Literals</h2>
+        <p>Template literals make string interpolation much cleaner:</p>
+        <pre><code>const greeting = `Hello, ${name}! You are ${age} years old.`;</code></pre>
+
+        <h2>Conclusion</h2>
+        <p>These are just a few of the powerful features in modern JavaScript. As you continue your journey, explore modules, promises, async/await, and more!</p>
+      </div>
+
+      <footer class="post-footer">
+        <div class="share-section">
+          <h3>Share this post</h3>
+          <div class="share-buttons">
+            <a href="#" class="share-btn">Twitter</a>
+            <a href="#" class="share-btn">LinkedIn</a>
+            <a href="#" class="share-btn">Facebook</a>
+          </div>
+        </div>
+      </footer>
+    </article>
+  </main>
+
+  <script src="../script.js"></script>
+</body>
+</html>
