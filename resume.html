@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Resume - Priyanath Maji</title>
+  <title>CV/Resume - Priyanath Maji</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -12,10 +12,10 @@
       <a href="index.html" class="nav-brand">Priyanath Maji</a>
       <ul class="nav-menu">
         <li><a href="index.html">Home</a></li>
-        <li><a href="about.html" class="active">About</a></li>
+        <li><a href="about.html">About</a></li>
         <li><a href="projects.html">Projects</a></li>
         <li><a href="blog.html">Blog</a></li>
-        <li><a href="contact.html">Contact</a></li>
+        <li><a href="resume.html" class="active">CV</a></li>
       </ul>
       <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
         <span class="sun-icon">☀️</span>
@@ -27,18 +27,39 @@
   <main class="container">
     <section class="resume-header fade-in">
       <div class="resume-title">
-        <h1>Resume</h1>
-        <p class="section-description">My professional journey and qualifications</p>
+        <h1>Curriculum Vitae</h1>
+        <p class="section-description">Full Stack Developer | Open Source Contributor | Tech Enthusiast</p>
       </div>
       <div class="resume-actions">
-        <button class="btn btn-primary" onclick="window.print()">🖨️ Print Resume</button>
-        <a href="#" class="btn btn-secondary">📥 Download PDF</a>
+        <button class="btn btn-primary" onclick="window.print()">🖨️ Print CV</button>
+        <a href="#" class="btn btn-secondary" download>📥 Download PDF</a>
+      </div>
+    </section>
+
+    <section class="resume-contact fade-in">
+      <div class="contact-grid">
+        <div class="contact-item">
+          <strong>Email:</strong>
+          <a href="mailto:priyanath@example.com">priyanath@example.com</a>
+        </div>
+        <div class="contact-item">
+          <strong>GitHub:</strong>
+          <a href="https://github.com/priyanathmaji" target="_blank">github.com/priyanathmaji</a>
+        </div>
+        <div class="contact-item">
+          <strong>LinkedIn:</strong>
+          <a href="https://linkedin.com/in/priyanathmaji" target="_blank">linkedin.com/in/priyanathmaji</a>
+        </div>
+        <div class="contact-item">
+          <strong>Location:</strong>
+          <span>Your City, Country</span>
+        </div>
       </div>
     </section>
 
     <section class="resume-summary fade-in">
       <h2>Professional Summary</h2>
-      <p>Passionate Full Stack Developer with 3+ years of experience building scalable web applications. Expert in modern JavaScript frameworks, cloud technologies, and agile methodologies. Proven track record of delivering high-quality solutions and leading development teams.</p>
+      <p>Passionate Full Stack Developer with 3+ years of experience building scalable web applications. Expert in modern JavaScript frameworks, cloud technologies, and agile methodologies. Proven track record of delivering high-quality solutions and leading development teams. Strong advocate for clean code, best practices, and continuous learning.</p>
     </section>
 
     <section class="resume-experience fade-in">
@@ -57,7 +78,15 @@
             <li>Implemented microservices architecture reducing response time by 60%</li>
             <li>Mentored team of 5 junior developers and conducted code reviews</li>
             <li>Integrated AWS services including Lambda, S3, and DynamoDB</li>
+            <li>Improved application performance by 45% through optimization techniques</li>
           </ul>
+          <div class="entry-skills">
+            <span class="skill-badge">React</span>
+            <span class="skill-badge">Node.js</span>
+            <span class="skill-badge">AWS</span>
+            <span class="skill-badge">MongoDB</span>
+            <span class="skill-badge">Docker</span>
+          </div>
         </div>
 
         <div class="resume-entry slide-up">
@@ -71,9 +100,16 @@
           <ul class="entry-list">
             <li>Developed and maintained 15+ client projects using React and Node.js</li>
             <li>Implemented CI/CD pipelines using GitHub Actions and Docker</li>
-            <li>Improved application performance by 40% through optimization</li>
+            <li>Improved application performance by 40% through code optimization</li>
             <li>Collaborated with cross-functional teams in agile environment</li>
+            <li>Built RESTful APIs and integrated third-party services</li>
           </ul>
+          <div class="entry-skills">
+            <span class="skill-badge">JavaScript</span>
+            <span class="skill-badge">Python</span>
+            <span class="skill-badge">PostgreSQL</span>
+            <span class="skill-badge">CI/CD</span>
+          </div>
         </div>
 
         <div class="resume-entry slide-up">
@@ -86,9 +122,15 @@
           </div>
           <ul class="entry-list">
             <li>Built responsive web applications using HTML, CSS, and JavaScript</li>
-            <li>Participated in daily standups and sprint planning</li>
-            <li>Learned modern development practices and version control</li>
+            <li>Participated in daily standups and sprint planning sessions</li>
+            <li>Learned modern development practices and version control with Git</li>
+            <li>Contributed to 20+ successful project deliveries</li>
           </ul>
+          <div class="entry-skills">
+            <span class="skill-badge">HTML/CSS</span>
+            <span class="skill-badge">JavaScript</span>
+            <span class="skill-badge">Git</span>
+          </div>
         </div>
       </div>
     </section>
@@ -105,8 +147,9 @@
         </div>
         <ul class="entry-list">
           <li>Graduated with Honors (GPA: 3.8/4.0)</li>
-          <li>Relevant Coursework: Data Structures, Algorithms, Web Development, Database Systems</li>
-          <li>Active member of Computer Science Club</li>
+          <li>Relevant Coursework: Data Structures, Algorithms, Web Development, Database Systems, Software Engineering</li>
+          <li>Active member of Computer Science Club and Hackathon organizer</li>
+          <li>Dean's List for 6 consecutive semesters</li>
         </ul>
       </div>
     </section>
@@ -115,22 +158,83 @@
       <h2>Technical Skills</h2>
       <div class="skills-resume-grid">
         <div class="skill-group">
-          <h4>Languages</h4>
-          <p>JavaScript, TypeScript, Python, HTML5, CSS3, SQL</p>
+          <h4>Programming Languages</h4>
+          <p>JavaScript (ES6+), TypeScript, Python, HTML5, CSS3, SQL, Bash</p>
         </div>
         <div class="skill-group">
-          <h4>Frameworks</h4>
-          <p>React, Node.js, Express, Vue.js, Next.js</p>
+          <h4>Frontend Technologies</h4>
+          <p>React, Vue.js, Next.js, Redux, Tailwind CSS, SASS, Responsive Design</p>
+        </div>
+        <div class="skill-group">
+          <h4>Backend Technologies</h4>
+          <p>Node.js, Express, Django, REST APIs, GraphQL, Microservices</p>
         </div>
         <div class="skill-group">
           <h4>Databases</h4>
-          <p>MongoDB, PostgreSQL, MySQL, Redis</p>
+          <p>MongoDB, PostgreSQL, MySQL, Redis, DynamoDB</p>
         </div>
         <div class="skill-group">
-          <h4>Tools & Platforms</h4>
-          <p>Git, Docker, AWS, CI/CD, Kubernetes, Linux</p>
+          <h4>DevOps & Cloud</h4>
+          <p>AWS (EC2, S3, Lambda), Docker, Kubernetes, CI/CD, GitHub Actions, Linux</p>
+        </div>
+        <div class="skill-group">
+          <h4>Tools & Others</h4>
+          <p>Git, VS Code, Jira, Figma, Agile/Scrum, Testing (Jest, Pytest)</p>
         </div>
       </div>
+    </section>
+
+    <section class="resume-certifications fade-in">
+      <h2>Certifications</h2>
+      <div class="cert-resume-grid">
+        <div class="cert-resume-item">
+          <h4>AWS Certified Solutions Architect</h4>
+          <p>Amazon Web Services • 2024</p>
+        </div>
+        <div class="cert-resume-item">
+          <h4>Google Cloud Professional</h4>
+          <p>Google Cloud • 2023</p>
+        </div>
+        <div class="cert-resume-item">
+          <h4>Full Stack Web Development</h4>
+          <p>Coursera • 2023</p>
+        </div>
+        <div class="cert-resume-item">
+          <h4>JavaScript Algorithms Expert</h4>
+          <p>freeCodeCamp • 2023</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="resume-projects fade-in">
+      <h2>Notable Projects</h2>
+      <div class="resume-timeline">
+        <div class="resume-entry slide-up">
+          <h3>E-Commerce Platform</h3>
+          <p>Built a full-stack e-commerce platform with real-time inventory management, payment integration, and admin dashboard. Handles 5000+ daily transactions.</p>
+          <div class="entry-skills">
+            <span class="skill-badge">React</span>
+            <span class="skill-badge">Node.js</span>
+            <span class="skill-badge">Stripe</span>
+            <span class="skill-badge">MongoDB</span>
+          </div>
+        </div>
+
+        <div class="resume-entry slide-up">
+          <h3>Task Management SaaS</h3>
+          <p>Developed a collaborative task management tool with real-time updates, team collaboration features, and analytics dashboard.</p>
+          <div class="entry-skills">
+            <span class="skill-badge">Vue.js</span>
+            <span class="skill-badge">Firebase</span>
+            <span class="skill-badge">WebSockets</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="resume-footer fade-in">
+      <p class="resume-reference">References available upon request</p>
+      <p class="resume-updated">Last updated: January 2025</p>
     </section>
   </main>
 
