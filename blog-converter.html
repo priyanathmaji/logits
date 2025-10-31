@@ -276,6 +276,7 @@ ${content}
     }
 
     function downloadHTML() {
+        
       const markdown = document.getElementById('markdownInput').value;
       const titleMatch = markdown.match(/^#\s+(.+)$/m);
       const title = titleMatch ? titleMatch[1] : 'blog-post';
