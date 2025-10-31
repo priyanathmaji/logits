@@ -201,8 +201,8 @@
   <link rel="stylesheet" href="../styles.css" />
   <!-- KaTeX for Math -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"><\/script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"><\/script>
 </head>
 <body>
   <nav class="navbar">
@@ -213,7 +213,7 @@
         <li><a href="../about.html">About</a></li>
         <li><a href="../projects.html">Projects</a></li>
         <li><a href="../blog.html" class="active">Blog</a></li>
-        <li><a href="../contact.html">Contact</a></li>
+        <li><a href="../resume.html">CV</a></li>
       </ul>
       <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
         <span class="sun-icon">☀️</span>
@@ -251,7 +251,7 @@ ${content}
     </article>
   </main>
 
-  <script src="../script.js"></script>
+  <script src="../script.js"><\/script>
   <script>
     // Render LaTeX math
     document.addEventListener('DOMContentLoaded', function() {
@@ -263,7 +263,7 @@ ${content}
         throwOnError: false
       });
     });
-  </script>
+  <\/script>
 </body>
 </html>`;
     }
@@ -294,47 +294,33 @@ ${content}
     }
 
     function loadTemplate() {
-      const template = `# Your Blog Post Title
-
-Date: January 15, 2025
-Tag: Tutorial
-
-## Introduction
-
-Write your introduction here. You can use **bold**, *italic*, and \`inline code\`.
-
-## Code Example
-
-\`\`\`javascript
-const example = () => {
-  console.log('Hello World!');
-};
-\`\`\`
-
-## Math Example (LaTeX)
-
-Inline math: The quadratic formula is $x = \\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}$
-
-Display math:
-
-$$
-E = mc^2
-$$
-
-$$
-\\int_{0}^{\\infty} e^{-x^2} dx = \\frac{\\sqrt{\\pi}}{2}
-$$
-
-## Lists
-
-- Item 1
-- Item 2
-- Item 3
-
-## Conclusion
-
-Write your conclusion here.
-`;
+      const template = '# Your Blog Post Title\n\n' +
+        'Date: January 15, 2025\n' +
+        'Tag: Tutorial\n\n' +
+        '## Introduction\n\n' +
+        'Write your introduction here. You can use **bold**, *italic*, and `inline code`.\n\n' +
+        '## Code Example\n\n' +
+        '```javascript\n' +
+        'const example = () => {\n' +
+        '  console.log(\'Hello World!\');\n' +
+        '};\n' +
+        '```\n\n' +
+        '## Math Example (LaTeX)\n\n' +
+        'Inline math: The quadratic formula is $x = \\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}$\n\n' +
+        'Display math:\n\n' +
+        '$$\n' +
+        'E = mc^2\n' +
+        '$$\n\n' +
+        '$$\n' +
+        '\\int_{0}^{\\infty} e^{-x^2} dx = \\frac{\\sqrt{\\pi}}{2}\n' +
+        '$$\n\n' +
+        '## Lists\n\n' +
+        '- Item 1\n' +
+        '- Item 2\n' +
+        '- Item 3\n\n' +
+        '## Conclusion\n\n' +
+        'Write your conclusion here.\n';
+      
       document.getElementById('markdownInput').value = template;
       convertMarkdown();
     }
