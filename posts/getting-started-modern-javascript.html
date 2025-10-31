@@ -3,9 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Getting Started with Modern JavaScript - Priyanath Maji</title>
-  <meta name="description" content="Learn the fundamentals of ES6+ features and how they can improve your code quality">
+  <title>Your Blog Post Title - Priyanath Maji</title>
+  <meta name="description" content="Your Blog Post Title">
   <link rel="stylesheet" href="../styles.css" />
+  <!-- KaTeX for Math -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 </head>
 <body>
   <nav class="navbar">
@@ -16,7 +20,7 @@
         <li><a href="../about.html">About</a></li>
         <li><a href="../projects.html">Projects</a></li>
         <li><a href="../blog.html" class="active">Blog</a></li>
-        <li><a href="../contact.html">Contact</a></li>
+        <li><a href="../resume.html">CV</a></li>
       </ul>
       <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
         <span class="sun-icon">☀️</span>
@@ -32,39 +36,36 @@
       <header class="post-header">
         <div class="post-meta">
           <span class="post-date">January 15, 2025</span>
-          <span class="post-tag">Tutorial</span>
+          <span class="post-tag">Tutorial 1</span>
         </div>
-        <h1>Getting Started with Modern JavaScript</h1>
+        <h1>Your Blog Post Title</h1>
       </header>
 
       <div class="post-content">
-        <h2>Introduction</h2>
-        <p>Modern JavaScript (ES6+) has revolutionized the way we write code. In this tutorial, we'll explore the most important features that every developer should know.</p>
+<h1>Your Blog Post Title</h1>
+<p>Date: January 15, 2025<br>Tag: Tutorial 1</p>
+<h2>Introduction</h2>
+<p>Write your introduction here. You can use <strong>bold</strong>, <em>italic</em>, and <code>inline code</code>.</p>
+<h2>Code Example</h2>
+<pre><code class="language-javascript">const example = () =&gt; {
+  console.log(&#39;Hello World!&#39;);
+};
+</code></pre>
+<h2>Math Example (LaTeX)</h2>
+<p>Inline math: The quadratic formula is $x = \frac{-b \pm \sqrt{b^2-4ac}}{2a}$</p>
+<p>Display math:</p>
+<p>$E = mc^2$</p>
+<p>$\int_{0}^{\infty} e^{-x^2} dx = \frac{\sqrt{\pi}}{2}$</p>
+<p>$\frac{\partial x}{\partial y} $</p>
+<h2>Lists</h2>
+<ul>
+<li>Item 1</li>
+<li>Item 2</li>
+<li>Item 3</li>
+</ul>
+<h2>Conclusion</h2>
+<p>Write your conclusion here.</p>
 
-        <h2>Arrow Functions</h2>
-        <p>Arrow functions provide a more concise syntax for writing function expressions:</p>
-        <pre><code>// Traditional function
-function add(a, b) {
-  return a + b;
-}
-
-// Arrow function
-const add = (a, b) => a + b;</code></pre>
-
-        <h2>Destructuring</h2>
-        <p>Destructuring allows you to extract values from arrays or properties from objects:</p>
-        <pre><code>// Object destructuring
-const { name, age } = person;
-
-// Array destructuring
-const [first, second] = array;</code></pre>
-
-        <h2>Template Literals</h2>
-        <p>Template literals make string interpolation much cleaner:</p>
-        <pre><code>const greeting = `Hello, ${name}! You are ${age} years old.`;</code></pre>
-
-        <h2>Conclusion</h2>
-        <p>These are just a few of the powerful features in modern JavaScript. As you continue your journey, explore modules, promises, async/await, and more!</p>
       </div>
 
       <footer class="post-footer">
@@ -81,5 +82,17 @@ const [first, second] = array;</code></pre>
   </main>
 
   <script src="../script.js"></script>
+  <script>
+    // Render LaTeX math
+    document.addEventListener('DOMContentLoaded', function() {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
 </body>
 </html>
