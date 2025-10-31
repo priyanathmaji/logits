@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Resume - Priyanath Maji</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">Priyanath Maji</a>
+      <ul class="nav-menu">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html" class="active">About</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+        <span class="sun-icon">☀️</span>
+        <span class="moon-icon">🌙</span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <section class="resume-header fade-in">
+      <div class="resume-title">
+        <h1>Resume</h1>
+        <p class="section-description">My professional journey and qualifications</p>
+      </div>
+      <div class="resume-actions">
+        <button class="btn btn-primary" onclick="window.print()">🖨️ Print Resume</button>
+        <a href="#" class="btn btn-secondary">📥 Download PDF</a>
+      </div>
+    </section>
+
+    <section class="resume-summary fade-in">
+      <h2>Professional Summary</h2>
+      <p>Passionate Full Stack Developer with 3+ years of experience building scalable web applications. Expert in modern JavaScript frameworks, cloud technologies, and agile methodologies. Proven track record of delivering high-quality solutions and leading development teams.</p>
+    </section>
+
+    <section class="resume-experience fade-in">
+      <h2>Work Experience</h2>
+      <div class="resume-timeline">
+        <div class="resume-entry slide-up">
+          <div class="entry-header">
+            <div>
+              <h3>Senior Full Stack Developer</h3>
+              <p class="entry-company">Tech Solutions Inc.</p>
+            </div>
+            <span class="entry-date">2023 - Present</span>
+          </div>
+          <ul class="entry-list">
+            <li>Led development of enterprise-level web applications serving 10,000+ users</li>
+            <li>Implemented microservices architecture reducing response time by 60%</li>
+            <li>Mentored team of 5 junior developers and conducted code reviews</li>
+            <li>Integrated AWS services including Lambda, S3, and DynamoDB</li>
+          </ul>
+        </div>
+
+        <div class="resume-entry slide-up">
+          <div class="entry-header">
+            <div>
+              <h3>Full Stack Developer</h3>
+              <p class="entry-company">Digital Innovations Ltd.</p>
+            </div>
+            <span class="entry-date">2021 - 2023</span>
+          </div>
+          <ul class="entry-list">
+            <li>Developed and maintained 15+ client projects using React and Node.js</li>
+            <li>Implemented CI/CD pipelines using GitHub Actions and Docker</li>
+            <li>Improved application performance by 40% through optimization</li>
+            <li>Collaborated with cross-functional teams in agile environment</li>
+          </ul>
+        </div>
+
+        <div class="resume-entry slide-up">
+          <div class="entry-header">
+            <div>
+              <h3>Junior Developer</h3>
+              <p class="entry-company">StartUp Labs</p>
+            </div>
+            <span class="entry-date">2020 - 2021</span>
+          </div>
+          <ul class="entry-list">
+            <li>Built responsive web applications using HTML, CSS, and JavaScript</li>
+            <li>Participated in daily standups and sprint planning</li>
+            <li>Learned modern development practices and version control</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <section class="resume-education fade-in">
+      <h2>Education</h2>
+      <div class="resume-entry slide-up">
+        <div class="entry-header">
+          <div>
+            <h3>Bachelor of Computer Science</h3>
+            <p class="entry-company">University of Technology</p>
+          </div>
+          <span class="entry-date">2016 - 2020</span>
+        </div>
+        <ul class="entry-list">
+          <li>Graduated with Honors (GPA: 3.8/4.0)</li>
+          <li>Relevant Coursework: Data Structures, Algorithms, Web Development, Database Systems</li>
+          <li>Active member of Computer Science Club</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="resume-skills fade-in">
+      <h2>Technical Skills</h2>
+      <div class="skills-resume-grid">
+        <div class="skill-group">
+          <h4>Languages</h4>
+          <p>JavaScript, TypeScript, Python, HTML5, CSS3, SQL</p>
+        </div>
+        <div class="skill-group">
+          <h4>Frameworks</h4>
+          <p>React, Node.js, Express, Vue.js, Next.js</p>
+        </div>
+        <div class="skill-group">
+          <h4>Databases</h4>
+          <p>MongoDB, PostgreSQL, MySQL, Redis</p>
+        </div>
+        <div class="skill-group">
+          <h4>Tools & Platforms</h4>
+          <p>Git, Docker, AWS, CI/CD, Kubernetes, Linux</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
