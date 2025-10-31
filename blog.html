@@ -22,54 +22,180 @@
   </nav>
 
   <main class="container">
-    <section class="blog-section fade-in">
+    <section class="blog-section">
       <h1>Blog</h1>
-      <p class="section-description">Sharing my thoughts, tutorials, and experiences in web development.</p>
+      <p class="section-description">Thoughts on Machine Learning, Software Engineering, and Technology</p>
       
+      <!-- Category Filter -->
+      <div class="blog-categories">
+        <button class="category-btn active" data-category="all">All Posts</button>
+        <button class="category-btn" data-category="machine-learning">Machine Learning</button>
+        <button class="category-btn" data-category="software-engineering">Software Engineering</button>
+        <button class="category-btn" data-category="distributed-systems">Distributed Systems</button>
+        <button class="category-btn" data-category="cloud-architecture">Cloud Architecture</button>
+        <button class="category-btn" data-category="tutorials">Tutorials</button>
+        <button class="category-btn" data-category="career">Career & Growth</button>
+      </div>
+
+      <!-- Blog Grid -->
       <div class="blog-grid" id="blogGrid">
-        <article class="blog-card slide-up">
-          <div class="blog-meta"> 
-            <span class="blog-date">January 15, 2025</span>
-            <span class="blog-tag">Tutorial</span>
-          </div>
-          <h2><a href="posts/getting-started-modern-javascript.html">Getting Started with Modern JavaScript</a></h2>
-          <p class="blog-excerpt">Learn the fundamentals of ES6+ features and how they can improve your code quality and developer experience.</p>
-          <a href="posts/getting-started-modern-javascript.html" class="read-more">Read More →</a>
-        </article>
-
-        <article class="blog-card slide-up">
+        
+        <!-- Machine Learning Posts -->
+        <article class="blog-card" data-category="machine-learning">
           <div class="blog-meta">
-            <span class="blog-date">January 10, 2025</span>
-            <span class="blog-tag">Experience</span>
+            <span class="blog-date">January 20, 2025</span>
+            <span class="blog-tag">Machine Learning</span>
           </div>
-          <h2><a href="posts/building-scalable-web-applications.html">Building Scalable Web Applications</a></h2>
-          <p class="blog-excerpt">My journey and lessons learned while building production-ready applications that scale.</p>
-          <a href="posts/building-scalable-web-applications.html" class="read-more">Read More →</a>
+          <h2><a href="posts/llm-fine-tuning-rlhf.html">Fine-tuning LLMs with RLHF: A Practical Guide</a></h2>
+          <p class="blog-excerpt">Deep dive into Reinforcement Learning from Human Feedback and how to apply it to improve LLM performance in real-world applications.</p>
+          <div class="blog-series">Part of: <a href="#ml-series">LLM Mastery Series</a></div>
+          <a href="posts/llm-fine-tuning-rlhf.html" class="read-more">Read More →</a>
         </article>
 
-        <article class="blog-card slide-up">
+        <article class="blog-card" data-category="machine-learning">
+          <div class="blog-meta">
+            <span class="blog-date">January 15, 2025</span>
+            <span class="blog-tag">Machine Learning</span>
+          </div>
+          <h2><a href="posts/rag-vector-databases.html">Building RAG Systems with Vector Databases</a></h2>
+          <p class="blog-excerpt">Learn how to implement Retrieval-Augmented Generation using vector databases for efficient knowledge retrieval in LLM applications.</p>
+          <div class="blog-series">Part of: <a href="#ml-series">LLM Mastery Series</a></div>
+          <a href="posts/rag-vector-databases.html" class="read-more">Read More →</a>
+        </article>
+
+        <!-- Distributed Systems Posts -->
+        <article class="blog-card" data-category="distributed-systems">
+          <div class="blog-meta">
+            <span class="blog-date">January 12, 2025</span>
+            <span class="blog-tag">Distributed Systems</span>
+          </div>
+          <h2><a href="posts/designing-scalable-apis.html">Designing Scalable API Integration Platforms</a></h2>
+          <p class="blog-excerpt">Architectural patterns and best practices for building high-performance, fault-tolerant API integration systems at scale.</p>
+          <div class="blog-series">Part of: <a href="#systems-series">Distributed Systems Series</a></div>
+          <a href="posts/designing-scalable-apis.html" class="read-more">Read More →</a>
+        </article>
+
+        <article class="blog-card" data-category="distributed-systems">
+          <div class="blog-meta">
+            <span class="blog-date">January 8, 2025</span>
+            <span class="blog-tag">Distributed Systems</span>
+          </div>
+          <h2><a href="posts/event-driven-architecture.html">Event-Driven Architecture: Real-Time Processing at Scale</a></h2>
+          <p class="blog-excerpt">How to design and implement event-driven systems that handle high-frequency data streams with low latency.</p>
+          <div class="blog-series">Part of: <a href="#systems-series">Distributed Systems Series</a></div>
+          <a href="posts/event-driven-architecture.html" class="read-more">Read More →</a>
+        </article>
+
+        <!-- Cloud Architecture Posts -->
+        <article class="blog-card" data-category="cloud-architecture">
           <div class="blog-meta">
             <span class="blog-date">January 5, 2025</span>
-            <span class="blog-tag">Tutorial</span>
+            <span class="blog-tag">Cloud Architecture</span>
           </div>
-          <h2><a href="posts/css-grid-vs-flexbox.html">CSS Grid vs Flexbox: When to Use What</a></h2>
-          <p class="blog-excerpt">A comprehensive guide to understanding the differences and use cases for CSS Grid and Flexbox.</p>
-          <a href="posts/css-grid-vs-flexbox.html" class="read-more">Read More →</a>
+          <h2><a href="posts/aws-azure-comparison.html">AWS vs Azure: Choosing the Right Cloud Platform</a></h2>
+          <p class="blog-excerpt">Comparative analysis of AWS and Azure services for enterprise applications, with real-world use cases and cost considerations.</p>
+          <a href="posts/aws-azure-comparison.html" class="read-more">Read More →</a>
         </article>
 
-        <article class="blog-card slide-up">
+        <!-- Software Engineering Posts -->
+        <article class="blog-card" data-category="software-engineering">
           <div class="blog-meta">
             <span class="blog-date">December 28, 2024</span>
-            <span class="blog-tag">Thoughts</span>
+            <span class="blog-tag">Software Engineering</span>
           </div>
-          <h2><a href="posts/future-of-web-development.html">The Future of Web Development</a></h2>
-          <p class="blog-excerpt">Exploring emerging trends and technologies that are shaping the future of web development.</p>
-          <a href="posts/future-of-web-development.html" class="read-more">Read More →</a>
+          <h2><a href="posts/cqrs-event-sourcing.html">CQRS and Event Sourcing Patterns Explained</a></h2>
+          <p class="blog-excerpt">Understanding Command Query Responsibility Segregation and Event Sourcing for building maintainable systems.</p>
+          <a href="posts/cqrs-event-sourcing.html" class="read-more">Read More →</a>
         </article>
+
+        <!-- Tutorials -->
+        <article class="blog-card" data-category="tutorials">
+          <div class="blog-meta">
+            <span class="blog-date">December 20, 2024</span>
+            <span class="blog-tag">Tutorial</span>
+          </div>
+          <h2><a href="posts/python-ml-pipeline.html">Building ML Pipelines with Python: Step-by-Step Guide</a></h2>
+          <p class="blog-excerpt">Complete tutorial on creating production-ready machine learning pipelines using Python, scikit-learn, and MLflow.</p>
+          <a href="posts/python-ml-pipeline.html" class="read-more">Read More →</a>
+        </article>
+
+        <!-- Career Posts -->
+        <article class="blog-card" data-category="career">
+          <div class="blog-meta">
+            <span class="blog-date">December 15, 2024</span>
+            <span class="blog-tag">Career</span>
+          </div>
+          <h2><a href="posts/from-developer-to-architect.html">From Developer to Architect: My Journey</a></h2>
+          <p class="blog-excerpt">Lessons learned transitioning from a hands-on developer role to a technology architect position over 20+ years.</p>
+          <a href="posts/from-developer-to-architect.html" class="read-more">Read More →</a>
+        </article>
+
       </div>
+
+      <!-- Blog Series Section -->
+      <section class="blog-series-section" style="margin-top: 4rem;">
+        <h2>Blog Series</h2>
+        <p class="section-description">Deep dives into specific topics, organized as multi-part series</p>
+        
+        <div class="series-grid">
+          <div class="series-card" id="ml-series">
+            <h3>🤖 LLM Mastery Series</h3>
+            <p>Complete guide to working with Large Language Models in production</p>
+            <ul class="series-posts">
+              <li><a href="posts/llm-fine-tuning-rlhf.html">Part 1: Fine-tuning LLMs with RLHF</a></li>
+              <li><a href="posts/rag-vector-databases.html">Part 2: Building RAG Systems with Vector Databases</a></li>
+              <li><span class="coming-soon">Part 3: LLM Deployment and Scaling (Coming Soon)</span></li>
+            </ul>
+          </div>
+
+          <div class="series-card" id="systems-series">
+            <h3>⚙️ Distributed Systems Series</h3>
+            <p>Building reliable, scalable distributed systems</p>
+            <ul class="series-posts">
+              <li><a href="posts/designing-scalable-apis.html">Part 1: Designing Scalable API Platforms</a></li>
+              <li><a href="posts/event-driven-architecture.html">Part 2: Event-Driven Architecture Patterns</a></li>
+              <li><span class="coming-soon">Part 3: Data Consistency in Distributed Systems (Coming Soon)</span></li>
+            </ul>
+          </div>
+
+          <div class="series-card">
+            <h3>☁️ Cloud Architecture Series</h3>
+            <p>Best practices for cloud-native applications</p>
+            <ul class="series-posts">
+              <li><span class="coming-soon">Part 1: Microservices on Kubernetes (Coming Soon)</span></li>
+              <li><span class="coming-soon">Part 2: Serverless Architecture Patterns (Coming Soon)</span></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
     </section>
   </main>
 
   <script src="script.js"></script>
+  <script>
+    // Category filtering
+    const categoryButtons = document.querySelectorAll('.category-btn');
+    const blogCards = document.querySelectorAll('.blog-card');
+
+    categoryButtons.forEach(button => {
+      button.addEventListener('click', () => {
+        const category = button.getAttribute('data-category');
+        
+        // Update active button
+        categoryButtons.forEach(btn => btn.classList.remove('active'));
+        button.classList.add('active');
+        
+        // Filter blog posts
+        blogCards.forEach(card => {
+          if (category === 'all' || card.getAttribute('data-category') === category) {
+            card.style.display = 'block';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+  </script>
 </body>
 </html>
