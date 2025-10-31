@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Projects - Priyanath Maji</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">Priyanath Maji</a>
+      <ul class="nav-menu">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="projects.html" class="active">Projects</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+        <span class="sun-icon">☀️</span>
+        <span class="moon-icon">🌙</span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <section class="projects-section fade-in">
+      <h1>My Projects</h1>
+      <p class="section-description">Here are some of my recent works and open-source contributions.</p>
+      
+      <div class="projects-grid" id="projectsGrid">
+        <div class="project-card slide-up">
+          <h3>Project One</h3>
+          <p class="project-description">A web application built with modern technologies to solve real-world problems.</p>
+          <div class="project-tags">
+            <span class="tag">React</span>
+            <span class="tag">Node.js</span>
+            <span class="tag">MongoDB</span>
+          </div>
+          <div class="project-links">
+            <a href="#" class="btn-small">GitHub</a>
+            <a href="#" class="btn-small">Live Demo</a>
+          </div>
+        </div>
+
+        <div class="project-card slide-up">
+          <h3>Project Two</h3>
+          <p class="project-description">An open-source tool that helps developers streamline their workflow.</p>
+          <div class="project-tags">
+            <span class="tag">Python</span>
+            <span class="tag">Docker</span>
+            <span class="tag">API</span>
+          </div>
+          <div class="project-links">
+            <a href="#" class="btn-small">GitHub</a>
+            <a href="#" class="btn-small">Documentation</a>
+          </div>
+        </div>
+
+        <div class="project-card slide-up">
+          <h3>Project Three</h3>
+          <p class="project-description">A responsive portfolio template with modern design principles.</p>
+          <div class="project-tags">
+            <span class="tag">HTML</span>
+            <span class="tag">CSS</span>
+            <span class="tag">JavaScript</span>
+          </div>
+          <div class="project-links">
+            <a href="#" class="btn-small">GitHub</a>
+            <a href="#" class="btn-small">Live Demo</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>

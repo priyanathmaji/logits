@@ -3,42 +3,54 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Logits — Demo</title>
-  <style>
-    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; background:#f7f9fc; color:#0b1220; margin:0; padding:2rem; }
-    main { max-width:720px; margin:0 auto; background:#fff; padding:1.5rem; border-radius:10px; box-shadow:0 6px 24px rgba(12,18,30,0.06); }
-    h1 { margin:0 0 .5rem 0; font-size:1.5rem; }
-    p { margin:0.25rem 0; color:#334155; }
-    button { margin-top:1rem; padding:.5rem .75rem; border-radius:8px; border:1px solid #cbd5e1; background:#fff; cursor:pointer; }
-  </style>
+  <title>Priyanath Maji - Portfolio</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <main>
-    <h1 id="greeting">Hello from Priyanath Maji</h1>
-    <p id="description">This is a small demo page. Click the button to update the greeting and time.</p>
-    <p>Current time: <time id="now" datetime=""></time></p>
-    <button id="updateBtn" type="button">Update greeting</button>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">Priyanath Maji</a>
+      <ul class="nav-menu">
+        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+        <span class="sun-icon">☀️</span>
+        <span class="moon-icon">🌙</span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="hero fade-in">
+    <div class="hero-content">
+      <h1>Hi, I'm <span class="highlight">Priyanath Maji</span></h1>
+      <p class="tagline">Full Stack Developer & Open Source Enthusiast</p>
+      <p class="description">Building elegant solutions to complex problems. Passionate about web development, cloud technologies, and creating impactful software.</p>
+      <div class="cta-buttons">
+        <a href="projects.html" class="btn btn-primary">View Projects</a>
+        <a href="https://github.com/priyanathmaji" target="_blank" class="btn btn-secondary">GitHub Profile</a>
+      </div>
+    </div>
   </main>
 
-  <script>
-    const greeting = document.getElementById('greeting');
-    const nowEl = document.getElementById('now');
-    const btn = document.getElementById('updateBtn');
+  <section class="stats">
+    <div class="stat-item">
+      <h3 id="projectCount">0</h3>
+      <p>Projects</p>
+    </div>
+    <div class="stat-item">
+      <h3 id="yearsExp">0</h3>
+      <p>Years Experience</p>
+    </div>
+    <div class="stat-item">
+      <h3 id="techStack">0</h3>
+      <p>Technologies</p>
+    </div>
+  </section>
 
-    function setNow(){
-      const d = new Date();
-      nowEl.textContent = d.toLocaleString();
-      nowEl.setAttribute('datetime', d.toISOString());
-    }
-
-    btn.addEventListener('click', () => {
-      greeting.textContent = 'Hi — Priyanath Maji';
-      setNow();
-    });
-
-    // initialize time on load
-    setNow();
-    
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>

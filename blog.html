@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Blog - Priyanath Maji</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">Priyanath Maji</a>
+      <ul class="nav-menu">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="blog.html" class="active">Blog</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+        <span class="sun-icon">☀️</span>
+        <span class="moon-icon">🌙</span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <section class="blog-section fade-in">
+      <h1>Blog</h1>
+      <p class="section-description">Sharing my thoughts, tutorials, and experiences in web development.</p>
+      
+      <div class="blog-grid" id="blogGrid">
+        <article class="blog-card slide-up">
+          <div class="blog-meta">
+            <span class="blog-date">January 15, 2025</span>
+            <span class="blog-tag">Tutorial</span>
+          </div>
+          <h2><a href="blog-post.html?id=1">Getting Started with Modern JavaScript</a></h2>
+          <p class="blog-excerpt">Learn the fundamentals of ES6+ features and how they can improve your code quality and developer experience.</p>
+          <a href="blog-post.html?id=1" class="read-more">Read More →</a>
+        </article>
+
+        <article class="blog-card slide-up">
+          <div class="blog-meta">
+            <span class="blog-date">January 10, 2025</span>
+            <span class="blog-tag">Experience</span>
+          </div>
+          <h2><a href="blog-post.html?id=2">Building Scalable Web Applications</a></h2>
+          <p class="blog-excerpt">My journey and lessons learned while building production-ready applications that scale.</p>
+          <a href="blog-post.html?id=2" class="read-more">Read More →</a>
+        </article>
+
+        <article class="blog-card slide-up">
+          <div class="blog-meta">
+            <span class="blog-date">January 5, 2025</span>
+            <span class="blog-tag">Tutorial</span>
+          </div>
+          <h2><a href="blog-post.html?id=3">CSS Grid vs Flexbox: When to Use What</a></h2>
+          <p class="blog-excerpt">A comprehensive guide to understanding the differences and use cases for CSS Grid and Flexbox.</p>
+          <a href="blog-post.html?id=3" class="read-more">Read More →</a>
+        </article>
+
+        <article class="blog-card slide-up">
+          <div class="blog-meta">
+            <span class="blog-date">December 28, 2024</span>
+            <span class="blog-tag">Thoughts</span>
+          </div>
+          <h2><a href="blog-post.html?id=4">The Future of Web Development</a></h2>
+          <p class="blog-excerpt">Exploring emerging trends and technologies that are shaping the future of web development.</p>
+          <a href="blog-post.html?id=4" class="read-more">Read More →</a>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+</body>
+</html>
