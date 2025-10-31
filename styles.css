@@ -840,6 +840,48 @@ body {
   gap: 0.5rem;
 }
 
+/* Minimal Certifications Grid */
+.certifications-minimal-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.cert-minimal-card {
+  padding: 1.5rem;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  transition: var(--transition);
+}
+
+.cert-minimal-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--accent);
+  box-shadow: 0 4px 12px var(--shadow);
+}
+
+.cert-minimal-card h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.75rem;
+  line-height: 1.4;
+}
+
+.cert-issuer {
+  color: var(--accent);
+  font-weight: 500;
+  font-size: 0.875rem;
+  margin-bottom: 0.5rem;
+}
+
+.cert-date {
+  color: var(--text-tertiary);
+  font-size: 0.8125rem;
+}
+
 /* Timeline Section */
 .timeline {
   position: relative;
