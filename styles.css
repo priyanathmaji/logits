@@ -1582,73 +1582,59 @@ body {
   position: relative;
 }
 
-.timeline-item {
+.minimal-timeline .timeline-item {
   display: grid;
   grid-template-columns: 140px 1fr;
   gap: 2rem;
   margin-bottom: 3rem;
   position: relative;
+  opacity: 1;
+  animation: none;
 }
 
-.timeline-year {
+.minimal-timeline .timeline-year {
   font-size: 0.875rem;
   color: var(--text-tertiary);
   font-weight: 500;
   padding-top: 0.25rem;
 }
 
-.timeline-content h3 {
+.minimal-timeline .timeline-content {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  border: none;
+}
+
+.minimal-timeline .timeline-content h3 {
   font-size: 1.125rem;
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 0.25rem;
 }
 
-.timeline-company {
+.minimal-timeline .timeline-company {
   font-size: 0.9375rem;
   color: var(--accent);
   margin-bottom: 0.5rem;
   font-weight: 500;
 }
 
-.timeline-content p {
+.minimal-timeline .timeline-content p {
   color: var(--text-secondary);
   line-height: 1.6;
   font-size: 0.9375rem;
 }
 
-/* Minimal Footer */
-.minimal-footer {
-  text-align: center;
-  padding: 3rem 2rem;
-  border-top: 1px solid var(--border);
-  margin-top: 6rem;
+/* Override old timeline styles for minimal timeline */
+.minimal-timeline::before {
+  display: none;
 }
 
-.minimal-footer p {
-  color: var(--text-tertiary);
-  font-size: 0.875rem;
-}
-
-/* Navbar Minimal Adjustments */
-.navbar {
-  background: var(--bg-secondary);
-  box-shadow: 0 1px 3px var(--shadow);
-  border-bottom: 1px solid var(--border);
-}
-
-.nav-menu {
-  gap: 2.5rem;
-}
-
-.nav-menu a {
-  font-size: 0.9375rem;
-  font-weight: 500;
-}
-
-.nav-menu a::after {
-  bottom: -1.5rem;
-  height: 1px;
+.minimal-timeline .timeline-item:hover .timeline-content {
+  transform: none;
+  box-shadow: none;
+  border-color: transparent;
 }
 
 /* Clean up unnecessary animations */
