@@ -1597,13 +1597,7 @@ body {
   font-size: 0.875rem;
   color: var(--text-tertiary);
   font-weight: 500;
-}
-
-.minimal-timeline .timeline-content {
-  background: transparent;
-  padding: 0;
-  border-radius: 0;
-  border: none;
+  margin-bottom: 0.5rem;
 }
 
 .minimal-timeline .timeline-content h3 {
@@ -1616,7 +1610,7 @@ body {
 .minimal-timeline .timeline-company {
   font-size: 0.9375rem;
   color: var(--accent);
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
   font-weight: 500;
 }
 
@@ -1624,6 +1618,7 @@ body {
   color: var(--text-secondary);
   line-height: 1.6;
   font-size: 0.9375rem;
+  margin-bottom: 0.5rem;
 }
 
 /* Override old timeline styles for minimal timeline */
