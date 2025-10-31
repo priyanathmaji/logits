@@ -42,6 +42,11 @@
         <h2>Introduction</h2>
         <p>Retrieval-Augmented Generation (RAG) has emerged as one of the most practical ways to enhance LLMs with domain-specific knowledge. In this post, I'll share how we built a production RAG system using vector databases to support our wellness recommendation platform.</p>
 
+        <figure>
+          <img src="../images/rag-architecture.jpg" alt="RAG System Architecture" style="width: 100%; max-width: 800px;">
+          <figcaption>Figure 1: High-level RAG system architecture showing document indexing, retrieval, and generation pipeline</figcaption>
+        </figure>
+
         <h2>Why RAG?</h2>
         <p>LLMs are powerful but face critical limitations:</p>
         <ul>
@@ -115,6 +120,19 @@ Answer:"""
         answer = self.generate(question, docs)
         return answer
 </code></pre>
+
+        <h2>Understanding Vector Databases</h2>
+        <p>Before diving into implementation, let's understand how vector databases work. This video provides an excellent overview of vector search and embeddings:</p>
+
+        <div class="video-container">
+          <iframe 
+            src="https://www.youtube.com/embed/dN0lsF2cvm4" 
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+            allowfullscreen
+            title="Introduction to Vector Databases"
+          ></iframe>
+        </div>
 
         <h2>Choosing a Vector Database</h2>
         <p>We evaluated several options for our production system:</p>
@@ -451,6 +469,28 @@ class CachedRAG:
           {left: '$', right: '$', display: false}
         ],
         throwOnError: false
+      });
+
+      // Add lightbox functionality for images
+      document.querySelectorAll('.post-content img').forEach(img => {
+        img.style.cursor = 'pointer';
+        img.addEventListener('click', function() {
+          const lightbox = document.createElement('div');
+          lightbox.className = 'lightbox active';
+          lightbox.innerHTML = `
+            <button class="lightbox-close">&times;</button>
+            <img src="${this.src}" alt="${this.alt}">
+          `;
+          document.body.appendChild(lightbox);
+          
+          lightbox.querySelector('.lightbox-close').addEventListener('click', () => {
+            lightbox.remove();
+          });
+          
+          lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) lightbox.remove();
+          });
+        });
       });
     });
   </script>
