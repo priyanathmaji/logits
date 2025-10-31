@@ -75,29 +75,61 @@ document.addEventListener('DOMContentLoaded', () => {
 // Handle contact form submission
 const contactForm = document.getElementById('contactForm');
 if (contactForm) {
-  contactForm.addEventListener('submit', (e) => {
-    e.preventDefault();
+  // Check if using FormSubmit or custom handling
+  const isFormSubmit = contactForm.getAttribute('action')?.includes('formsubmit.co');
+  
+  if (!isFormSubmit) {
+    // Custom form handling (for demo/testing)
+    contactForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const formMessage = document.getElementById('formMessage');
+      const submitBtn = contactForm.querySelector('button[type="submit"]');
+      
+      // Disable button and show loading
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+      
+      // Simulate form submission
+      setTimeout(() => {
+        formMessage.textContent = 'Thank you for your message! I\'ll get back to you soon.';
+        formMessage.className = 'form-message success';
+        
+        contactForm.reset();
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Message';
+        
+        setTimeout(() => {
+          formMessage.style.display = 'none';
+        }, 5000);
+      }, 1000);
+    });
+  } else {
+    // FormSubmit handling - check for success parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const success = urlParams.get('success');
     const formMessage = document.getElementById('formMessage');
-    const submitBtn = contactForm.querySelector('button[type="submit"]');
     
-    // Disable button and show loading
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Sending...';
-    
-    // Simulate form submission
-    setTimeout(() => {
+    if (success === 'true' && formMessage) {
       formMessage.textContent = 'Thank you for your message! I\'ll get back to you soon.';
       formMessage.className = 'form-message success';
+      formMessage.style.display = 'block';
       
-      contactForm.reset();
-      submitBtn.disabled = false;
-      submitBtn.textContent = 'Send Message';
-      
-      setTimeout(() => {
-        formMessage.style.display = 'none';
-      }, 5000);
-    }, 1000);
-  });
+      // Clear URL parameter
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }
+}
+
+// mailto fallback function
+function sendEmail() {
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const message = document.getElementById('message').value;
+  
+  const subject = encodeURIComponent(`Portfolio Contact from ${name}`);
+  const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
+  
+  window.location.href = `mailto:your-email@example.com?subject=${subject}&body=${body}`;
 }
 
 // Smooth scroll for anchor links

@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Building Scalable Web Applications - Priyanath Maji</title>
+  <meta name="description" content="My journey and lessons learned while building production-ready applications that scale">
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="../index.html" class="nav-brand">Priyanath Maji</a>
+      <ul class="nav-menu">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="../projects.html">Projects</a></li>
+        <li><a href="../blog.html" class="active">Blog</a></li>
+        <li><a href="../contact.html">Contact</a></li>
+      </ul>
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+        <span class="sun-icon">☀️</span>
+        <span class="moon-icon">🌙</span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <article class="blog-post fade-in">
+      <a href="../blog.html" class="back-link">← Back to Blog</a>
+      
+      <header class="post-header">
+        <div class="post-meta">
+          <span class="post-date">January 10, 2025</span>
+          <span class="post-tag">Experience</span>
+        </div>
+        <h1>Building Scalable Web Applications</h1>
+      </header>
+
+      <div class="post-content">
+        <h2>Introduction</h2>
+        <p>Building applications that can handle growth is one of the most challenging aspects of software development. Over the years, I've learned valuable lessons about creating systems that scale efficiently.</p>
+
+        <h2>Architecture Matters</h2>
+        <p>The foundation of any scalable application is its architecture. Here are key principles I follow:</p>
+        <ul>
+          <li>Separation of concerns - keep business logic separate from presentation</li>
+          <li>Microservices when appropriate - but don't over-engineer</li>
+          <li>Stateless design - makes horizontal scaling much easier</li>
+          <li>Database optimization - proper indexing and query optimization</li>
+        </ul>
+
+        <h2>Performance Optimization</h2>
+        <p>Performance is critical for scalability. Some strategies that have worked well:</p>
+        <pre><code>// Implement caching strategically
+const cache = new Map();
+
+async function fetchData(key) {
+  if (cache.has(key)) {
+    return cache.get(key);
+  }
+  
+  const data = await database.query(key);
+  cache.set(key, data);
+  return data;
+}</code></pre>
+
+        <h2>Monitoring and Logging</h2>
+        <p>You can't improve what you don't measure. Implementing comprehensive monitoring early on saves countless hours of debugging later.</p>
+
+        <h2>Database Scaling Strategies</h2>
+        <p>As your application grows, database performance becomes crucial:</p>
+        <ul>
+          <li>Read replicas for distributing read traffic</li>
+          <li>Connection pooling to manage database connections efficiently</li>
+          <li>Caching frequently accessed data</li>
+          <li>Sharding for extremely large datasets</li>
+        </ul>
+
+        <h2>Load Balancing</h2>
+        <p>Distributing traffic across multiple servers ensures reliability and performance:</p>
+        <pre><code>// Example nginx configuration
+upstream backend {
+  server app1.example.com;
+  server app2.example.com;
+  server app3.example.com;
+}
+
+server {
+  listen 80;
+  location / {
+    proxy_pass http://backend;
+  }
+}</code></pre>
+
+        <h2>Lessons Learned</h2>
+        <p>The biggest lesson: start simple and scale when needed. Premature optimization can waste time and resources. Focus on writing clean, maintainable code first.</p>
+
+        <h2>Conclusion</h2>
+        <p>Building scalable applications is an ongoing journey. Each project teaches new lessons. The key is to learn from experience, stay updated with best practices, and always prioritize user experience.</p>
+      </div>
+
+      <footer class="post-footer">
+        <div class="share-section">
+          <h3>Share this post</h3>
+          <div class="share-buttons">
+            <a href="#" class="share-btn">Twitter</a>
+            <a href="#" class="share-btn">LinkedIn</a>
+            <a href="#" class="share-btn">Facebook</a>
+          </div>
+        </div>
+      </footer>
+    </article>
+  </main>
+
+  <script src="../script.js"></script>
+</body>
+</html>

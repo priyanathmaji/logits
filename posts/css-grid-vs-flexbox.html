@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>CSS Grid vs Flexbox: When to Use What - Priyanath Maji</title>
+  <meta name="description" content="A comprehensive guide to understanding the differences and use cases for CSS Grid and Flexbox">
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="../index.html" class="nav-brand">Priyanath Maji</a>
+      <ul class="nav-menu">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="../projects.html">Projects</a></li>
+        <li><a href="../blog.html" class="active">Blog</a></li>
+        <li><a href="../contact.html">Contact</a></li>
+      </ul>
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+        <span class="sun-icon">☀️</span>
+        <span class="moon-icon">🌙</span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <article class="blog-post fade-in">
+      <a href="../blog.html" class="back-link">← Back to Blog</a>
+      
+      <header class="post-header">
+        <div class="post-meta">
+          <span class="post-date">January 5, 2025</span>
+          <span class="post-tag">Tutorial</span>
+        </div>
+        <h1>CSS Grid vs Flexbox: When to Use What</h1>
+      </header>
+
+      <div class="post-content">
+        <h2>Introduction</h2>
+        <p>Both CSS Grid and Flexbox are powerful layout tools, but they serve different purposes. Understanding when to use each one will make your CSS cleaner and more maintainable.</p>
+
+        <h2>Flexbox: One-Dimensional Layouts</h2>
+        <p>Flexbox excels at laying out items in a single direction - either a row or a column.</p>
+        
+        <h3>Best Use Cases for Flexbox:</h3>
+        <ul>
+          <li>Navigation bars</li>
+          <li>Card components</li>
+          <li>Centering content</li>
+          <li>Distributing space between items</li>
+        </ul>
+
+        <pre><code>/* Flexbox example - Navigation bar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+}
+
+.nav-menu {
+  display: flex;
+  gap: 2rem;
+}</code></pre>
+
+        <h2>CSS Grid: Two-Dimensional Layouts</h2>
+        <p>CSS Grid is designed for creating complex, two-dimensional layouts with rows and columns.</p>
+
+        <h3>Best Use Cases for Grid:</h3>
+        <ul>
+          <li>Overall page layouts</li>
+          <li>Image galleries</li>
+          <li>Card grids</li>
+          <li>Complex dashboard layouts</li>
+        </ul>
+
+        <pre><code>/* Grid example - Card grid */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+/* Grid example - Page layout */
+.page-layout {
+  display: grid;
+  grid-template-areas:
+    "header header header"
+    "sidebar main main"
+    "footer footer footer";
+  grid-template-columns: 200px 1fr 1fr;
+  gap: 1rem;
+}</code></pre>
+
+        <h2>Key Differences</h2>
+        <table style="width: 100%; border-collapse: collapse; margin: 2rem 0;">
+          <tr style="background: var(--card-bg);">
+            <th style="padding: 1rem; text-align: left; border: 1px solid var(--border);">Feature</th>
+            <th style="padding: 1rem; text-align: left; border: 1px solid var(--border);">Flexbox</th>
+            <th style="padding: 1rem; text-align: left; border: 1px solid var(--border);">Grid</th>
+          </tr>
+          <tr>
+            <td style="padding: 1rem; border: 1px solid var(--border);">Dimension</td>
+            <td style="padding: 1rem; border: 1px solid var(--border);">One-dimensional</td>
+            <td style="padding: 1rem; border: 1px solid var(--border);">Two-dimensional</td>
+          </tr>
+          <tr style="background: var(--card-bg);">
+            <td style="padding: 1rem; border: 1px solid var(--border);">Direction</td>
+            <td style="padding: 1rem; border: 1px solid var(--border);">Row or column</td>
+            <td style="padding: 1rem; border: 1px solid var(--border);">Rows and columns</td>
+          </tr>
+          <tr>
+            <td style="padding: 1rem; border: 1px solid var(--border);">Best for</td>
+            <td style="padding: 1rem; border: 1px solid var(--border);">Components, navigation</td>
+            <td style="padding: 1rem; border: 1px solid var(--border);">Page layouts, grids</td>
+          </tr>
+        </table>
+
+        <h2>Can You Use Both Together?</h2>
+        <p>Absolutely! In fact, combining them is often the best approach:</p>
+        <pre><code>/* Grid for overall layout */
+.page-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+/* Flexbox for card internals */
+.card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}</code></pre>
+
+        <h2>Quick Decision Guide</h2>
+        <p><strong>Use Flexbox when:</strong></p>
+        <ul>
+          <li>You need to align items in one direction</li>
+          <li>Content size should determine layout</li>
+          <li>You want items to wrap or not wrap</li>
+        </ul>
+
+        <p><strong>Use Grid when:</strong></p>
+        <ul>
+          <li>You need precise control over rows AND columns</li>
+          <li>You want to create complex layouts</li>
+          <li>You need to overlap items</li>
+        </ul>
+
+        <h2>Conclusion</h2>
+        <p>Both CSS Grid and Flexbox are essential tools in modern web development. Master both, understand their strengths, and use them together to create beautiful, responsive layouts.</p>
+      </div>
+
+      <footer class="post-footer">
+        <div class="share-section">
+          <h3>Share this post</h3>
+          <div class="share-buttons">
+            <a href="#" class="share-btn">Twitter</a>
+            <a href="#" class="share-btn">LinkedIn</a>
+            <a href="#" class="share-btn">Facebook</a>
+          </div>
+        </div>
+      </footer>
+    </article>
+  </main>
+
+  <script src="../script.js"></script>
+</body>
+</html>

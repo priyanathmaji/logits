@@ -1,0 +1,356 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Blog Post Converter - Markdown to HTML</title>
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Marked.js for Markdown parsing -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <!-- KaTeX for LaTeX math rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <style>
+    .converter-container {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+    .editor-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    .editor-panel {
+      background: var(--bg-secondary);
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 6px 24px var(--shadow);
+    }
+    .editor-panel h2 {
+      margin-bottom: 1rem;
+      color: var(--accent);
+    }
+    #markdownInput {
+      width: 100%;
+      min-height: 500px;
+      padding: 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      background: var(--card-bg);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      resize: vertical;
+    }
+    #htmlPreview {
+      min-height: 500px;
+      padding: 1rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow-y: auto;
+    }
+    .controls {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .controls button {
+      padding: 0.5rem 1rem;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .controls button:hover {
+      background: var(--accent-hover);
+    }
+    .template-info {
+      background: var(--card-bg);
+      padding: 1rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      border-left: 4px solid var(--accent);
+    }
+    @media (max-width: 768px) {
+      .editor-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">Priyanath Maji</a>
+      <ul class="nav-menu">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="projects.html">Projects</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+        <span class="sun-icon">☀️</span>
+        <span class="moon-icon">🌙</span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="converter-container">
+    <div class="template-info">
+      <h2>📝 Blog Post Converter - Markdown to HTML</h2>
+      <p>Write your blog post in Markdown (left), see the preview (right), and copy the generated HTML!</p>
+      <p><strong>Supports:</strong> Headings, Lists, Code blocks, LaTeX math (use $...$ or $$...$$), Links, Images, Bold, Italic, and more!</p>
+    </div>
+
+    <div class="controls">
+      <button onclick="convertMarkdown()">🔄 Convert</button>
+      <button onclick="copyHTML()">📋 Copy HTML</button>
+      <button onclick="downloadHTML()">💾 Download HTML File</button>
+      <button onclick="loadTemplate()">📄 Load Template</button>
+      <button onclick="clearAll()">🗑️ Clear</button>
+    </div>
+
+    <div class="editor-layout">
+      <div class="editor-panel">
+        <h2>Markdown Input</h2>
+        <textarea id="markdownInput" placeholder="Write your blog post in Markdown here..."></textarea>
+      </div>
+
+      <div class="editor-panel">
+        <h2>Preview</h2>
+        <div id="htmlPreview" class="post-content"></div>
+      </div>
+    </div>
+
+    <div class="editor-panel" style="margin-top: 2rem;">
+      <h2>Generated HTML</h2>
+      <textarea id="htmlOutput" style="width: 100%; min-height: 300px; font-family: 'Courier New', monospace; font-size: 12px; padding: 1rem; background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border); border-radius: 8px;"></textarea>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    // Configure marked for code highlighting
+    marked.setOptions({
+      breaks: true,
+      gfm: true,
+      highlight: function(code, lang) {
+        return code;
+      }
+    });
+
+    // Auto-convert on input
+    document.getElementById('markdownInput').addEventListener('input', convertMarkdown);
+
+    function convertMarkdown() {
+      const markdown = document.getElementById('markdownInput').value;
+      const preview = document.getElementById('htmlPreview');
+      const output = document.getElementById('htmlOutput');
+      
+      // Convert markdown to HTML
+      let html = marked.parse(markdown);
+      
+      // Display preview
+      preview.innerHTML = html;
+      
+      // Render LaTeX math in preview
+      renderMathInElement(preview, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+      
+      // Generate full HTML for blog post
+      const fullHTML = generateBlogPostHTML(markdown, html);
+      output.value = fullHTML;
+    }
+
+    function generateBlogPostHTML(markdown, content) {
+      // Extract title (first # heading)
+      const titleMatch = markdown.match(/^#\s+(.+)$/m);
+      const title = titleMatch ? titleMatch[1] : 'Blog Post';
+      
+      // Create slug from title
+      const slug = title.toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-');
+      
+      // Extract metadata (assuming format: Date: ..., Tag: ...)
+      const dateMatch = markdown.match(/Date:\s*(.+)/);
+      const tagMatch = markdown.match(/Tag:\s*(.+)/);
+      const date = dateMatch ? dateMatch[1] : new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      const tag = tagMatch ? tagMatch[1] : 'Article';
+      
+      return `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>${title} - Priyanath Maji</title>
+  <meta name="description" content="${title}">
+  <link rel="stylesheet" href="../styles.css" />
+  <!-- KaTeX for Math -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="../index.html" class="nav-brand">Priyanath Maji</a>
+      <ul class="nav-menu">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../about.html">About</a></li>
+        <li><a href="../projects.html">Projects</a></li>
+        <li><a href="../blog.html" class="active">Blog</a></li>
+        <li><a href="../contact.html">Contact</a></li>
+      </ul>
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+        <span class="sun-icon">☀️</span>
+        <span class="moon-icon">🌙</span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <article class="blog-post fade-in">
+      <a href="../blog.html" class="back-link">← Back to Blog</a>
+      
+      <header class="post-header">
+        <div class="post-meta">
+          <span class="post-date">${date}</span>
+          <span class="post-tag">${tag}</span>
+        </div>
+        <h1>${title}</h1>
+      </header>
+
+      <div class="post-content">
+${content}
+      </div>
+
+      <footer class="post-footer">
+        <div class="share-section">
+          <h3>Share this post</h3>
+          <div class="share-buttons">
+            <a href="#" class="share-btn">Twitter</a>
+            <a href="#" class="share-btn">LinkedIn</a>
+            <a href="#" class="share-btn">Facebook</a>
+          </div>
+        </div>
+      </footer>
+    </article>
+  </main>
+
+  <script src="../script.js"></script>
+  <script>
+    // Render LaTeX math
+    document.addEventListener('DOMContentLoaded', function() {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+</body>
+</html>`;
+    }
+
+    function copyHTML() {
+      const output = document.getElementById('htmlOutput');
+      output.select();
+      document.execCommand('copy');
+      alert('HTML copied to clipboard!');
+    }
+
+    function downloadHTML() {
+      const markdown = document.getElementById('markdownInput').value;
+      const titleMatch = markdown.match(/^#\s+(.+)$/m);
+      const title = titleMatch ? titleMatch[1] : 'blog-post';
+      const slug = title.toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-');
+      
+      const html = document.getElementById('htmlOutput').value;
+      const blob = new Blob([html], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${slug}.html`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function loadTemplate() {
+      const template = `# Your Blog Post Title
+
+Date: January 15, 2025
+Tag: Tutorial
+
+## Introduction
+
+Write your introduction here. You can use **bold**, *italic*, and \`inline code\`.
+
+## Code Example
+
+\`\`\`javascript
+const example = () => {
+  console.log('Hello World!');
+};
+\`\`\`
+
+## Math Example (LaTeX)
+
+Inline math: The quadratic formula is $x = \\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}$
+
+Display math:
+
+$$
+E = mc^2
+$$
+
+$$
+\\int_{0}^{\\infty} e^{-x^2} dx = \\frac{\\sqrt{\\pi}}{2}
+$$
+
+## Lists
+
+- Item 1
+- Item 2
+- Item 3
+
+## Conclusion
+
+Write your conclusion here.
+`;
+      document.getElementById('markdownInput').value = template;
+      convertMarkdown();
+    }
+
+    function clearAll() {
+      if (confirm('Are you sure you want to clear everything?')) {
+        document.getElementById('markdownInput').value = '';
+        document.getElementById('htmlPreview').innerHTML = '';
+        document.getElementById('htmlOutput').value = '';
+      }
+    }
+
+    // Load template on first visit
+    if (!document.getElementById('markdownInput').value) {
+      loadTemplate();
+    }
+  </script>
+</body>
+</html>

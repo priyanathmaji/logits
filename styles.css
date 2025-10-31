@@ -690,6 +690,40 @@ body {
   transform: translateX(5px);
 }
 
+.direct-contact {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--border);
+}
+
+.direct-contact h3 {
+  margin-bottom: 1rem;
+  color: var(--text-primary);
+}
+
+.contact-detail {
+  margin-bottom: 1rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.contact-detail strong {
+  display: inline-block;
+  min-width: 80px;
+  color: var(--text-primary);
+}
+
+.contact-detail a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: var(--transition);
+}
+
+.contact-detail a:hover {
+  color: var(--accent-hover);
+  text-decoration: underline;
+}
+
 /* Certifications Section */
 .certifications-section,
 .timeline-section {
