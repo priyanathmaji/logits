@@ -1,0 +1,620 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Designing Scalable API Integration Platforms - Priyanath Maji</title>
+  <meta name="description" content="Architectural patterns and best practices for building high-performance API systems">
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="../index.html" class="nav-brand">Priyanath Maji</a>
+      <ul class="nav-menu">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../blog.html" class="active">Blog</a></li>
+      </ul>
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+        <span class="sun-icon">☀️</span>
+        <span class="moon-icon">🌙</span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <article class="blog-post">
+      <a href="../blog.html" class="back-link">← Back to Blog</a>
+      
+      <header class="post-header">
+        <div class="post-meta">
+          <span class="post-date">January 12, 2025</span>
+          <span class="post-tag">Distributed Systems</span>
+        </div>
+        <h1>Designing Scalable API Integration Platforms</h1>
+        <p style="color: var(--text-tertiary); font-style: italic;">Part 1 of Distributed Systems Series</p>
+      </header>
+
+      <div class="post-content">
+        <h2>Introduction</h2>
+        <p>Building a FHIR-based API integration platform that handles real-time communication between healthcare providers and insurance payors taught me valuable lessons about distributed systems design. In this post, I'll share the architecture that helped us achieve a 50% reduction in prior authorization processing time while maintaining 99.95% uptime.</p>
+
+        <h2>The Challenge</h2>
+        <p>Healthcare provider EHR systems need to communicate with insurance payors for prior authorization of medical services. The requirements were demanding:</p>
+        <ul>
+          <li><strong>High throughput:</strong> Handle 10,000+ requests per minute</li>
+          <li><strong>Low latency:</strong> Sub-second response times</li>
+          <li><strong>High availability:</strong> 99.95% uptime SLA</li>
+          <li><strong>Security:</strong> HIPAA compliant, encrypted data</li>
+          <li><strong>Scalability:</strong> Handle traffic spikes during business hours</li>
+        </ul>
+
+        <h2>Architecture Overview</h2>
+        <p>Our solution employed a layered architecture with multiple resilience patterns:</p>
+
+        <pre><code class="language-plaintext">┌─────────────────────────────────────────────────────────┐
+│                    API Gateway                          │
+│          (Rate Limiting, Auth, Routing)                 │
+└────────────────────┬────────────────────────────────────┘
+                     │
+        ┌────────────┼────────────┐
+        │            │            │
+        ▼            ▼            ▼
+   ┌─────────┐  ┌─────────┐  ┌─────────┐
+   │  API    │  │  API    │  │  API    │
+   │Service 1│  │Service 2│  │Service 3│
+   └────┬────┘  └────┬────┘  └────┬────┘
+        │            │            │
+        └────────────┼────────────┘
+                     │
+        ┌────────────┼────────────┐
+        │            │            │
+        ▼            ▼            ▼
+   ┌─────────┐  ┌─────────┐  ┌─────────┐
+   │  Cache  │  │Database │  │ Message │
+   │ (Redis) │  │Replicas │  │  Queue  │
+   └─────────┘  └─────────┘  └─────────┘
+</code></pre>
+
+        <h2>Key Design Patterns</h2>
+
+        <h3>1. Distributed Caching</h3>
+        <p>Redis-based caching reduced database load by 70% and improved response times dramatically:</p>
+
+        <pre><code class="language-python">import redis
+from functools import wraps
+import json
+import hashlib
+
+class DistributedCache:
+    def __init__(self, redis_url: str):
+        self.redis = redis.from_url(redis_url)
+        self.default_ttl = 3600  # 1 hour
+    
+    def cache_key(self, func_name: str, *args, **kwargs) -> str:
+        """Generate unique cache key"""
+        key_data = f"{func_name}:{args}:{sorted(kwargs.items())}"
+        return hashlib.md5(key_data.encode()).hexdigest()
+    
+    def get(self, key: str):
+        """Get cached value"""
+        value = self.redis.get(key)
+        if value:
+            return json.loads(value)
+        return None
+    
+    def set(self, key: str, value, ttl: int = None):
+        """Set cached value with TTL"""
+        ttl = ttl or self.default_ttl
+        self.redis.setex(
+            key, 
+            ttl, 
+            json.dumps(value, default=str)
+        )
+    
+    def invalidate(self, pattern: str):
+        """Invalidate cache by pattern"""
+        for key in self.redis.scan_iter(match=pattern):
+            self.redis.delete(key)
+
+def cached(ttl: int = 3600):
+    """Decorator for caching function results"""
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            cache = DistributedCache("redis://localhost:6379")
+            key = cache.cache_key(func.__name__, *args, **kwargs)
+            
+            # Try cache first
+            result = cache.get(key)
+            if result is not None:
+                return result
+            
+            # Execute function
+            result = func(*args, **kwargs)
+            
+            # Cache result
+            cache.set(key, result, ttl)
+            return result
+        
+        return wrapper
+    return decorator
+
+# Usage
+@cached(ttl=600)  # Cache for 10 minutes
+def get_prior_authorization(patient_id: str, service_code: str):
+    """Fetch prior authorization from database"""
+    # Expensive database query
+    return database.query_authorization(patient_id, service_code)
+</code></pre>
+
+        <h3>2. Asynchronous Request Handling</h3>
+        <p>For long-running operations, we implemented async processing with callbacks:</p>
+
+        <pre><code class="language-python">from fastapi import FastAPI, BackgroundTasks
+from pydantic import BaseModel
+import uuid
+from typing import Optional
+import asyncio
+
+app = FastAPI()
+
+class AuthorizationRequest(BaseModel):
+    patient_id: str
+    provider_id: str
+    service_code: str
+    callback_url: Optional[str] = None
+
+class RequestStatus:
+    def __init__(self):
+        self.statuses = {}
+    
+    def create(self, request_id: str):
+        self.statuses[request_id] = {
+            "status": "pending",
+            "result": None,
+            "created_at": datetime.now()
+        }
+    
+    def update(self, request_id: str, status: str, result=None):
+        if request_id in self.statuses:
+            self.statuses[request_id].update({
+                "status": status,
+                "result": result,
+                "updated_at": datetime.now()
+            })
+    
+    def get(self, request_id: str):
+        return self.statuses.get(request_id)
+
+status_tracker = RequestStatus()
+
+async def process_authorization(
+    request_id: str, 
+    auth_request: AuthorizationRequest
+):
+    """Background task to process authorization"""
+    try:
+        # Simulate long-running process
+        await asyncio.sleep(5)
+        
+        # Process authorization
+        result = await call_external_api(auth_request)
+        
+        # Update status
+        status_tracker.update(request_id, "completed", result)
+        
+        # Send callback if provided
+        if auth_request.callback_url:
+            await send_callback(
+                auth_request.callback_url, 
+                request_id, 
+                result
+            )
+    
+    except Exception as e:
+        status_tracker.update(request_id, "failed", str(e))
+
+@app.post("/api/v1/authorization")
+async def create_authorization(
+    request: AuthorizationRequest,
+    background_tasks: BackgroundTasks
+):
+    """Create authorization request (async)"""
+    # Generate request ID
+    request_id = str(uuid.uuid4())
+    
+    # Create status entry
+    status_tracker.create(request_id)
+    
+    # Queue background task
+    background_tasks.add_task(
+        process_authorization,
+        request_id,
+        request
+    )
+    
+    return {
+        "request_id": request_id,
+        "status": "pending",
+        "status_url": f"/api/v1/authorization/{request_id}"
+    }
+
+@app.get("/api/v1/authorization/{request_id}")
+async def get_authorization_status(request_id: str):
+    """Check authorization status"""
+    status = status_tracker.get(request_id)
+    
+    if not status:
+        return {"error": "Request not found"}, 404
+    
+    return status
+</code></pre>
+
+        <h3>3. Database Replication</h3>
+        <p>Master-slave replication with read replicas distributed load and improved availability:</p>
+
+        <pre><code class="language-python">from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+import random
+
+class DatabaseRouter:
+    def __init__(self, master_url: str, replica_urls: list):
+        # Master for writes
+        self.master = create_engine(
+            master_url,
+            pool_size=20,
+            max_overflow=40,
+            pool_pre_ping=True
+        )
+        
+        # Replicas for reads
+        self.replicas = [
+            create_engine(
+                url,
+                pool_size=10,
+                max_overflow=20,
+                pool_pre_ping=True
+            )
+            for url in replica_urls
+        ]
+        
+        self.MasterSession = sessionmaker(bind=self.master)
+        self.ReplicaSessions = [
+            sessionmaker(bind=replica) 
+            for replica in self.replicas
+        ]
+    
+    def get_write_session(self):
+        """Get session for write operations"""
+        return self.MasterSession()
+    
+    def get_read_session(self):
+        """Get session for read operations (load balanced)"""
+        session_maker = random.choice(self.ReplicaSessions)
+        return session_maker()
+    
+    def execute_write(self, query):
+        """Execute write query on master"""
+        session = self.get_write_session()
+        try:
+            result = session.execute(query)
+            session.commit()
+            return result
+        except Exception as e:
+            session.rollback()
+            raise e
+        finally:
+            session.close()
+    
+    def execute_read(self, query):
+        """Execute read query on replica"""
+        session = self.get_read_session()
+        try:
+            return session.execute(query)
+        finally:
+            session.close()
+
+# Usage
+db = DatabaseRouter(
+    master_url="postgresql://master:5432/db",
+    replica_urls=[
+        "postgresql://replica1:5432/db",
+        "postgresql://replica2:5432/db",
+        "postgresql://replica3:5432/db"
+    ]
+)
+
+# Read from replica
+results = db.execute_read("SELECT * FROM authorizations WHERE status='pending'")
+
+# Write to master
+db.execute_write("INSERT INTO authorizations VALUES (...)")
+</code></pre>
+
+        <h3>4. Auto-Scaling</h3>
+        <p>Kubernetes-based auto-scaling handled traffic spikes gracefully:</p>
+
+        <pre><code class="language-yaml"># kubernetes/hpa.yaml
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: api-service-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: api-service
+  minReplicas: 3
+  maxReplicas: 50
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+  - type: Pods
+    pods:
+      metric:
+        name: http_requests_per_second
+      target:
+        type: AverageValue
+        averageValue: "1000"
+  behavior:
+    scaleDown:
+      stabilizationWindowSeconds: 300
+      policies:
+      - type: Percent
+        value: 50
+        periodSeconds: 60
+    scaleUp:
+      stabilizationWindowSeconds: 0
+      policies:
+      - type: Percent
+        value: 100
+        periodSeconds: 30
+      - type: Pods
+        value: 4
+        periodSeconds: 60
+</code></pre>
+
+        <h2>Security Implementation</h2>
+
+        <h3>OAuth 2.0 Authentication</h3>
+        <pre><code class="language-python">from fastapi import Depends, HTTPException, status
+from fastapi.security import OAuth2PasswordBearer
+from jose import JWTError, jwt
+from datetime import datetime, timedelta
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+SECRET_KEY = "your-secret-key"
+ALGORITHM = "HS256"
+ACCESS_TOKEN_EXPIRE_MINUTES = 30
+
+def create_access_token(data: dict):
+    """Create JWT access token"""
+    to_encode = data.copy()
+    expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
+    to_encode.update({"exp": expire})
+    
+    encoded_jwt = jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)
+    return encoded_jwt
+
+async def get_current_user(token: str = Depends(oauth2_scheme)):
+    """Validate token and get current user"""
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_401_UNAUTHORIZED,
+        detail="Could not validate credentials",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            raise credentials_exception
+    except JWTError:
+        raise credentials_exception
+    
+    # Fetch user from database
+    user = get_user(username)
+    if user is None:
+        raise credentials_exception
+    
+    return user
+
+@app.get("/api/v1/protected")
+async def protected_route(current_user = Depends(get_current_user)):
+    """Protected endpoint"""
+    return {"message": f"Hello {current_user.username}"}
+</code></pre>
+
+        <h3>TLS Encryption</h3>
+        <pre><code class="language-python"># Enforce HTTPS
+from fastapi.middleware.httpsredirect import HTTPSRedirectMiddleware
+from fastapi.middleware.trustedhost import TrustedHostMiddleware
+
+app.add_middleware(HTTPSRedirectMiddleware)
+app.add_middleware(
+    TrustedHostMiddleware, 
+    allowed_hosts=["api.example.com", "*.example.com"]
+)
+
+# Configure SSL
+import uvicorn
+
+if __name__ == "__main__":
+    uvicorn.run(
+        app,
+        host="0.0.0.0",
+        port=443,
+        ssl_keyfile="/path/to/key.pem",
+        ssl_certfile="/path/to/cert.pem",
+        ssl_ca_certs="/path/to/ca.pem"
+    )
+</code></pre>
+
+        <h2>Fault Tolerance Patterns</h2>
+
+        <h3>Circuit Breaker</h3>
+        <pre><code class="language-python">from enum import Enum
+import time
+
+class CircuitState(Enum):
+    CLOSED = "closed"
+    OPEN = "open"
+    HALF_OPEN = "half_open"
+
+class CircuitBreaker:
+    def __init__(
+        self,
+        failure_threshold: int = 5,
+        timeout: int = 60,
+        expected_exception = Exception
+    ):
+        self.failure_threshold = failure_threshold
+        self.timeout = timeout
+        self.expected_exception = expected_exception
+        
+        self.failure_count = 0
+        self.last_failure_time = None
+        self.state = CircuitState.CLOSED
+    
+    def call(self, func, *args, **kwargs):
+        """Execute function with circuit breaker"""
+        if self.state == CircuitState.OPEN:
+            if time.time() - self.last_failure_time > self.timeout:
+                self.state = CircuitState.HALF_OPEN
+            else:
+                raise Exception("Circuit breaker is OPEN")
+        
+        try:
+            result = func(*args, **kwargs)
+            self._on_success()
+            return result
+        
+        except self.expected_exception as e:
+            self._on_failure()
+            raise e
+    
+    def _on_success(self):
+        """Reset on successful call"""
+        self.failure_count = 0
+        self.state = CircuitState.CLOSED
+    
+    def _on_failure(self):
+        """Increment failure count"""
+        self.failure_count += 1
+        self.last_failure_time = time.time()
+        
+        if self.failure_count >= self.failure_threshold:
+            self.state = CircuitState.OPEN
+
+# Usage
+breaker = CircuitBreaker(failure_threshold=5, timeout=60)
+
+def call_external_api(data):
+    return breaker.call(external_api.post, data)
+</code></pre>
+
+        <h2>Monitoring and Observability</h2>
+        <pre><code class="language-python">from prometheus_client import Counter, Histogram, Gauge
+import time
+
+# Metrics
+request_count = Counter(
+    'api_requests_total',
+    'Total API requests',
+    ['method', 'endpoint', 'status']
+)
+
+request_duration = Histogram(
+    'api_request_duration_seconds',
+    'API request duration',
+    ['method', 'endpoint']
+)
+
+active_requests = Gauge(
+    'api_active_requests',
+    'Number of active requests'
+)
+
+# Middleware
+@app.middleware("http")
+async def metrics_middleware(request, call_next):
+    """Collect metrics for each request"""
+    active_requests.inc()
+    start_time = time.time()
+    
+    try:
+        response = await call_next(request)
+        
+        # Record metrics
+        duration = time.time() - start_time
+        request_count.labels(
+            method=request.method,
+            endpoint=request.url.path,
+            status=response.status_code
+        ).inc()
+        
+        request_duration.labels(
+            method=request.method,
+            endpoint=request.url.path
+        ).observe(duration)
+        
+        return response
+    
+    finally:
+        active_requests.dec()
+</code></pre>
+
+        <h2>Real-World Results</h2>
+        <p>Our FHIR-based API platform delivered impressive metrics:</p>
+        <ul>
+          <li><strong>50% reduction</strong> in prior authorization turnaround time</li>
+          <li><strong>99.95% uptime</strong> over 12 months</li>
+          <li><strong>15,000 requests/min</strong> at peak load</li>
+          <li><strong>Sub-200ms</strong> p95 latency</li>
+          <li><strong>Zero data breaches</strong> - HIPAA compliant</li>
+        </ul>
+
+        <h2>Key Takeaways</h2>
+        <ul>
+          <li><strong>Cache aggressively:</strong> Reduced database load by 70%</li>
+          <li><strong>Think async:</strong> Long operations should never block</li>
+          <li><strong>Plan for failure:</strong> Circuit breakers save you</li>
+          <li><strong>Monitor everything:</strong> You can't fix what you can't see</li>
+          <li><strong>Security first:</strong> OAuth, TLS, and encryption are non-negotiable</li>
+        </ul>
+
+        <h2>Next Steps</h2>
+        <p>In Part 2, we'll explore Event-Driven Architecture patterns for building real-time processing systems at scale.</p>
+
+        <h2>Conclusion</h2>
+        <p>Building scalable API platforms requires careful attention to caching, async processing, fault tolerance, and security. Start with these patterns and iterate based on your specific requirements and metrics.</p>
+      </div>
+
+      <footer class="post-footer">
+        <div class="share-section">
+          <h3>Share this post</h3>
+          <div class="share-buttons">
+            <a href="#" class="share-btn">Twitter</a>
+            <a href="#" class="share-btn">LinkedIn</a>
+            <a href="#" class="share-btn">Facebook</a>
+          </div>
+        </div>
+      </footer>
+    </article>
+  </main>
+
+  <script src="../script.js"></script>
+</body>
+</html>

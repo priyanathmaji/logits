@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Event-Driven Architecture: Real-Time Processing at Scale - Priyanath Maji</title>
+  <meta name="description" content="Design and implement event-driven systems that handle high-frequency data streams">
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="../index.html" class="nav-brand">Priyanath Maji</a>
+      <ul class="nav-menu">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../blog.html" class="active">Blog</a></li>
+      </ul>
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+        <span class="sun-icon">☀️</span>
+        <span class="moon-icon">🌙</span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <article class="blog-post">
+      <a href="../blog.html" class="back-link">← Back to Blog</a>
+      
+      <header class="post-header">
+        <div class="post-meta">
+          <span class="post-date">January 8, 2025</span>
+          <span class="post-tag">Distributed Systems</span>
+        </div>
+        <h1>Event-Driven Architecture: Real-Time Processing at Scale</h1>
+        <p style="color: var(--text-tertiary); font-style: italic;">Part 2 of Distributed Systems Series</p>
+      </header>
+
+      <div class="post-content">
+        <h2>Introduction</h2>
+        <p>When we needed to process high-frequency employee badging events for COVID-19 compliance, traditional request-response architecture wouldn't cut it. We built an event-driven system that achieved 98% efficiency at turnstile processing while handling thousands of events per second. Here's how we did it.</p>
+
+        <h2>Why Event-Driven Architecture?</h2>
+        <p>Event-driven architecture (EDA) excels when you need:</p>
+        <ul>
+          <li><strong>Real-time processing:</strong> React to events as they happen</li>
+          <li><strong>High throughput:</strong> Handle massive event streams</li>
+          <li><strong>Loose coupling:</strong> Services don't need to know about each other</li>
+          <li><strong>Scalability:</strong> Scale producers and consumers independently</li>
+          <li><strong>Resilience:</strong> Events are persisted and can be replayed</li>
+        </ul>
+
+        <h2>Architecture Pattern</h2>
+        <p>Our event-driven system followed this architecture:</p>
+
+        <pre><code class="language-plaintext">Event Producers → Message Broker → Event Consumers
+     (Badges)       (Kafka/RabbitMQ)   (Processors)
+                           ↓
+                    Event Store (Audit)
+                           ↓
+                    Dead Letter Queue
+</code></pre>
+
+        <h2>Core Components</h2>
+
+        <h3>1. Event Producer</h3>
+        <p>Badge readers produce events whenever an employee scans:</p>
+
+        <pre><code class="language-python">from dataclasses import dataclass
+from datetime import datetime
+from typing import Optional
+import json
+from kafka import KafkaProducer
+
+@dataclass
+class BadgeEvent:
+    """Employee badge scan event"""
+    employee_id: str
+    badge_id: str
+    location: str
+    timestamp: datetime
+    event_type: str  # 'entry' or 'exit'
+    metadata: Optional[dict] = None
+    
+    def to_dict(self):
+        return {
+            "employee_id": self.employee_id,
+            "badge_id": self.badge_id,
+            "location": self.location,
+            "timestamp": self.timestamp.isoformat(),
+            "event_type": self.event_type,
+            "metadata": self.metadata or {}
+        }
+
+class BadgeEventProducer:
+    def __init__(self, kafka_servers: list):
+        self.producer = KafkaProducer(
+            bootstrap_servers=kafka_servers,
+            value_serializer=lambda v: json.dumps(v).encode('utf-8'),
+            acks='all',  # Wait for all replicas
+            retries=3,
+            max_in_flight_requests_per_connection=1  # Maintain order
+        )
+        self.topic = 'badge-events'
+    
+    def publish_event(self, event: BadgeEvent):
+        """Publish badge event to Kafka"""
+        try:
+            # Use employee_id as partition key for ordering
+            future = self.producer.send(
+                self.topic,
+                key=event.employee_id.encode('utf-8'),
+                value=event.to_dict()
+            )
+            
+            # Wait for confirmation
+            record_metadata = future.get(timeout=10)
+            
+            print(f"Event published to {record_metadata.topic} "
+                  f"partition {record_metadata.partition} "
+                  f"offset {record_metadata.offset}")
+            
+            return True
+        
+        except Exception as e:
+            print(f"Failed to publish event: {e}")
+            return False
+    
+    def close(self):
+        """Flush and close producer"""
+        self.producer.flush()
+        self.producer.close()
+
+# Usage
+producer = BadgeEventProducer(['localhost:9092'])
+
+event = BadgeEvent(
+    employee_id="EMP12345",
+    badge_id="BADGE789",
+    location="Building A - Main Entrance",
+    timestamp=datetime.now(),
+    event_type="entry"
+)
+
+producer.publish_event(event)
+</code></pre>
+
+        <h3>2. Event Consumer</h3>
+        <p>Consumers process events and check vaccination compliance:</p>
+
+        <pre><code class="language-python">from kafka import KafkaConsumer
+import asyncio
+import httpx
+from typing import Dict
+
+class ComplianceChecker:
+    def __init__(self, oauth_client):
+        self.oauth_client = oauth_client
+        self.cache = {}  # Simple in-memory cache
+    
+    async def check_vaccination_status(self, employee_id: str) -> Dict:
+        """Retrieve vaccination record from provider API"""
+        # Check cache first
+        if employee_id in self.cache:
+            return self.cache[employee_id]
+        
+        # Get OAuth token
+        token = await self.oauth_client.get_token()
+        
+        # Call provider API
+        async with httpx.AsyncClient() as client:
+            response = await client.get(
+                f"https://api.provider.com/vaccination/{employee_id}",
+                headers={"Authorization": f"Bearer {token}"},
+                timeout=5.0
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                # Cache result for 1 hour
+                self.cache[employee_id] = data
+                return data
+            else:
+                raise Exception(f"API error: {response.status_code}")
+    
+    async def is_compliant(self, employee_id: str) -> bool:
+        """Check if employee meets compliance requirements"""
+        try:
+            record = await self.check_vaccination_status(employee_id)
+            
+            # Check vaccination status
+            return record.get('fully_vaccinated', False) or \
+                   record.get('has_exemption', False)
+        
+        except Exception as e:
+            print(f"Compliance check failed: {e}")
+            # Fail open for availability (or fail closed for security)
+            return True
+
+class BadgeEventConsumer:
+    def __init__(self, kafka_servers: list, group_id: str):
+        self.consumer = KafkaConsumer(
+            'badge-events',
+            bootstrap_servers=kafka_servers,
+            group_id=group_id,
+            auto_offset_reset='earliest',
+            enable_auto_commit=False,  # Manual commit for reliability
+            value_deserializer=lambda m: json.loads(m.decode('utf-8'))
+        )
+        
+        self.compliance_checker = ComplianceChecker(OAuth2Client())
+        self.turnstile_controller = TurnstileController()
+    
+    async def process_event(self, event: Dict):
+        """Process single badge event"""
+        employee_id = event['employee_id']
+        event_type = event['event_type']
+        
+        if event_type == 'entry':
+            # Check compliance
+            is_compliant = await self.compliance_checker.is_compliant(
+                employee_id
+            )
+            
+            if is_compliant:
+                # Grant access
+                await self.turnstile_controller.open_gate(event['location'])
+                print(f"Access granted for {employee_id}")
+            else:
+                # Deny access
+                await self.turnstile_controller.deny_access(event['location'])
+                print(f"Access denied for {employee_id}")
+                
+                # Send notification
+                await self.send_notification(employee_id)
+    
+    async def consume(self):
+        """Main consumer loop"""
+        try:
+            for message in self.consumer:
+                event = message.value
+                
+                try:
+                    # Process event
+                    await self.process_event(event)
+                    
+                    # Commit offset on success
+                    self.consumer.commit()
+                
+                except Exception as e:
+                    print(f"Error processing event: {e}")
+                    # Send to dead letter queue
+                    await self.send_to_dlq(event, str(e))
+        
+        finally:
+            self.consumer.close()
+
+# Run consumer
+consumer = BadgeEventConsumer(
+    kafka_servers=['localhost:9092'],
+    group_id='compliance-checker-group'
+)
+
+asyncio.run(consumer.consume())
+</code></pre>
+
+        <h3>3. Event Store (Audit Log)</h3>
+        <p>All events are persisted for compliance and auditing:</p>
+
+        <pre><code class="language-python">from elasticsearch import Elasticsearch
+from datetime import datetime
+
+class EventStore:
+    def __init__(self, es_hosts: list):
+        self.es = Elasticsearch(es_hosts)
+        self.index = 'badge-events'
+        
+        # Create index if not exists
+        if not self.es.indices.exists(index=self.index):
+            self.create_index()
+    
+    def create_index(self):
+        """Create Elasticsearch index with mapping"""
+        mapping = {
+            "mappings": {
+                "properties": {
+                    "employee_id": {"type": "keyword"},
+                    "badge_id": {"type": "keyword"},
+                    "location": {"type": "keyword"},
+                    "timestamp": {"type": "date"},
+                    "event_type": {"type": "keyword"},
+                    "compliance_status": {"type": "boolean"},
+                    "processing_time_ms": {"type": "integer"}
+                }
+            }
+        }
+        self.es.indices.create(index=self.index, body=mapping)
+    
+    def store_event(self, event: Dict, metadata: Dict = None):
+        """Store event in Elasticsearch"""
+        document = {
+            **event,
+            "stored_at": datetime.now().isoformat(),
+            **(metadata or {})
+        }
+        
+        self.es.index(
+            index=self.index,
+            body=document
+        )
+    
+    def search_events(
+        self,
+        employee_id: str = None,
+        start_time: datetime = None,
+        end_time: datetime = None
+    ):
+        """Search events by criteria"""
+        query = {"bool": {"must": []}}
+        
+        if employee_id:
+            query["bool"]["must"].append({
+                "term": {"employee_id": employee_id}
+            })
+        
+        if start_time or end_time:
+            range_query = {"range": {"timestamp": {}}}
+            if start_time:
+                range_query["range"]["timestamp"]["gte"] = start_time.isoformat()
+            if end_time:
+                range_query["range"]["timestamp"]["lte"] = end_time.isoformat()
+            query["bool"]["must"].append(range_query)
+        
+        results = self.es.search(
+            index=self.index,
+            body={"query": query},
+            size=1000
+        )
+        
+        return [hit["_source"] for hit in results["hits"]["hits"]]
+</code></pre>
+
+        <h2>Advanced Patterns</h2>
+
+        <h3>1. Event Sourcing</h3>
+        <p>Store all state changes as events for complete audit trail:</p>
+
+        <pre><code class="language-python">class EmployeeComplianceAggregate:
+    """Aggregate that rebuilds state from events"""
+    
+    def __init__(self, employee_id: str):
+        self.employee_id = employee_id
+        self.vaccination_records = []
+        self.badge_events = []
+        self.current_status = "unknown"
+    
+    def apply_event(self, event: Dict):
+        """Apply event to update state"""
+        event_type = event.get('type')
+        
+        if event_type == 'vaccination_recorded':
+            self.vaccination_records.append(event)
+            self._update_compliance_status()
+        
+        elif event_type == 'badge_scanned':
+            self.badge_events.append(event)
+        
+        elif event_type == 'exemption_granted':
+            self.current_status = 'exempt'
+    
+    def _update_compliance_status(self):
+        """Calculate compliance from vaccination records"""
+        if len(self.vaccination_records) >= 2:
+            self.current_status = 'compliant'
+        elif len(self.vaccination_records) == 1:
+            self.current_status = 'partial'
+        else:
+            self.current_status = 'non_compliant'
+    
+    def rebuild_from_events(self, events: list):
+        """Rebuild aggregate state from event stream"""
+        for event in sorted(events, key=lambda e: e['timestamp']):
+            self.apply_event(event)
+        
+        return self
+</code></pre>
+
+        <h3>2. CQRS (Command Query Responsibility Segregation)</h3>
+        <p>Separate read and write models for optimized performance:</p>
+
+        <pre><code class="language-python"># Write Model (Commands)
+class ComplianceCommand:
+    def record_vaccination(self, employee_id: str, vaccine_data: Dict):
+        """Command: Record vaccination"""
+        event = {
+            'type': 'vaccination_recorded',
+            'employee_id': employee_id,
+            'data': vaccine_data,
+            'timestamp': datetime.now().isoformat()
+        }
+        
+        # Publish to event stream
+        event_store.append(event)
+        event_bus.publish('compliance-events', event)
+    
+    def grant_exemption(self, employee_id: str, reason: str):
+        """Command: Grant exemption"""
+        event = {
+            'type': 'exemption_granted',
+            'employee_id': employee_id,
+            'reason': reason,
+            'timestamp': datetime.now().isoformat()
+        }
+        
+        event_store.append(event)
+        event_bus.publish('compliance-events', event)
+
+# Read Model (Queries)
+class ComplianceQueryModel:
+    """Optimized read model built from events"""
+    
+    def __init__(self, redis_client):
+        self.redis = redis_client
+    
+    def update_from_event(self, event: Dict):
+        """Update read model when event occurs"""
+        employee_id = event['employee_id']
+        
+        if event['type'] == 'vaccination_recorded':
+            # Increment vaccination count
+            key = f"vaccinations:{employee_id}"
+            self.redis.incr(key)
+            
+            # Update status
+            count = int(self.redis.get(key))
+            status = 'compliant' if count >= 2 else 'partial'
+            self.redis.set(f"status:{employee_id}", status)
+        
+        elif event['type'] == 'exemption_granted':
+            self.redis.set(f"status:{employee_id}", 'exempt')
+    
+    def get_status(self, employee_id: str) -> str:
+        """Fast status lookup from read model"""
+        status = self.redis.get(f"status:{employee_id}")
+        return status.decode() if status else 'unknown'
+    
+    def get_statistics(self) -> Dict:
+        """Get aggregate statistics"""
+        return {
+            'compliant': self.redis.get('stats:compliant') or 0,
+            'partial': self.redis.get('stats:partial') or 0,
+            'exempt': self.redis.get('stats:exempt') or 0,
+            'non_compliant': self.redis.get('stats:non_compliant') or 0
+        }
+</code></pre>
+
+        <h2>Performance Optimization</h2>
+
+        <h3>Batching</h3>
+        <pre><code class="language-python">class BatchProcessor:
+    """Process events in batches for efficiency"""
+    
+    def __init__(self, batch_size=100, flush_interval=5):
+        self.batch = []
+        self.batch_size = batch_size
+        self.flush_interval = flush_interval
+        self.last_flush = time.time()
+    
+    def add_event(self, event: Dict):
+        """Add event to batch"""
+        self.batch.append(event)
+        
+        # Flush if batch is full or interval elapsed
+        if len(self.batch) >= self.batch_size or \
+           time.time() - self.last_flush > self.flush_interval:
+            self.flush()
+    
+    def flush(self):
+        """Process batch of events"""
+        if not self.batch:
+            return
+        
+        # Bulk process
+        self.process_batch(self.batch)
+        
+        # Reset
+        self.batch = []
+        self.last_flush = time.time()
+    
+    def process_batch(self, events: list):
+        """Bulk process events"""
+        # Bulk database insert
+        event_store.bulk_insert(events)
+        
+        # Bulk API calls
+        employee_ids = [e['employee_id'] for e in events]
+        statuses = compliance_api.bulk_check(employee_ids)
+        
+        # Update read model
+        for event, status in zip(events, statuses):
+            query_model.update(event['employee_id'], status)
+</code></pre>
+
+        <h2>Monitoring and Metrics</h2>
+        <pre><code class="language-python">from prometheus_client import Counter, Histogram, Gauge
+
+# Event metrics
+events_produced = Counter(
+    'events_produced_total',
+    'Total events produced',
+    ['event_type']
+)
+
+events_consumed = Counter(
+    'events_consumed_total',
+    'Total events consumed',
+    ['consumer_group']
+)
+
+event_processing_duration = Histogram(
+    'event_processing_duration_seconds',
+    'Event processing duration',
+    ['event_type']
+)
+
+consumer_lag = Gauge(
+    'consumer_lag',
+    'Consumer lag in messages',
+    ['consumer_group', 'partition']
+)
+
+compliance_checks = Counter(
+    'compliance_checks_total',
+    'Total compliance checks',
+    ['result']  # 'granted' or 'denied'
+)
+</code></pre>
+
+        <h2>Real-World Results</h2>
+        <p>Our event-driven compliance system delivered:</p>
+        <ul>
+          <li><strong>98% efficiency</strong> at turnstile processing</li>
+          <li><strong>Sub-100ms</strong> event processing latency</li>
+          <li><strong>5,000+ events/sec</strong> throughput capacity</li>
+          <li><strong>100% audit trail</strong> - complete event history</li>
+          <li><strong>Zero data loss</strong> with Kafka replication</li>
+        </ul>
+
+        <h2>Best Practices</h2>
+        <ul>
+          <li><strong>Design for idempotency:</strong> Events may be processed multiple times</li>
+          <li><strong>Use schemas:</strong> Define event structure with Avro or Protobuf</li>
+          <li><strong>Monitor lag:</strong> Consumer lag is your key health metric</li>
+          <li><strong>Handle failures gracefully:</strong> Dead letter queues are essential</li>
+          <li><strong>Version your events:</strong> Schema evolution is inevitable</li>
+        </ul>
+
+        <h2>Conclusion</h2>
+        <p>Event-driven architecture enables building highly scalable, real-time systems. Focus on event design, proper partitioning, monitoring consumer lag, and handling failures. The result is systems that can process massive event streams with low latency and high reliability.</p>
+      </div>
+
+      <footer class="post-footer">
+        <div class="share-section">
+          <h3>Share this post</h3>
+          <div class="share-buttons">
+            <a href="#" class="share-btn">Twitter</a>
+            <a href="#" class="share-btn">LinkedIn</a>
+            <a href="#" class="share-btn">Facebook</a>
+          </div>
+        </div>
+      </footer>
+    </article>
+  </main>
+
+  <script src="../script.js"></script>
+</body>
+</html>
