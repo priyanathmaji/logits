@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Blog Post with Images and Videos - Priyanath Maji</title>
+  <meta name="description" content="Example showing how to embed images and YouTube videos">
+  <link rel="stylesheet" href="../styles.css" />
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="../index.html" class="nav-brand">Priyanath Maji</a>
+      <ul class="nav-menu">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../blog.html" class="active">Blog</a></li>
+      </ul>
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+        <span class="sun-icon">☀️</span>
+        <span class="moon-icon">🌙</span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <article class="blog-post">
+      <a href="../blog.html" class="back-link">← Back to Blog</a>
+      
+      <header class="post-header">
+        <div class="post-meta">
+          <span class="post-date">January 15, 2025</span>
+          <span class="post-tag">Tutorial</span>
+        </div>
+        <h1>Embedding Images and Videos in Blog Posts</h1>
+      </header>
+
+      <div class="post-content">
+        <h2>Introduction</h2>
+        <p>This post demonstrates how to embed images, YouTube videos, and image galleries in your blog posts.</p>
+
+        <h2>Single Image</h2>
+        <p>You can add images using standard markdown syntax:</p>
+        
+        <img src="https://picsum.photos/800/400" alt="Example image">
+
+        <h2>Image with Caption</h2>
+        <p>For images with captions, use the figure element:</p>
+        
+        <figure>
+          <img src="https://picsum.photos/800/400?random=1" alt="System Architecture">
+          <figcaption>Figure 1: High-level system architecture diagram</figcaption>
+        </figure>
+
+        <h2>YouTube Video</h2>
+        <p>Embed YouTube videos using the shortcode format: <code>[youtube:VIDEO_ID]</code></p>
+        
+        <div class="video-container">
+          <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" allowfullscreen></iframe>
+        </div>
+
+        <h2>Image Gallery</h2>
+        <p>Create responsive image galleries that look great on all devices:</p>
+        
+        <div class="image-gallery">
+          <img src="https://picsum.photos/400/300?random=2" alt="Demo 1">
+          <img src="https://picsum.photos/400/300?random=3" alt="Demo 2">
+          <img src="https://picsum.photos/400/300?random=4" alt="Demo 3">
+          <img src="https://picsum.photos/400/300?random=5" alt="Demo 4">
+          <img src="https://picsum.photos/400/300?random=6" alt="Demo 5">
+          <img src="https://picsum.photos/400/300?random=7" alt="Demo 6">
+        </div>
+
+        <h2>Code Examples</h2>
+        <p>Here's how to use these in your markdown:</p>
+
+        <pre><code class="language-markdown"># Single Image
+![Alt text](image-url.jpg)
+
+# Image with Caption
+&lt;figure&gt;
+  &lt;img src="image.jpg" alt="Description"&gt;
+  &lt;figcaption&gt;Your caption here&lt;/figcaption&gt;
+&lt;/figure&gt;
+
+# YouTube Video
+[youtube:VIDEO_ID]
+
+# Image Gallery
+&lt;div class="image-gallery"&gt;
+  &lt;img src="img1.jpg" alt="1"&gt;
+  &lt;img src="img2.jpg" alt="2"&gt;
+  &lt;img src="img3.jpg" alt="3"&gt;
+&lt;/div&gt;
+</code></pre>
+
+        <h2>Best Practices</h2>
+        <ul>
+          <li><strong>Always use alt text:</strong> Helps with accessibility and SEO</li>
+          <li><strong>Optimize images:</strong> Compress images before uploading</li>
+          <li><strong>Use appropriate sizes:</strong> 800-1200px width for single images</li>
+          <li><strong>Consistent aspect ratios:</strong> Keep gallery images uniform</li>
+          <li><strong>Enable autoplay carefully:</strong> YouTube embeds don't autoplay by default</li>
+        </ul>
+
+        <h2>Conclusion</h2>
+        <p>Rich media makes blog posts more engaging and easier to understand. Use images to illustrate concepts and videos to provide in-depth explanations.</p>
+      </div>
+
+      <footer class="post-footer">
+        <div class="share-section">
+          <h3>Share this post</h3>
+          <div class="share-buttons">
+            <a href="#" class="share-btn">Twitter</a>
+            <a href="#" class="share-btn">LinkedIn</a>
+            <a href="#" class="share-btn">Facebook</a>
+          </div>
+        </div>
+      </footer>
+    </article>
+  </main>
+
+  <script src="../script.js"></script>
+  <script>
+    // Optional: Add lightbox for images
+    document.querySelectorAll('.post-content img, .image-gallery img').forEach(img => {
+      img.addEventListener('click', function() {
+        const lightbox = document.createElement('div');
+        lightbox.className = 'lightbox active';
+        lightbox.innerHTML = `
+          <button class="lightbox-close">&times;</button>
+          <img src="${this.src}" alt="${this.alt}">
+        `;
+        document.body.appendChild(lightbox);
+        
+        lightbox.querySelector('.lightbox-close').addEventListener('click', () => {
+          lightbox.remove();
+        });
+        
+        lightbox.addEventListener('click', (e) => {
+          if (e.target === lightbox) lightbox.remove();
+        });
+      });
+    });
+  </script>
+</body>
+</html>

@@ -107,7 +107,7 @@
     <div class="template-info">
       <h2>📝 Blog Post Converter - Markdown to HTML</h2>
       <p>Write your blog post in Markdown (left), see the preview (right), and copy the generated HTML!</p>
-      <p><strong>Supports:</strong> Categories, Series, Code blocks, LaTeX math, and more!</p>
+      <p><strong>Supports:</strong> Categories, Series, Code blocks, LaTeX math, YouTube videos, and images!</p>
     </div>
 
     <div class="controls">
@@ -171,6 +171,37 @@
       <p style="color: var(--text-tertiary); margin-bottom: 1rem;">Copy this card and add it to your blog.html file</p>
       <textarea id="blogCardOutput" style="width: 100%; min-height: 200px; font-family: 'Courier New', monospace; font-size: 12px; padding: 1rem; background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border); border-radius: 8px;"></textarea>
     </div>
+
+    <!-- Quick Reference -->
+    <div class="editor-panel" style="margin-top: 2rem; background: var(--card-bg); padding: 1.5rem; border-radius: 8px;">
+      <h3>📚 Quick Reference</h3>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+        <div>
+          <h4 style="color: var(--accent); margin-bottom: 0.5rem;">Images</h4>
+          <pre style="font-size: 0.875rem; background: var(--bg-primary); padding: 0.5rem; border-radius: 4px;">![Alt text](image-url.jpg)
+![Diagram](../images/diagram.png)</pre>
+        </div>
+        <div>
+          <h4 style="color: var(--accent); margin-bottom: 0.5rem;">YouTube Videos</h4>
+          <pre style="font-size: 0.875rem; background: var(--bg-primary); padding: 0.5rem; border-radius: 4px;">[youtube:VIDEO_ID]
+[youtube:dQw4w9WgXcQ]</pre>
+        </div>
+        <div>
+          <h4 style="color: var(--accent); margin-bottom: 0.5rem;">Image with Caption</h4>
+          <pre style="font-size: 0.875rem; background: var(--bg-primary); padding: 0.5rem; border-radius: 4px;">&lt;figure&gt;
+  &lt;img src="image.jpg" alt="Description"&gt;
+  &lt;figcaption&gt;Caption here&lt;/figcaption&gt;
+&lt;/figure&gt;</pre>
+        </div>
+        <div>
+          <h4 style="color: var(--accent); margin-bottom: 0.5rem;">Image Gallery</h4>
+          <pre style="font-size: 0.875rem; background: var(--bg-primary); padding: 0.5rem; border-radius: 4px;">&lt;div class="image-gallery"&gt;
+  &lt;img src="img1.jpg" alt="1"&gt;
+  &lt;img src="img2.jpg" alt="2"&gt;
+&lt;/div&gt;</pre>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script src="script.js"></script>
@@ -193,8 +224,14 @@
       const output = document.getElementById('htmlOutput');
       const cardOutput = document.getElementById('blogCardOutput');
       
+      // Convert YouTube shortcodes before markdown conversion
+      let processedMarkdown = markdown.replace(
+        /\[youtube:([a-zA-Z0-9_-]+)\]/g,
+        '<div class="video-container"><iframe src="https://www.youtube.com/embed/$1" allowfullscreen></iframe></div>'
+      );
+      
       // Convert markdown to HTML
-      let html = marked.parse(markdown);
+      let html = marked.parse(processedMarkdown);
       
       // Display preview
       preview.innerHTML = html;
@@ -391,25 +428,32 @@ ${content}
         'Date: January 15, 2025\n\n' +
         '## Introduction\n\n' +
         'Write your introduction here. You can use **bold**, *italic*, and `inline code`.\n\n' +
+        '## Images\n\n' +
+        '![Architecture Diagram](../images/architecture.png)\n\n' +
+        '<figure>\n' +
+        '  <img src="../images/results.png" alt="Results">\n' +
+        '  <figcaption>Figure 1: Performance Results</figcaption>\n' +
+        '</figure>\n\n' +
+        '## YouTube Video\n\n' +
+        '[youtube:dQw4w9WgXcQ]\n\n' +
         '## Code Example\n\n' +
         '```javascript\n' +
         'const example = () => {\n' +
         '  console.log(\'Hello World!\');\n' +
         '};\n' +
         '```\n\n' +
+        '## Image Gallery\n\n' +
+        '<div class="image-gallery">\n' +
+        '  <img src="../images/demo1.jpg" alt="Demo 1">\n' +
+        '  <img src="../images/demo2.jpg" alt="Demo 2">\n' +
+        '  <img src="../images/demo3.jpg" alt="Demo 3">\n' +
+        '</div>\n\n' +
         '## Math Example (LaTeX)\n\n' +
         'Inline math: The quadratic formula is $x = \\frac{-b \\pm \\sqrt{b^2-4ac}}{2a}$\n\n' +
         'Display math:\n\n' +
         '$$\n' +
         'E = mc^2\n' +
         '$$\n\n' +
-        '$$\n' +
-        '\\int_{0}^{\\infty} e^{-x^2} dx = \\frac{\\sqrt{\\pi}}{2}\n' +
-        '$$\n\n' +
-        '## Lists\n\n' +
-        '- Item 1\n' +
-        '- Item 2\n' +
-        '- Item 3\n\n' +
         '## Conclusion\n\n' +
         'Write your conclusion here.\n';
       
