@@ -1579,24 +1579,24 @@ body {
 
 /* Minimal Timeline */
 .minimal-timeline {
-  position: relative;
+  display: block;
 }
 
 .minimal-timeline .timeline-item {
-  display: grid;
-  grid-template-columns: 140px 1fr;
-  gap: 2rem;
+  display: block;
   margin-bottom: 3rem;
-  position: relative;
-  opacity: 1;
-  animation: none;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.minimal-timeline .timeline-item:last-child {
+  border-bottom: none;
 }
 
 .minimal-timeline .timeline-year {
   font-size: 0.875rem;
   color: var(--text-tertiary);
   font-weight: 500;
-  padding-top: 0.25rem;
 }
 
 .minimal-timeline .timeline-content {
