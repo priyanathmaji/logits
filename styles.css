@@ -1598,6 +1598,11 @@ body {
   color: var(--text-tertiary);
   font-weight: 500;
   margin-bottom: 0.5rem;
+  display: block;
+}
+
+.minimal-timeline .timeline-content {
+  display: block;
 }
 
 .minimal-timeline .timeline-content h3 {
@@ -1605,6 +1610,7 @@ body {
   font-weight: 600;
   color: var(--text-primary);
   margin-bottom: 0.25rem;
+  display: block;
 }
 
 .minimal-timeline .timeline-company {
@@ -1612,6 +1618,7 @@ body {
   color: var(--accent);
   margin-bottom: 1rem;
   font-weight: 500;
+  display: block;
 }
 
 .minimal-timeline .timeline-content p {
@@ -1619,6 +1626,16 @@ body {
   line-height: 1.6;
   font-size: 0.9375rem;
   margin-bottom: 0.5rem;
+  display: block;
+}
+
+.minimal-timeline .timeline-content h4 {
+  display: block;
+  margin-top: 1rem;
+}
+
+.minimal-timeline .timeline-content div {
+  display: block;
 }
 
 /* Override old timeline styles for minimal timeline */
