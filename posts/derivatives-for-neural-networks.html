@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+    
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Derivatives for Neural Networks - Priyanath Maji</title>
+  <meta name="description" content="Derivatives for Neural Networks">
+  <link rel="stylesheet" href="../styles.css" />
+  <!-- KaTeX for Math -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="../index.html" class="nav-brand">Priyanath Maji</a>
+      <ul class="nav-menu">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../blog.html" class="active">Blog</a></li>
+      </ul>
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+        <span class="sun-icon">☀️</span>
+        <span class="moon-icon">🌙</span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <article class="blog-post">
+      <a href="../blog.html" class="back-link">← Back to Blog</a>
+      
+      <header class="post-header">
+        <div class="post-meta">
+          <span class="post-date">Nov 04, 2025</span>
+          <span class="post-tag">Machine Learning</span>
+        </div>
+        <h1>Derivatives for Neural Networks</h1>
+        
+      </header>
+
+      <div class="post-content">
+<h1>Derivatives for Neural Networks</h1>
+<p>Date: Nov 04, 2025</p>
+<h2>Introduction</h2>
+<p>Write your introduction here. You can use <strong>bold</strong>, <em>italic</em>, and <code>inline code</code>.</p>
+<h2>Image Gallery</h2>
+<div class="image-gallery">
+  <img src="../images/demo1.jpg" alt="Demo 1">
+</div>
+
+<h2>Node Equations</h2>
+<p>$ z = w1x1 + w2x2 + b $<br>Activation Function:<br>$ a = \sigma (z)$<br>Loss function:<br>$ L = -[y log(a) + (1-y) log(1-a) ]$</p>
+<h2>Gradient Equations</h2>
+<p>To calculate the gradient $ \Delta w1$<br>$ \frac{\partial L}{\partial {w1}} = \frac {\partial L}{\partial a}*\frac {\partial a}{\partial z} * \frac {\partial z}{\partial w1} $</p>
+<p>To calculate the gradient $ \Delta w2$<br>$ \frac{\partial L}{\partial {w1}} = \frac {\partial L}{\partial a}*\frac {\partial a}{\partial z} * \frac {\partial z}{\partial w2} $</p>
+<p>To calculate the gradient $ \Delta b$<br>$ \frac{\partial L}{\partial {w1}} = \frac {\partial L}{\partial a}*\frac {\partial a}{\partial z} * \frac {\partial z}{\partial b} $</p>
+<p>Lets compute each derivative one by one:</p>
+<h2>Computing $ \frac {\partial L}{\partial a} $</h2>
+<p>$ \frac {\partial L}{\partial a}  = \frac {\partial (-y log(a) + (1-y) log(1-a))}{\partial a} $ ... (1)</p>
+<p>$ \frac {\partial L}{\partial a}  = - \frac {\partial (y log(a)) }{\partial a} - \frac {\partial  (1-y) log(1-a) )}{\partial a}$ ... (2)</p>
+<p>$ \frac {\partial L}{\partial a}  = - y \frac {\partial (log(a)) }{\partial a} - (1-y)\frac {\partial   log(1-a) )}{\partial a}$ ... (3)</p>
+<p>$ \frac {d loga}{da} = \frac {1}{a} $ </p>
+<p>Chain Rule:<br>$ g(x) = f(h(x))$<br>$ g&#39;(x) = f&#39;(h(x)).h&#39;(x)$</p>
+<p>$ \frac {d log(1-a)}{da} = \frac {-1}{1-a} $</p>
+<p>$ g(x) = log (1-x) $<br>$ f(x) = log x $<br>$ h(x) = (1-x) $<br>$ f&#39;(x) = \frac {1}{x}$<br>$ h&#39;(x) = -1 $<br>$ g&#39;(x) = \frac {-1}{x} $</p>
+<p>Substituting:</p>
+<p>$ \frac {\partial L}{\partial a}  = -  \frac {y }{a} + \frac {(1-y) )}{(1-a)}$ ... (4)</p>
+<h2>Computing $ \frac {\partial a}{\partial z} $</h2>
+
+      </div>
+
+      <footer class="post-footer">
+        <div class="share-section">
+          <h3>Share this post</h3>
+          <div class="share-buttons">
+            <a href="#" class="share-btn">Twitter</a>
+            <a href="#" class="share-btn">LinkedIn</a>
+            <a href="#" class="share-btn">Facebook</a>
+          </div>
+        </div>
+      </footer>
+    </article>
+  </main>
+
+  <script src="../script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+</body>
+</html>

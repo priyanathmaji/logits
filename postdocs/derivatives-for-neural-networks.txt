@@ -1,0 +1,108 @@
+# Derivatives for Neural Networks
+
+Date: Nov 04, 2025
+
+## Introduction
+
+This blog solves the partial derivative of a neural network with 2 features x1 and x2. 
+
+## Node Equations
+
+$ z = w1x1 + w2x2 + b $
+Activation Function:
+$ a = \sigma(z) = \frac {1}{1+ e^{(-z)}}$
+Loss function:
+$ L = -[y log(a) + (1-y) log(1-a) ]$
+
+## Gradient Equations
+
+To calculate the gradient $ \Delta w1$
+$ \frac{\partial L}{\partial {w1}} = \frac {\partial L}{\partial a}*\frac {\partial a}{\partial z} * \frac {\partial z}{\partial w1} $
+
+To calculate the gradient $ \Delta w2$
+$ \frac{\partial L}{\partial {w1}} = \frac {\partial L}{\partial a}*\frac {\partial a}{\partial z} * \frac {\partial z}{\partial w2} $
+
+To calculate the gradient $ \Delta b$
+$ \frac{\partial L}{\partial {b}} = \frac {\partial L}{\partial a}*\frac {\partial a}{\partial z} * \frac {\partial z}{\partial b} $
+
+Lets compute each derivative one by one:
+
+## Computing $ \frac {\partial L}{\partial a} $
+
+$ \frac {\partial L}{\partial a}  = \frac {\partial (-y log(a) + (1-y) log(1-a))}{\partial a} $ ... (1)
+
+$ \frac {\partial L}{\partial a}  = - \frac {\partial (y log(a)) }{\partial a} - \frac {\partial  (1-y) log(1-a) )}{\partial a}$ ... (2)
+
+$ \frac {\partial L}{\partial a}  = - y \frac {\partial (log(a)) }{\partial a} - (1-y)\frac {\partial   log(1-a) )}{\partial a}$ ... (3)
+
+$ \frac {d loga}{da} = \frac {1}{a} $ 
+
+Chain Rule:
+$ g(x) = f(h(x))$
+$ g'(x) = f'(h(x)).h'(x)$
+
+$ \frac {d log(1-a)}{da} = \frac {-1}{1-a} $
+
+$ g(x) = log (1-x) $
+$ f(x) = log x $
+$ h(x) = (1-x) $
+$ f'(x) = \frac {1}{x}$
+$ h'(x) = -1 $
+$ g'(x) = \frac {-1}{x} $
+
+Substituting:
+
+$ \frac {\partial L}{\partial a}  = -  \frac {y }{a} + \frac {(1-y) )}{(1-a)}$ ... (4)
+
+
+## Converting $ e^{(-z)} $ in terms of a
+
+$ a = \sigma(z) = \frac {1}{1+ e^{(-z)}}$
+$ a + a. e^{(-z)} = 1$
+$ e^{(-z)} = \frac{1-a} {a} $
+
+
+## Computing $ \frac {\partial a}{\partial z} $
+
+$ \frac {\partial a}{\partial z} = \frac {\partial (1+ e^{(-z)})^{-1}}{\partial z} $
+
+
+Chain Rule:
+$ g(x) = f(h(x))$
+$ g'(x) = f'(h(x)).h'(x)$
+
+$ g(x) = \partial (1+ e^{(-z)})^{-1} $
+$ f(x) = x^{-1} $
+$ f'(x) = -x^{-2}$
+
+$ h(x) = (1+ e^{(-x)}) $
+$ h'(x) = -e^{(-x)} $
+
+$ \frac {\partial a}{\partial z}  = -((1+e^{-z})^{-2}).-e^{(-z)} $
+
+$ \frac {\partial a}{\partial z}  = (a^2.\frac{1-a} {a}) $
+
+$ \frac {\partial a}{\partial z}  = (a(1-a)) $
+
+## Computing $ \frac {\partial z}{\partial w1} $
+
+$ z = w1x1 + w2x2 + b $
+
+$ \frac {\partial z}{\partial w1} = x1$
+$ \frac {\partial z}{\partial w2} = x2$
+$ \frac {\partial z}{\partial b} = 1$
+
+
+## Finally computing the gradient deltas
+
+$ \frac{\partial L}{\partial {w1}} = \frac {\partial L}{\partial a}*\frac {\partial a}{\partial z} * \frac {\partial z}{\partial w1} $
+$ \frac{\partial L}{\partial {w1}} = (-  \frac {y }{a} + \frac {(1-y) )}{(1-a)}) * (a(1-a)) * x1$
+$ \frac{\partial L}{\partial {w1}} = (-y(1-a) + a(1-y)) * x1$
+$ \frac{\partial L}{\partial {w1}} = (-y +ya + a -ay) * x1$
+$ \frac{\partial L}{\partial {w1}} = (a - y) * x1$
+
+$ \frac{\partial L}{\partial {w1}} = \frac {\partial L}{\partial a}*\frac {\partial a}{\partial z} * \frac {\partial z}{\partial w2} $
+$ \frac{\partial L}{\partial {w2}} = (a - y) * x2$
+
+$ \frac{\partial L}{\partial {b}} = \frac {\partial L}{\partial a}*\frac {\partial a}{\partial z} * \frac {\partial z}{\partial b} $
+$ \frac{\partial L}{\partial {b}} = (a - y)$
