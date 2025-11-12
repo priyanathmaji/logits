@@ -1,11 +1,13 @@
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Blog - Priyanath Maji</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
+
 <body>
   <nav class="navbar">
     <div class="nav-container">
@@ -25,7 +27,7 @@
     <section class="blog-section">
       <h1>Blog</h1>
       <p class="section-description">Thoughts on Machine Learning, Software Engineering, and Technology</p>
-      
+
       <!-- Category Filter -->
       <div class="blog-categories">
         <button class="category-btn active" data-category="all">All Posts</button>
@@ -39,19 +41,29 @@
 
       <!-- Blog Grid -->
       <div class="blog-grid" id="blogGrid">
-        
-        
+
+
 
         <article class="blog-card" data-category="machine-learning">
-        <div class="blog-meta">
-          <span class="blog-date">November 4, 2025</span>
-          <span class="blog-tag">Machine Learning</span>
-        </div>
-        <h2><a href="posts/derivatives-for-neural-networks.html">Derivatives of Neural Networks</a></h2>
-        <p class="blog-excerpt">This blog solves the partial derivative of a neural network with 2 features x1 and x2. </p>
-        <a href="posts/derivatives-for-neural-networks.html" class="read-more">Read More →</a>
-      </article>
-
+          <div class="blog-meta">
+            <span class="blog-date">November 4, 2025</span>
+            <span class="blog-tag">Machine Learning</span>
+          </div>
+          <h2><a href="posts/derivatives-for-neural-networks.html">Derivatives of Neural Networks</a></h2>
+          <p class="blog-excerpt">This blog solves the partial derivative of a neural network with 2 features x1 and x2.
+          </p>
+          <a href="posts/derivatives-for-neural-networks.html" class="read-more">Read More →</a>
+        </article>
+        <article class="blog-card" data-category="machine-learning">
+          <div class="blog-meta">
+            <span class="blog-date">Nov 11, 2025</span>
+            <span class="blog-tag">Machine Learning</span>
+          </div>
+          <h2><a href="posts/entropy-cross-entropy-and-kl-divergence.html">Entropy, Cross Entropy and KL Divergence</a>
+          </h2>
+          <p class="blog-excerpt">This write-up clearly explains how entropy, cross-entropy, and KL divergence quantify uncertainty and difference between probability distributions. It connects these concepts to information theory and their practical use in machine learning and reinforcement learning.</p>
+          <a href="posts/entropy-cross-entropy-and-kl-divergence.html" class="read-more">Read More →</a>
+        </article>
       </div>
 
       <!-- Blog Series Section 
@@ -103,11 +115,11 @@
     categoryButtons.forEach(button => {
       button.addEventListener('click', () => {
         const category = button.getAttribute('data-category');
-        
+
         // Update active button
         categoryButtons.forEach(btn => btn.classList.remove('active'));
         button.classList.add('active');
-        
+
         // Filter blog posts
         blogCards.forEach(card => {
           if (category === 'all' || card.getAttribute('data-category') === category) {
@@ -120,4 +132,5 @@
     });
   </script>
 </body>
+
 </html>

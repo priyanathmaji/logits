@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+    
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Entropy, Cross Entropy and KL Divergence - Priyanath Maji</title>
+  <meta name="description" content="Entropy, Cross Entropy and KL Divergence">
+  <link rel="stylesheet" href="../styles.css" />
+  <!-- KaTeX for Math -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="../index.html" class="nav-brand">Priyanath Maji</a>
+      <ul class="nav-menu">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../blog.html" class="active">Blog</a></li>
+      </ul>
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+        <span class="sun-icon">☀️</span>
+        <span class="moon-icon">🌙</span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="container">
+    <article class="blog-post">
+      <a href="../blog.html" class="back-link">← Back to Blog</a>
+      
+      <header class="post-header">
+        <div class="post-meta">
+          <span class="post-date">Nov 11, 2025</span>
+          <span class="post-tag">Machine Learning</span>
+        </div>
+        <h1>Entropy, Cross Entropy and KL Divergence</h1>
+        
+      </header>
+
+      <div class="post-content">
+<h1>Entropy, Cross Entropy and KL Divergence</h1>
+<p>Date: Nov 11, 2025</p>
+<h2>Introduction</h2>
+<p>Before beginning to understand Entropy, Cross Entropy and KL Divergence, it is important to understand the logarithm graph.</p>
+<figure>
+  <img src="../images/logx.png" alt="Results">
+  <figcaption>Figure 1: ln(x)</figcaption>
+</figure>
+
+<p>This graph shows the<br>$log(1) = 0$ and<br>$log(x) &lt;0 $ when $ 0 &lt; x &lt; 1$.<br>Also the value of the $log(x)$ rapidly decreases as the x moves away from 1.</p>
+<h2>Why do we need entropy, cross entropy, KL Divergence?</h2>
+<p>In classification learning algorithm, the model outputs a predicted probability distribution $ \hat{y} $ over the classes.</p>
+<p>$ \hat{y} = [.7, .2, .1] $</p>
+<p>which means, 70% probability that the output $ \hat{y} $  is class 1, 20% that it is class 2 and 10% that it is class 3. The true distribution of $ y$ (in one-hot form) is:</p>
+<p>$ y = [1,0,0]$</p>
+<p>The goal is to make the predicted probability distribution $ \hat{y}$ to be as close as the true $y$.</p>
+<h2>Mean Squared Error (MSE)</h2>
+<p>The mean squared error is defined as:<br>$ L = \frac{1}{2}\sum_i (y_i - \hat{y_i})^2$</p>
+<p>MSE does not work well for probabilities - It does not reflect how surprised the model should be when its wrong. We want a measure that allows the penalty to grow rapidly, when we assign a low probability to the true class. Penalize the incorrect predicted probability distribution.</p>
+<h2>What is Information theory?</h2>
+<p>Information theory is a branch of mathematics (founded by Claude Shannon in 1948) that studies how to <em>quantify, transmit, and store information efficiently.</em></p>
+<p>The core idea: <strong>Information = surprise</strong><br>Lets say we are predicting the weather:<br>If it <em>always</em> rains, and it rains again today, it is <em>not surprising</em>. (Low information).<br>If it almost <em>never</em> rains, and it rains today, it is <em>big</em> surprise. (High information).</p>
+<p>Shannon defined the <strong>information content</strong> of an event with probability p as:</p>
+<p>$I(p) = -log(p)$</p>
+<p><em>Due to the negative log, the value of $ I(p)$ increases rapidly for rare events where p is very very small. For common events, the p is large and I(p) is small.</em></p>
+<h2>Entropy - How uncertain the true data is?</h2>
+<p>Entropy comes from information theory.</p>
+<p>It is a measure of how uncertain the probability distribution is. <em>Note: This does not depend on the model output. It is computed from the true distribution, not the model&#39;s prediction.</em></p>
+<p>$ H(P) = - \sum_i P(i)logP(i)$</p>
+<p>Intuitively, it measures uncertainty. If the distribution is flat i.e. all class have equal probability, then the entropy (<em>uncertainty</em>) is high. <strong>If the distribution has a peak i.e. say one class is highly probable than the rest, that class would occur more often, so the distribution is stable and less uncertain.</strong></p>
+<p>Example:<br>$P = [1,0,0]$, $ H(P) = -1*log(1) -0*log(0) - 0*log(0) = 0 $<br>$P = [.33,.33,.33]$, $ H(P) = -.3*log(.3) -.3*log(.3) - .3*log(.3) = 3*.361 = 1.099 $ <em>High uncertainty</em></p>
+<p><strong>log is the natural log</strong></p>
+<h2>Cross-Entropy - How surprised the predicted model is by the true/actual data?</h2>
+<p>In other words, the cross-entropy provides an indication of how uncertain the model&#39;s predicted distribution $ Q$ is to <em>encode</em> samples from $P$.</p>
+<p>The cross entropy between two distributions $P$ and $Q$ is defined as:</p>
+<p>$H(P,Q) = -\sum_i P(i)log(Q(i))$</p>
+<p>True distribution: $P = [1,0,0]$<br>Predicted distributions:</p>
+<ol>
+<li>$Q = [0.9, 0.05, 0.05]$<br>H(P,Q) = -1*log(0.9)-0*log(.05) - 0*log(.05) = .105</li>
+<li>$Q = [0.5, 0.3, 0.2]$<br>H(P,Q) = -1*log(0.5) -0 -0 = .693</li>
+<li>$Q = [0.05, 0.9, 0.05]$<br>H(P,Q) = -1*log(.05) = 2.996 (Highest cross-entropy)</li>
+</ol>
+<p>A classifier (or model) learns to predict labels (P = true labels, Q = predictions). Cross-Entropy is used as a loss. Minimizing this loss makes Q approach P. </p>
+<h2>KL - Divergence</h2>
+<p>The KL Divergence measures the extra confusion/ surprise caused by using $Q$ instead of using the truth $P$.</p>
+<p>In reinforcement learning,<br>Small KL indicates new policy is close to old policy.<br>Large KL indicates new policy is farther away from the old policy and risks of unintended updates.<br>KL divergence is a measure of policy change and acts as a signal to keep the learning stable.</p>
+<p>The KL divergence between two distributions $P$ (true) and $Q$ (approximate or predicted) is defined as </p>
+<p>$D_{KL} (P||Q) = \sum_i P(i)log\frac{P(i)}{Q(i)}$</p>
+<p>If we expand the log:</p>
+<p>$D_{KL} (P||Q) = \sum_i P(i)logP(i) - \sum_i P(i)logQ(i) $</p>
+<p>$D_{KL} (P||Q) = H(P,Q) - H(P) $</p>
+<p>$D_{KL} (P||Q) = Cross-Entropy - Self-Entropy $</p>
+<p>KL Divergence measures how much uncertainty (cross-entropy) we have when using Q minus the uncertainty we have if we used the true P.</p>
+<h2>Conclusion</h2>
+<p>Write your conclusion here.</p>
+
+      </div>
+
+      <footer class="post-footer">
+        <div class="share-section">
+          <h3>Share this post</h3>
+          <div class="share-buttons">
+            <a href="#" class="share-btn">Twitter</a>
+            <a href="#" class="share-btn">LinkedIn</a>
+            <a href="#" class="share-btn">Facebook</a>
+          </div>
+        </div>
+      </footer>
+    </article>
+  </main>
+
+  <script src="../script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+</body>
+</html>

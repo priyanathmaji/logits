@@ -1,0 +1,113 @@
+# Entropy, Cross Entropy and KL Divergence
+
+Date: Nov 11, 2025
+
+## Introduction
+
+Before beginning to understand Entropy, Cross Entropy and KL Divergence, it is important to understand the logarithm graph.
+
+<figure>
+  <img src="../images/logx.png" alt="Results">
+  <figcaption>Figure 1: ln(x)</figcaption>
+</figure>
+
+This graph shows the 
+$log(1) = 0$ and 
+$log(x) <0 $ when $ 0 < x < 1$. 
+Also the value of the $log(x)$ rapidly decreases as the x moves away from 1.
+
+## Why do we need entropy, cross entropy, KL Divergence?
+
+In classification learning algorithm, the model outputs a predicted probability distribution $ \hat{y} $ over the classes.
+
+$ \hat{y} = [.7, .2, .1] $
+
+which means, 70% probability that the output $ \hat{y} $  is class 1, 20% that it is class 2 and 10% that it is class 3. The true distribution of $ y$ (in one-hot form) is:
+
+$ y = [1,0,0]$
+
+The goal is to make the predicted probability distribution $ \hat{y}$ to be as close as the true $y$.
+
+## Mean Squared Error (MSE)
+
+The mean squared error is defined as:
+$ L = \frac{1}{2}\sum_i (y_i - \hat{y_i})^2$
+
+MSE does not work well for probabilities - It does not reflect how surprised the model should be when its wrong. We want a measure that allows the penalty to grow rapidly, when we assign a low probability to the true class. Penalize the incorrect predicted probability distribution.
+
+## What is Information theory?
+Information theory is a branch of mathematics (founded by Claude Shannon in 1948) that studies how to *quantify, transmit, and store information efficiently.*
+
+The core idea: **Information = surprise**
+Lets say we are predicting the weather:
+If it *always* rains, and it rains again today, it is *not surprising*. (Low information).
+If it almost *never* rains, and it rains today, it is *big* surprise. (High information).
+
+Shannon defined the **information content** of an event with probability p as:
+
+$I(p) = -log(p)$
+
+*Due to the negative log, the value of $ I(p)$ increases rapidly for rare events where p is very very small. For common events, the p is large and I(p) is small.*
+
+
+## Entropy - How uncertain the true data is?
+
+Entropy comes from information theory.
+
+It is a measure of how uncertain the probability distribution is. *Note: This does not depend on the model output. It is computed from the true distribution, not the model's prediction.*
+
+$ H(P) = - \sum_i P(i)logP(i)$
+
+Intuitively, it measures uncertainty. If the distribution is flat i.e. all class have equal probability, then the entropy (*uncertainty*) is high. **If the distribution has a peak i.e. say one class is highly probable than the rest, that class would occur more often, so the distribution is stable and less uncertain.**
+
+Example: 
+$P = [1,0,0]$, $ H(P) = -1\*log(1) -0\*log(0) - 0\*log(0) = 0 $
+$P = [.33,.33,.33]$, $ H(P) = -.3\*log(.3) -.3\*log(.3) - .3\*log(.3) = 3\*.361 = 1.099 $ *High uncertainty*
+
+**log is the natural log**
+
+## Cross-Entropy - How surprised the predicted model is by the true/actual data?
+
+In other words, the cross-entropy provides an indication of how uncertain the model's predicted distribution $ Q$ is to *encode* samples from $P$.
+
+The cross entropy between two distributions $P$ and $Q$ is defined as:
+
+$H(P,Q) = -\sum_i P(i)log(Q(i))$
+
+True distribution: $P = [1,0,0]$
+Predicted distributions:
+1. $Q = [0.9, 0.05, 0.05]$
+H(P,Q) = -1\*log(0.9)-0\*log(.05) - 0\*log(.05) = .105
+2. $Q = [0.5, 0.3, 0.2]$
+H(P,Q) = -1\*log(0.5) -0 -0 = .693
+3. $Q = [0.05, 0.9, 0.05]$
+H(P,Q) = -1\*log(.05) = 2.996 (Highest cross-entropy)
+
+A classifier (or model) learns to predict labels (P = true labels, Q = predictions). Cross-Entropy is used as a loss. Minimizing this loss makes Q approach P. 
+
+## KL - Divergence
+
+The KL Divergence measures the extra confusion/ surprise caused by using $Q$ instead of using the truth $P$.
+
+In reinforcement learning,
+Small KL indicates new policy is close to old policy.
+Large KL indicates new policy is farther away from the old policy and risks of unintended updates.
+KL divergence is a measure of policy change and acts as a signal to keep the learning stable.
+
+The KL divergence between two distributions $P$ (true) and $Q$ (approximate or predicted) is defined as 
+
+$D_{KL} (P||Q) = \sum_i P(i)log\frac{P(i)}{Q(i)}$
+
+If we expand the log:
+
+$D_{KL} (P||Q) = \sum_i P(i)logP(i) - \sum_i P(i)logQ(i) $
+
+$D_{KL} (P||Q) = H(P,Q) - H(P) $
+
+$D_{KL} (P||Q) = Cross-Entropy - Self-Entropy $
+
+KL Divergence measures how much uncertainty (cross-entropy) we have when using Q minus the uncertainty we have if we used the true P.
+
+## Conclusion
+
+Write your conclusion here.
