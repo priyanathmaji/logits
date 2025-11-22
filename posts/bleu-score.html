@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>BLEU Score - Priyanath Maji</title>
+    <meta name="description" content="BLEU Score">
+    <link rel="stylesheet" href="../styles.css" />
+    <!-- KaTeX for Math -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="../index.html" class="nav-brand">Priyanath Maji</a>
+            <ul class="nav-menu">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="../blog.html" class="active">Blog</a></li>
+            </ul>
+            <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+                <span class="sun-icon">☀️</span>
+                <span class="moon-icon">🌙</span>
+            </button>
+        </div>
+    </nav>
+
+    <main class="container">
+        <article class="blog-post">
+            <a href="../blog.html" class="back-link">← Back to Blog</a>
+
+            <header class="post-header">
+                <div class="post-meta">
+                    <span class="post-date">November 21, 2025</span>
+                    <span class="post-tag">Machine Learning</span>
+                </div>
+                <h1>BLEU Score</h1>
+
+            </header>
+
+            <div class="post-content">
+
+                <div><a href="../bleu.html" class="back-link">Blue Playground</a></div>
+
+                <p>BLEU (Bilingual Evaluation Understudy) is one of the most commonly used automatic evaluation metrics
+                    for Neural Machine Translation (NMT). It measures how closely a candidate translation matches a set
+                    of reference translations using n-gram overlap. BLEU balances precision of n-grams with a brevity
+                    penalty to discourage overly short translations. In this post, we walk through a step-by-step
+                    example to compute BLEU for a single sentence.</p>
+                <p>Consider a candidate translation:</p>
+                <p>c = &quot;the love can always do&quot;</p>
+                <p>and reference translations:</p>
+                <p>r₁ = &quot;love can always find a way&quot;<br>r₂ = &quot;love makes anything possible&quot;</p>
+                <h3>Step 1: Compute modified n-gram precisions</h3>
+                <p>For unigrams (1-grams):</p>
+                <ul>
+                    <li>Candidate unigrams: the, love, can, always, do</li>
+                    <li>Clipped counts: the=0, love=1, can=1, always=1, do=0</li>
+                    <li>Total candidate unigrams = 5</li>
+                </ul>
+                <p>$ p_1 = \frac{3}{5} = 0.6$</p>
+                <p>For bigrams:</p>
+                <ul>
+                    <li>Candidate bigrams: the love, love can, can always, always do</li>
+                    <li>Clipped counts: 0,1,1,0</li>
+                    <li>Total candidate bigrams = 4</li>
+                </ul>
+                <p>$ p_2 = \frac{2}{4} = 0.5$</p>
+                <p>For trigrams:</p>
+                <ul>
+                    <li>Candidate trigrams: the love can, love can always, can always do</li>
+                    <li>Clipped counts: 0,1,0</li>
+                    <li>Total candidate trigrams = 3</li>
+                </ul>
+                <p>$ p_3 = \frac{1}{3} = 0.333$</p>
+                <p>For 4-grams (using smoothing):</p>
+                <ul>
+                    <li>Candidate 4-grams: the love can always, love can always do</li>
+                    <li>Clipped counts (smoothed): 1/3 each (same as previous)</li>
+                </ul>
+                <p>$ p_4 = \frac{1}{3} = 0.333$</p>
+                <h3>Step 2: Brevity Penalty</h3>
+                <p>Candidate length: $𝑐=5$<br>Reference lengths: $r1​=6,r2​=4$<br>Closest reference length:$r^∗=4$</p>
+                <p>$ BP = \begin{cases} 1 &amp; \text{if } c \ge r^* \ || \space \space \exp(1-r^* / c) &amp; \text{if }
+                    c &lt; r^* \end{cases}$</p>
+                <h3>Step 3: Final BLEU Score</h3>
+                <p>Assuming uniform weights $\lambda_n = 0.25 $</p>
+                <p>$ BLEU = BP \space X \space exp \sum_{n=1}^4 \space \lambda _n log p_n = 0.427$</p>
+                <h2>Conclusion</h2>
+                <p>In this example, the candidate translation receives a sentence-level BLEU ≈ 0.427, reflecting partial
+                    overlap with the references. BLEU provides a quantitative measure of translation quality based on
+                    n-gram matches while penalizing overly short translations. Using step-by-step calculations like this
+                    helps us understand how BLEU captures precision at different n-gram levels and why smoothing is
+                    important for short sentences.</p>
+
+            </div>
+
+            <footer class="post-footer">
+                <div class="share-section">
+                    <h3>Share this post</h3>
+                    <div class="share-buttons">
+                        <a href="#" class="share-btn">Twitter</a>
+                        <a href="#" class="share-btn">LinkedIn</a>
+                        <a href="#" class="share-btn">Facebook</a>
+                    </div>
+                </div>
+            </footer>
+        </article>
+    </main>
+
+    <script src="../script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    { left: '$$', right: '$$', display: true },
+                    { left: '$', right: '$', display: false }
+                ],
+                throwOnError: false
+            });
+        });
+    </script>
+</body>
+
+</html>
