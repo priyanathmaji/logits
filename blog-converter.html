@@ -11,6 +11,9 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <!-- Highlight.js for Code Syntax Highlighting -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/atom-one-dark.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/highlight.min.js"></script>
   <style>
     .converter-container {
       max-width: 1400px;
@@ -206,13 +209,13 @@
 
   <script src="script.js"></script>
   <script>
-    // Configure marked for code highlighting
-    marked.setOptions({
+    // Configure marked for code highlighting and footnotes
+    marked.use({
       breaks: true,
       gfm: true,
-      highlight: function(code, lang) {
-        return code;
-      }
+      pedantic: false,
+      mangle: false,
+      headerIds: true
     });
 
     // Auto-convert on input

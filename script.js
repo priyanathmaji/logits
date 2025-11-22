@@ -174,3 +174,242 @@ window.addEventListener('scroll', () => {
     hero.style.opacity = 1 - scrolled / 700;
   }
 });
+
+// Reading Progress Bar
+function updateReadingProgress() {
+  const article = document.querySelector('.blog-post');
+  if (!article) return;
+
+  let progressBar = document.querySelector('.reading-progress');
+  if (!progressBar) {
+    progressBar = document.createElement('div');
+    progressBar.className = 'reading-progress';
+    document.body.prepend(progressBar);
+  }
+
+  const windowHeight = window.innerHeight;
+  const documentHeight = document.documentElement.scrollHeight - windowHeight;
+  const scrolled = window.pageYOffset;
+  const progress = (scrolled / documentHeight) * 100;
+
+  progressBar.style.width = `${Math.min(progress, 100)}%`;
+}
+
+if (document.querySelector('.blog-post')) {
+  window.addEventListener('scroll', updateReadingProgress);
+  updateReadingProgress();
+}
+
+// Copy Code to Clipboard
+function initCodeCopyButtons() {
+  const codeBlocks = document.querySelectorAll('.post-content pre');
+  
+  codeBlocks.forEach((block) => {
+    // Wrap in container if not already wrapped
+    if (!block.parentElement.classList.contains('code-block-wrapper')) {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'code-block-wrapper';
+      block.parentNode.insertBefore(wrapper, block);
+      wrapper.appendChild(block);
+    }
+
+    const wrapper = block.parentElement;
+    
+    // Add copy button
+    const button = document.createElement('button');
+    button.className = 'copy-code-btn';
+    button.textContent = 'Copy';
+    button.setAttribute('aria-label', 'Copy code to clipboard');
+    
+    button.addEventListener('click', async () => {
+      const code = block.querySelector('code').textContent;
+      
+      try {
+        await navigator.clipboard.writeText(code);
+        button.textContent = 'Copied!';
+        button.classList.add('copied');
+        
+        setTimeout(() => {
+          button.textContent = 'Copy';
+          button.classList.remove('copied');
+        }, 2000);
+      } catch (err) {
+        button.textContent = 'Failed';
+        setTimeout(() => {
+          button.textContent = 'Copy';
+        }, 2000);
+      }
+    });
+    
+    wrapper.insertBefore(button, block);
+  });
+}
+
+// Initialize code copy buttons on page load
+if (document.querySelector('.post-content')) {
+  document.addEventListener('DOMContentLoaded', initCodeCopyButtons);
+}
+
+// Table of Contents Generation and Active Highlighting
+function generateTableOfContents() {
+  const postContent = document.querySelector('.post-content');
+  if (!postContent) return;
+
+  const headings = postContent.querySelectorAll('h2, h3');
+  if (headings.length < 3) return; // Don't generate TOC for short posts
+
+  const toc = document.createElement('div');
+  toc.className = 'table-of-contents';
+  toc.innerHTML = '<h2>On This Page</h2><ul></ul>';
+  
+  const tocList = toc.querySelector('ul');
+  let currentLevel = 2;
+  let currentList = tocList;
+  const lists = { 2: tocList };
+
+  headings.forEach((heading, index) => {
+    const level = parseInt(heading.tagName.substring(1));
+    const text = heading.textContent;
+    const id = heading.id || `heading-${index}`;
+    
+    if (!heading.id) {
+      heading.id = id;
+    }
+
+    // Create nested lists for h3
+    if (level > currentLevel) {
+      const newList = document.createElement('ul');
+      if (currentList.lastElementChild) {
+        currentList.lastElementChild.appendChild(newList);
+      }
+      currentList = newList;
+      lists[level] = newList;
+    } else if (level < currentLevel) {
+      currentList = lists[level];
+    }
+
+    const li = document.createElement('li');
+    const a = document.createElement('a');
+    a.href = `#${id}`;
+    a.textContent = text;
+    li.appendChild(a);
+    currentList.appendChild(li);
+
+    currentLevel = level;
+  });
+
+  // Append TOC to body (as fixed sidebar)
+  document.body.appendChild(toc);
+
+  // Highlight active section on scroll
+  const tocLinks = toc.querySelectorAll('a');
+  const observerOptions = {
+    rootMargin: '-100px 0px -66%',
+    threshold: 0
+  };
+
+  const observerCallback = (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        tocLinks.forEach(link => link.classList.remove('active'));
+        const activeLink = toc.querySelector(`a[href="#${entry.target.id}"]`);
+        if (activeLink) {
+          activeLink.classList.add('active');
+        }
+      }
+    });
+  };
+
+  const observer = new IntersectionObserver(observerCallback, observerOptions);
+  headings.forEach(heading => observer.observe(heading));
+}
+
+// Initialize TOC on page load
+if (document.querySelector('.post-content')) {
+  document.addEventListener('DOMContentLoaded', generateTableOfContents);
+}
+
+// Footnotes Enhancement (convert markdown-style footnotes to proper HTML)
+function enhanceFootnotes() {
+  const postContent = document.querySelector('.post-content');
+  if (!postContent) return;
+
+  // This works with markdown parsers that generate footnote sections
+  const footnoteSection = postContent.querySelector('.footnotes');
+  if (footnoteSection && !footnoteSection.querySelector('h2')) {
+    const heading = document.createElement('h2');
+    heading.textContent = 'Footnotes';
+    footnoteSection.insertBefore(heading, footnoteSection.firstChild);
+  }
+}
+
+// Initialize footnotes on page load
+if (document.querySelector('.post-content')) {
+  document.addEventListener('DOMContentLoaded', enhanceFootnotes);
+}
+
+// Image Lightbox for Blog Posts
+function initImageLightbox() {
+  const images = document.querySelectorAll('.post-content img, .image-gallery img');
+  if (images.length === 0) return;
+
+  const lightbox = document.createElement('div');
+  lightbox.className = 'lightbox';
+  lightbox.innerHTML = `
+    <button class="lightbox-close" aria-label="Close lightbox">&times;</button>
+    <img src="" alt="">
+  `;
+  document.body.appendChild(lightbox);
+
+  const lightboxImg = lightbox.querySelector('img');
+  const closeBtn = lightbox.querySelector('.lightbox-close');
+
+  images.forEach(img => {
+    img.style.cursor = 'pointer';
+    img.addEventListener('click', () => {
+      lightboxImg.src = img.src;
+      lightboxImg.alt = img.alt;
+      lightbox.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  closeBtn.addEventListener('click', closeLightbox);
+  lightbox.addEventListener('click', (e) => {
+    if (e.target === lightbox) {
+      closeLightbox();
+    }
+  });
+
+  function closeLightbox() {
+    lightbox.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+
+  // Close on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && lightbox.classList.contains('active')) {
+      closeLightbox();
+    }
+  });
+}
+
+// Initialize lightbox on page load
+if (document.querySelector('.post-content')) {
+  document.addEventListener('DOMContentLoaded', initImageLightbox);
+}
+
+// Syntax Highlighting with Highlight.js (if loaded)
+function initSyntaxHighlighting() {
+  if (typeof hljs !== 'undefined') {
+    document.querySelectorAll('pre code').forEach((block) => {
+      hljs.highlightElement(block);
+    });
+  }
+}
+
+// Initialize syntax highlighting on page load
+if (document.querySelector('.post-content')) {
+  document.addEventListener('DOMContentLoaded', initSyntaxHighlighting);
+}
+

@@ -1,0 +1,666 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Enhanced Blog Post Converter - Markdown to HTML</title>
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Marked.js for Markdown parsing -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <!-- KaTeX for LaTeX math rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+  <!-- Highlight.js for Code Syntax Highlighting -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/atom-one-dark.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/highlight.min.js"></script>
+  <style>
+    .converter-container {
+      max-width: 1400px;
+      margin: 2rem auto;
+      padding: 0 2rem;
+    }
+    .editor-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+    .editor-panel {
+      background: var(--bg-secondary);
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 6px 24px var(--shadow);
+    }
+    .editor-panel h2 {
+      margin-bottom: 1rem;
+      color: var(--accent);
+    }
+    #markdownInput {
+      width: 100%;
+      min-height: 600px;
+      padding: 1rem;
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      font-size: 14px;
+      background: var(--card-bg);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      resize: vertical;
+    }
+    #htmlPreview {
+      min-height: 600px;
+      max-height: 600px;
+      padding: 1rem;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow-y: auto;
+    }
+    .controls {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+    .controls button {
+      padding: 0.5rem 1rem;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .controls button:hover {
+      background: var(--accent-hover);
+    }
+    .template-info {
+      background: var(--card-bg);
+      padding: 1.5rem;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      border-left: 4px solid var(--accent);
+    }
+    .template-info ul {
+      margin: 0.5rem 0 0 1.5rem;
+      color: var(--text-secondary);
+    }
+    .output-section {
+      margin-top: 2rem;
+    }
+    .output-section textarea {
+      width: 100%;
+      min-height: 200px;
+      padding: 1rem;
+      font-family: 'Consolas', monospace;
+      font-size: 12px;
+      background: var(--card-bg);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      resize: vertical;
+    }
+    .tabs {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      border-bottom: 2px solid var(--border);
+    }
+    .tab-btn {
+      padding: 0.75rem 1.5rem;
+      background: transparent;
+      border: none;
+      border-bottom: 3px solid transparent;
+      cursor: pointer;
+      color: var(--text-secondary);
+      font-weight: 600;
+      transition: var(--transition);
+    }
+    .tab-btn.active {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    @media (max-width: 768px) {
+      .editor-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="nav-brand">Priyanath Maji</a>
+      <ul class="nav-menu">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="blog-converter.html" class="active">Converter</a></li>
+      </ul>
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+        <span class="sun-icon">☀️</span>
+        <span class="moon-icon">🌙</span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="converter-container">
+    <div class="template-info">
+      <h2>📝 Enhanced Blog Post Converter</h2>
+      <p>Write your blog post in Markdown with YAML front matter, see live preview, and generate production-ready HTML!</p>
+      <strong>💡 Features:</strong>
+      <ul>
+        <li><strong>Front Matter:</strong> YAML metadata (--- wrapped) for title, date, category, tags, series</li>
+        <li><strong>Footnotes:</strong> Use [^1] and define [^1]: footnote text at the end</li>
+        <li><strong>Math:</strong> Use $...$ for inline, $$...$$ for display equations (KaTeX)</li>
+        <li><strong>Code:</strong> ```language for syntax highlighting (Highlight.js)</li>
+        <li><strong>YouTube:</strong> [youtube:VIDEO_ID] for embedded videos</li>
+        <li><strong>Table of Contents:</strong> Auto-generated from headings</li>
+        <li><strong>Disqus Comments:</strong> Integrated commenting system</li>
+      </ul>
+    </div>
+
+    <div class="controls">
+      <button onclick="convertMarkdown()">🔄 Convert</button>
+      <button onclick="loadTemplate()">📄 Load Template</button>
+      <button onclick="downloadHTML()">💾 Download HTML</button>
+      <button onclick="copyHTML()">📋 Copy HTML</button>
+      <button onclick="clearAll()">🗑️ Clear All</button>
+    </div>
+
+    <div class="editor-layout">
+      <div class="editor-panel">
+        <h2>Markdown Input</h2>
+        <textarea id="markdownInput" placeholder="Paste your markdown here or load the template..."></textarea>
+      </div>
+
+      <div class="editor-panel">
+        <h2>Live Preview</h2>
+        <div id="htmlPreview"></div>
+      </div>
+    </div>
+
+    <div class="output-section">
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab('html')">HTML Output</button>
+        <button class="tab-btn" onclick="switchTab('card')">Blog Card HTML</button>
+      </div>
+
+      <div id="htmlTab" class="tab-content active">
+        <textarea id="htmlOutput" readonly placeholder="Generated HTML will appear here..."></textarea>
+      </div>
+
+      <div id="cardTab" class="tab-content">
+        <textarea id="blogCardOutput" readonly placeholder="Blog card HTML will appear here..."></textarea>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  <script>
+    // Configure marked
+    marked.use({
+      breaks: true,
+      gfm: true,
+      pedantic: false,
+      mangle: false,
+      headerIds: true
+    });
+
+    let currentTab = 'html';
+
+    function switchTab(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+      
+      if (tab === 'html') {
+        document.querySelector('.tab-btn:nth-child(1)').classList.add('active');
+        document.getElementById('htmlTab').classList.add('active');
+      } else {
+        document.querySelector('.tab-btn:nth-child(2)').classList.add('active');
+        document.getElementById('cardTab').classList.add('active');
+      }
+    }
+
+    // Auto-convert on input with debounce
+    let debounceTimer;
+    document.getElementById('markdownInput').addEventListener('input', () => {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(convertMarkdown, 500);
+    });
+
+    function parseFrontMatter(markdown) {
+      const frontMatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n([\s\S]*)$/;
+      const match = markdown.match(frontMatterRegex);
+      
+      if (!match) {
+        return { metadata: {}, content: markdown };
+      }
+
+      const frontMatter = match[1];
+      const content = match[2];
+      const metadata = {};
+
+      frontMatter.split('\n').forEach(line => {
+        const colonIndex = line.indexOf(':');
+        if (colonIndex !== -1) {
+          const key = line.substring(0, colonIndex).trim();
+          let value = line.substring(colonIndex + 1).trim();
+          
+          // Handle arrays
+          if (value.startsWith('[') && value.endsWith(']')) {
+            value = value.slice(1, -1).split(',').map(v => v.trim());
+          }
+          
+          metadata[key] = value;
+        }
+      });
+
+      return { metadata, content };
+    }
+
+    function processFootnotes(html) {
+      // Convert markdown footnotes to proper HTML
+      const footnoteRefs = {};
+      let footnoteCounter = 0;
+
+      // Find all footnote references [^1]
+      html = html.replace(/\[\^(\w+)\]/g, (match, id) => {
+        if (!footnoteRefs[id]) {
+          footnoteCounter++;
+          footnoteRefs[id] = footnoteCounter;
+        }
+        return `<sup class="footnote-ref"><a href="#fn${footnoteRefs[id]}" id="fnref${footnoteRefs[id]}">[${footnoteRefs[id]}]</a></sup>`;
+      });
+
+      // Find footnote definitions
+      const footnoteSection = [];
+      const footnoteDefRegex = /\[\^(\w+)\]:\s*(.+?)(?=\n\[\^|\n\n|$)/gs;
+      let match;
+
+      while ((match = footnoteDefRegex.exec(html)) !== null) {
+        const [fullMatch, id, text] = match;
+        if (footnoteRefs[id]) {
+          footnoteSection.push(`<li id="fn${footnoteRefs[id]}">${text} <a href="#fnref${footnoteRefs[id]}" class="footnote-backref">↩</a></li>`);
+        }
+        html = html.replace(fullMatch, '');
+      }
+
+      if (footnoteSection.length > 0) {
+        html += `\n\n<div class="footnotes"><h2>Footnotes</h2><ol>\n${footnoteSection.join('\n')}\n</ol></div>`;
+      }
+
+      return html;
+    }
+
+    function convertMarkdown() {
+      const markdown = document.getElementById('markdownInput').value;
+      const preview = document.getElementById('htmlPreview');
+      const output = document.getElementById('htmlOutput');
+      const cardOutput = document.getElementById('blogCardOutput');
+      
+      const { metadata, content } = parseFrontMatter(markdown);
+      
+      // Process YouTube shortcodes
+      let processedContent = content.replace(
+        /\[youtube:([a-zA-Z0-9_-]+)\]/g,
+        '<div class="video-container"><iframe src="https://www.youtube.com/embed/$1" allowfullscreen></iframe></div>'
+      );
+      
+      // Convert markdown to HTML
+      let html = marked.parse(processedContent);
+      
+      // Process footnotes
+      html = processFootnotes(html);
+      
+      // Display preview
+      preview.innerHTML = html;
+      
+      // Render LaTeX math in preview
+      if (typeof renderMathInElement !== 'undefined') {
+        renderMathInElement(preview, {
+          delimiters: [
+            {left: '$$', right: '$$', display: true},
+            {left: '$', right: '$', display: false}
+          ],
+          throwOnError: false
+        });
+      }
+
+      // Apply syntax highlighting
+      if (typeof hljs !== 'undefined') {
+        preview.querySelectorAll('pre code').forEach((block) => {
+          hljs.highlightElement(block);
+        });
+      }
+      
+      // Generate full HTML
+      const fullHTML = generateBlogPostHTML(metadata, content, html);
+      output.value = fullHTML;
+      
+      // Generate blog card
+      const blogCard = generateBlogCard(metadata, content);
+      cardOutput.value = blogCard;
+    }
+
+    function generateBlogPostHTML(metadata, markdown, content) {
+      const title = metadata.title || 'Blog Post';
+      const date = metadata.date || new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      const category = metadata.category || 'Uncategorized';
+      const description = metadata.description || title;
+      const series = metadata.series || '';
+      const partNumber = metadata.partNumber || '';
+      
+      const slug = title.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-');
+      
+      const seriesInfo = series && partNumber
+        ? `<p style="color: var(--text-tertiary); font-style: italic;">${partNumber} of ${series}</p>`
+        : '';
+      
+      return `<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>${title} - Priyanath Maji</title>
+    <meta name="description" content="${description}">
+    <link rel="stylesheet" href="../styles.css" />
+    
+    <!-- KaTeX for Math -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"><\\/script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"><\\/script>
+    
+    <!-- Highlight.js for Code Syntax Highlighting -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/highlight.min.js"><\\/script>
+</head>
+
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="../index.html" class="nav-brand">Priyanath Maji</a>
+            <ul class="nav-menu">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="../blog.html" class="active">Blog</a></li>
+            </ul>
+            <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+                <span class="sun-icon">☀️</span>
+                <span class="moon-icon">🌙</span>
+            </button>
+        </div>
+    </nav>
+
+    <main class="container">
+        <article class="blog-post">
+            <a href="../blog.html" class="back-link">← Back to Blog</a>
+
+            <header class="post-header">
+                <div class="post-meta">
+                    <span class="post-date">${date}</span>
+                    <span class="post-tag">${category}</span>
+                </div>
+                <h1>${title}</h1>
+                ${seriesInfo}
+            </header>
+
+            <div class="post-content">
+${content}
+            </div>
+
+            <footer class="post-footer">
+                <div class="share-section">
+                    <h3>Share this post</h3>
+                    <div class="share-buttons">
+                        <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=https://priyanathmaji.github.io/logits/posts/${slug}.html" target="_blank" class="share-btn">Twitter</a>
+                        <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://priyanathmaji.github.io/logits/posts/${slug}.html" target="_blank" class="share-btn">LinkedIn</a>
+                        <a href="https://www.facebook.com/sharer/sharer.php?u=https://priyanathmaji.github.io/logits/posts/${slug}.html" target="_blank" class="share-btn">Facebook</a>
+                    </div>
+                </div>
+
+                <!-- Disqus Comments -->
+                <div id="disqus_thread"></div>
+            </footer>
+        </article>
+    </main>
+
+    <script src="../script.js"><\\/script>
+    
+    <!-- KaTeX Auto-render -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    { left: '$$', right: '$$', display: true },
+                    { left: '$', right: '$', display: false }
+                ],
+                throwOnError: false
+            });
+        });
+    <\\/script>
+
+    <!-- Disqus Configuration -->
+    <script>
+        var disqus_config = function () {
+            this.page.url = 'https://priyanathmaji.github.io/logits/posts/${slug}.html';
+            this.page.identifier = '${slug}';
+            this.reactions_enabled = 0;
+        };
+        
+        (function() {
+            var d = document, s = d.createElement('script');
+            s.src = 'https://https-priyanathmaji-github-io-logits.disqus.com/embed.js';
+            s.setAttribute('data-timestamp', +new Date());
+            (d.head || d.body).appendChild(s);
+        })();
+    <\/script>
+    <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</body>
+
+</html>`;
+    }
+
+    function generateBlogCard(metadata, markdown) {
+      const title = metadata.title || 'Blog Post';
+      const date = metadata.date || new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      const category = metadata.category || 'Uncategorized';
+      const series = metadata.series || '';
+      const seriesId = metadata.seriesId || '';
+      
+      const slug = title.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-');
+      
+      // Extract first meaningful paragraph as excerpt
+      const paragraphs = markdown.split('\n\n').filter(p => 
+        !p.startsWith('#') && 
+        !p.trim().startsWith('[') &&
+        p.trim().length > 50
+      );
+      const excerpt = (paragraphs[0] || 'Read more...').substring(0, 150) + '...';
+      
+      const seriesHtml = series && seriesId
+        ? `\n          <div class="blog-series">Part of: <a href="${seriesId}">${series}</a></div>`
+        : '';
+      
+      return `<article class="blog-card" data-category="${category.toLowerCase()}">
+  <div class="blog-meta">
+    <span class="blog-date">${date}</span>
+    <span class="blog-tag">${category}</span>
+  </div>
+  <h2><a href="posts/${slug}.html">${title}</a></h2>
+  <p class="blog-excerpt">${excerpt}</p>${seriesHtml}
+  <a href="posts/${slug}.html" class="read-more">Read More →</a>
+</article>`;
+    }
+
+    function copyHTML() {
+      const output = document.getElementById(currentTab === 'html' ? 'htmlOutput' : 'blogCardOutput');
+      output.select();
+      document.execCommand('copy');
+      alert('Copied to clipboard!');
+    }
+
+    function downloadHTML() {
+      const markdown = document.getElementById('markdownInput').value;
+      const { metadata } = parseFrontMatter(markdown);
+      const title = metadata.title || 'blog-post';
+      const slug = title.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-');
+      
+      const html = document.getElementById('htmlOutput').value;
+      const blob = new Blob([html], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${slug}.html`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function loadTemplate() {
+      const template = `---
+title: Understanding LSTM Networks
+date: November 22, 2025
+category: Machine Learning
+tags: [Deep Learning, Neural Networks, RNN, LSTM]
+description: A comprehensive guide to understanding Long Short-Term Memory networks
+series: Deep Learning Fundamentals
+seriesId: deep-learning-fundamentals
+partNumber: Part 3
+---
+
+# Understanding LSTM Networks
+
+## Introduction
+
+Long Short-Term Memory (LSTM) networks are a special kind of RNN, capable of learning long-term dependencies[^1]. They were introduced by Hochreiter & Schmidhuber (1997) and have been refined over the years.
+
+## The Problem of Long-Term Dependencies
+
+Traditional RNNs struggle with long-term dependencies. Consider predicting the last word in:
+
+> "I grew up in France... I speak fluent **French**."
+
+The gap between relevant information and where it's needed can become very large.
+
+## LSTM Architecture
+
+### The Core Idea
+
+The key to LSTMs is the **cell state**, which runs through the entire chain with only minor linear interactions.
+
+$$
+C_t = f_t * C_{t-1} + i_t * \\tilde{C}_t
+$$
+
+Where:
+- $C_t$ is the cell state at time $t$
+- $f_t$ is the forget gate
+- $i_t$ is the input gate
+- $\\tilde{C}_t$ is the candidate values
+
+### Implementation Example
+
+\`\`\`python
+import numpy as np
+
+class LSTMCell:
+    def __init__(self, input_size, hidden_size):
+        self.hidden_size = hidden_size
+        
+        # Initialize weights
+        self.Wf = np.random.randn(hidden_size, input_size + hidden_size)
+        self.Wi = np.random.randn(hidden_size, input_size + hidden_size)
+        self.Wc = np.random.randn(hidden_size, input_size + hidden_size)
+        self.Wo = np.random.randn(hidden_size, input_size + hidden_size)
+    
+    def forward(self, x, h_prev, c_prev):
+        # Concatenate input and previous hidden state
+        combined = np.concatenate([x, h_prev])
+        
+        # Forget gate
+        f = self.sigmoid(np.dot(self.Wf, combined))
+        
+        # Input gate
+        i = self.sigmoid(np.dot(self.Wi, combined))
+        
+        # Candidate values
+        c_tilde = np.tanh(np.dot(self.Wc, combined))
+        
+        # Update cell state
+        c = f * c_prev + i * c_tilde
+        
+        # Output gate
+        o = self.sigmoid(np.dot(self.Wo, combined))
+        
+        # Update hidden state
+        h = o * np.tanh(c)
+        
+        return h, c
+    
+    @staticmethod
+    def sigmoid(x):
+        return 1 / (1 + np.exp(-x))
+\`\`\`
+
+## Comparison with GRU
+
+| Feature | LSTM | GRU |
+|---------|------|-----|
+| Gates | 3 (forget, input, output) | 2 (reset, update) |
+| Cell State | Separate from hidden state | Combined |
+| Parameters | More | Fewer |
+| Performance | Better for complex tasks | Faster training |
+
+## Video Tutorial
+
+For a visual explanation, check out this video:
+
+[youtube:WCUNPb-5EYI]
+
+## Conclusion
+
+LSTMs are powerful tools for sequence modeling. They excel at:
+
+1. Natural language processing
+2. Time series prediction
+3. Speech recognition
+4. Video analysis
+
+The architecture allows them to maintain long-term dependencies while avoiding vanishing gradients[^2].
+
+## References
+
+1. Hochreiter, S., & Schmidhuber, J. (1997). Long short-term memory. *Neural computation*, 9(8), 1735-1780.
+2. Graves, A. (2013). Generating sequences with recurrent neural networks. *arXiv preprint arXiv:1308.0850*.
+
+[^1]: Long-term dependencies refer to the ability to remember information from many time steps in the past.
+[^2]: The vanishing gradient problem occurs when gradients become too small during backpropagation through many layers.
+`;
+      
+      document.getElementById('markdownInput').value = template;
+      convertMarkdown();
+    }
+
+    function clearAll() {
+      if (confirm('Are you sure you want to clear everything?')) {
+        document.getElementById('markdownInput').value = '';
+        document.getElementById('htmlPreview').innerHTML = '';
+        document.getElementById('htmlOutput').value = '';
+        document.getElementById('blogCardOutput').value = '';
+      }
+    }
+
+    // Load template on first visit
+    if (!document.getElementById('markdownInput').value) {
+      loadTemplate();
+    }
+  </script>
+</body>
+</html>
