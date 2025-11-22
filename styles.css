@@ -110,8 +110,11 @@ body {
 
 .nav-brand img {
   height: 32px;
+  max-height: 32px;
   width: auto;
+  max-width: 100px;
   display: block;
+  object-fit: contain;
 }
 
 .nav-menu {
