@@ -103,6 +103,15 @@ body {
   color: var(--text-primary);
   text-decoration: none;
   transition: var(--transition);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.nav-brand img {
+  height: 32px;
+  width: auto;
+  display: block;
 }
 
 .nav-menu {
