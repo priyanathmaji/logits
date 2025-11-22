@@ -113,7 +113,7 @@ body {
   max-height: 32px;
   width: auto;
   max-width: 100px;
-  display: block;
+  display: none;
   object-fit: contain;
 }
 
