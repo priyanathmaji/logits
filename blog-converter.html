@@ -38,8 +38,12 @@
     }
     #markdownInput {
       width: 100%;
-      min-height: 500px;
+      /* Make input take a comfortable viewport height and be resizable */
+      height: 60vh;
+      min-height: 300px;
+      max-height: 80vh;
       padding: 1rem;
+      box-sizing: border-box;
       font-family: 'Courier New', monospace;
       font-size: 14px;
       background: var(--card-bg);
@@ -47,14 +51,20 @@
       border: 1px solid var(--border);
       border-radius: 8px;
       resize: vertical;
+      overflow: auto;
     }
     #htmlPreview {
-      min-height: 500px;
+      /* Match the input: fixed-ish height, internal scrolling, and resizable */
+      height: 60vh;
+      min-height: 300px;
+      max-height: 80vh;
       padding: 1rem;
+      box-sizing: border-box;
       background: var(--card-bg);
       border: 1px solid var(--border);
       border-radius: 8px;
-      overflow-y: auto;
+      overflow: auto;
+      resize: vertical;
     }
     .controls {
       display: flex;
@@ -95,13 +105,7 @@
         <img src="images/logx.PNG" alt="logits">
         <span>logits</span>
       </a>
-      <ul class="nav-menu">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="projects.html">Projects</a></li>
-        <li><a href="blog.html">Blog</a></li>
-        <li><a href="contact.html">Contact</a></li>
-      </ul>
+      <!-- nav-menu removed for converter page -->
       <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
         <span class="sun-icon">☀️</span>
         <span class="moon-icon">🌙</span>
@@ -162,7 +166,7 @@
 
       <div class="editor-panel">
         <h2>Preview</h2>
-        <div id="htmlPreview" class="post-content"></div>
+        <div id="htmlPreview" class="preview-content"></div>
       </div>
     </div>
 
