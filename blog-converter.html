@@ -96,6 +96,245 @@
         grid-template-columns: 1fr;
       }
     }
+
+    /* Formatting Toolbar */
+    .formatting-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      padding: 0.75rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-bottom: none;
+      border-radius: 8px 8px 0 0;
+      align-items: center;
+    }
+    .toolbar-group {
+      display: flex;
+      gap: 0.25rem;
+      padding-right: 0.75rem;
+      margin-right: 0.5rem;
+      border-right: 1px solid var(--border);
+    }
+    .toolbar-group:last-child {
+      border-right: none;
+      margin-right: 0;
+      padding-right: 0;
+    }
+    .toolbar-btn {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-primary);
+      transition: var(--transition);
+    }
+    .toolbar-btn:hover {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+    .toolbar-btn.active {
+      background: var(--accent);
+      color: white;
+    }
+    .toolbar-dropdown {
+      position: relative;
+    }
+    .toolbar-dropdown-btn {
+      min-width: 80px;
+      padding: 0 0.5rem;
+      gap: 0.25rem;
+    }
+    .toolbar-dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      min-width: 150px;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      box-shadow: 0 4px 12px var(--shadow);
+      z-index: 100;
+      display: none;
+      padding: 0.5rem 0;
+    }
+    .toolbar-dropdown-menu.show {
+      display: block;
+    }
+    .toolbar-dropdown-menu button {
+      width: 100%;
+      padding: 0.5rem 1rem;
+      background: none;
+      border: none;
+      text-align: left;
+      cursor: pointer;
+      color: var(--text-primary);
+      font-size: 14px;
+    }
+    .toolbar-dropdown-menu button:hover {
+      background: var(--accent);
+      color: white;
+    }
+    .color-picker-wrapper {
+      position: relative;
+    }
+    .color-picker-wrapper input[type="color"] {
+      position: absolute;
+      opacity: 0;
+      width: 32px;
+      height: 32px;
+      cursor: pointer;
+    }
+    .color-swatch {
+      width: 16px;
+      height: 16px;
+      border-radius: 3px;
+      border: 1px solid var(--border);
+    }
+    #markdownInput {
+      border-radius: 0 0 8px 8px;
+    }
+    .toolbar-label {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      margin-right: 0.25rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    @media (max-width: 768px) {
+      .formatting-toolbar {
+        gap: 0.5rem;
+      }
+      .toolbar-group {
+        border-right: none;
+        padding-right: 0;
+        margin-right: 0;
+      }
+    }
+
+    /* Preview Header to match toolbar height */
+    .preview-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1rem;
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-bottom: none;
+      border-radius: 8px 8px 0 0;
+      min-height: 32px;
+    }
+    .preview-header span {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .preview-status {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    .preview-status .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+    #htmlPreview {
+      border-radius: 0 0 8px 8px;
+    }
+
+    /* Output section header with copy button */
+    .output-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 1rem;
+    }
+    .output-header h2 {
+      margin-bottom: 0;
+    }
+    .copy-btn {
+      padding: 0.4rem 0.75rem;
+      font-size: 13px;
+      background: var(--card-bg);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .copy-btn:hover {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+    .copy-btn.copied {
+      background: #10b981;
+      border-color: #10b981;
+      color: white;
+    }
+
+    /* Improved controls styling */
+    .controls {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+      padding: 1rem;
+      background: var(--bg-secondary);
+      border-radius: 8px;
+    }
+    .controls button {
+      padding: 0.6rem 1rem;
+      background: var(--card-bg);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+    .controls button:hover {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+    .controls .primary-btn {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+    .controls .primary-btn:hover {
+      background: var(--accent-hover);
+    }
+    .controls .divider {
+      width: 1px;
+      background: var(--border);
+      margin: 0 0.25rem;
+    }
   </style>
 </head>
 <body>
@@ -121,10 +360,12 @@
     </div>
 
     <div class="controls">
-      <button onclick="convertMarkdown()">🔄 Convert</button>
-      <button onclick="copyHTML()">📋 Copy HTML</button>
-      <button onclick="downloadHTML()">💾 Download HTML File</button>
-      <button onclick="loadTemplate()">📄 Load Template</button>
+      <button onclick="saveToPostdocs()" class="primary-btn">📁 Save Draft</button>
+      <button onclick="loadFromPostdocs()">📂 Load Draft</button>
+      <div class="divider"></div>
+      <button onclick="downloadHTML()">💾 Download HTML</button>
+      <div class="divider"></div>
+      <button onclick="loadTemplate()">📄 Template</button>
       <button onclick="clearAll()">🗑️ Clear</button>
     </div>
 
@@ -161,54 +402,165 @@
     <div class="editor-layout">
       <div class="editor-panel">
         <h2>Markdown Input</h2>
+        <!-- Formatting Toolbar -->
+        <div class="formatting-toolbar">
+          <!-- Text Formatting -->
+          <div class="toolbar-group">
+            <span class="toolbar-label">Format</span>
+            <button class="toolbar-btn" onclick="wrapText('**', '**')" title="Bold (Ctrl+B)"><b>B</b></button>
+            <button class="toolbar-btn" onclick="wrapText('*', '*')" title="Italic (Ctrl+I)"><i>I</i></button>
+            <button class="toolbar-btn" onclick="wrapText('~~', '~~')" title="Strikethrough"><s>S</s></button>
+            <button class="toolbar-btn" onclick="wrapText('`', '`')" title="Inline Code">&lt;/&gt;</button>
+          </div>
+          
+          <!-- Headings -->
+          <div class="toolbar-group">
+            <span class="toolbar-label">Heading</span>
+            <div class="toolbar-dropdown">
+              <button class="toolbar-btn toolbar-dropdown-btn" onclick="toggleDropdown('headingMenu')">
+                H ▾
+              </button>
+              <div id="headingMenu" class="toolbar-dropdown-menu">
+                <button onclick="insertHeading(1)">Heading 1</button>
+                <button onclick="insertHeading(2)">Heading 2</button>
+                <button onclick="insertHeading(3)">Heading 3</button>
+                <button onclick="insertHeading(4)">Heading 4</button>
+                <button onclick="insertHeading(5)">Heading 5</button>
+                <button onclick="insertHeading(6)">Heading 6</button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Insert Elements -->
+          <div class="toolbar-group">
+            <span class="toolbar-label">Insert</span>
+            <div class="toolbar-dropdown">
+              <button class="toolbar-btn toolbar-dropdown-btn" onclick="toggleDropdown('codeMenu')">
+                Code ▾
+              </button>
+              <div id="codeMenu" class="toolbar-dropdown-menu">
+                <button onclick="insertCodeBlock('javascript')">JavaScript</button>
+                <button onclick="insertCodeBlock('python')">Python</button>
+                <button onclick="insertCodeBlock('html')">HTML</button>
+                <button onclick="insertCodeBlock('css')">CSS</button>
+                <button onclick="insertCodeBlock('sql')">SQL</button>
+                <button onclick="insertCodeBlock('bash')">Bash</button>
+                <button onclick="insertCodeBlock('')">Plain Text</button>
+              </div>
+            </div>
+            <div class="toolbar-dropdown">
+              <button class="toolbar-btn toolbar-dropdown-btn" onclick="toggleDropdown('mathMenu')">
+                Math ▾
+              </button>
+              <div id="mathMenu" class="toolbar-dropdown-menu">
+                <button onclick="wrapText('$', '$')">Inline Math $...$</button>
+                <button onclick="insertBlockMath()">Block Math $$...$$</button>
+                <button onclick="insertFormula('fraction')">Fraction</button>
+                <button onclick="insertFormula('sqrt')">Square Root</button>
+                <button onclick="insertFormula('sum')">Summation</button>
+                <button onclick="insertFormula('integral')">Integral</button>
+              </div>
+            </div>
+            <button class="toolbar-btn" onclick="insertLink()" title="Insert Link">🔗</button>
+            <button class="toolbar-btn" onclick="insertImage()" title="Insert Image">🖼️</button>
+            <button class="toolbar-btn" onclick="insertYouTube()" title="Insert YouTube">▶️</button>
+          </div>
+          
+          <!-- Block Elements -->
+          <div class="toolbar-group">
+            <span class="toolbar-label">Block</span>
+            <button class="toolbar-btn" onclick="insertBlockquote()" title="Blockquote">❝</button>
+            <button class="toolbar-btn" onclick="insertList('ul')" title="Bullet List">•</button>
+            <button class="toolbar-btn" onclick="insertList('ol')" title="Numbered List">1.</button>
+            <button class="toolbar-btn" onclick="insertHorizontalRule()" title="Horizontal Rule">―</button>
+            <button class="toolbar-btn" onclick="insertLineBreak()" title="Line Break / New Paragraph">↵</button>
+          </div>
+          
+          <!-- Color -->
+          <div class="toolbar-group">
+            <span class="toolbar-label">Color</span>
+            <div class="color-picker-wrapper">
+              <input type="color" id="textColorPicker" value="#ff6b6b" onchange="applyColor(this.value)">
+              <button class="toolbar-btn" title="Text Color">
+                <span class="color-swatch" id="colorSwatch" style="background: #ff6b6b;"></span>
+              </button>
+            </div>
+          </div>
+        </div>
         <textarea id="markdownInput" placeholder="Write your blog post in Markdown here..."></textarea>
       </div>
 
       <div class="editor-panel">
         <h2>Preview</h2>
+        <!-- Preview Header to match toolbar height -->
+        <div class="preview-header">
+          <span>Live Preview</span>
+          <div class="preview-status">
+            <span class="dot"></span>
+            <span>Auto-updating</span>
+          </div>
+        </div>
         <div id="htmlPreview" class="preview-content"></div>
       </div>
     </div>
 
     <div class="editor-panel" style="margin-top: 2rem;">
-      <h2>Generated HTML</h2>
+      <div class="output-header">
+        <h2>Generated HTML</h2>
+        <button class="copy-btn" onclick="copyToClipboard('htmlOutput', this)">📋 Copy HTML</button>
+      </div>
       <textarea id="htmlOutput" style="width: 100%; min-height: 300px; font-family: 'Courier New', monospace; font-size: 12px; padding: 1rem; background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border); border-radius: 8px;"></textarea>
     </div>
 
     <!-- Blog Card HTML -->
     <div class="editor-panel" style="margin-top: 2rem;">
-      <h2>Blog Card HTML (for blog.html)</h2>
-      <p style="color: var(--text-tertiary); margin-bottom: 1rem;">Copy this card and add it to your blog.html file</p>
+      <div class="output-header">
+        <div>
+          <h2 style="margin-bottom: 0.25rem;">Blog Card HTML</h2>
+          <p style="color: var(--text-tertiary); margin: 0; font-size: 13px;">Add this to blog.html</p>
+        </div>
+        <button class="copy-btn" onclick="copyToClipboard('blogCardOutput', this)">📋 Copy Card</button>
+      </div>
       <textarea id="blogCardOutput" style="width: 100%; min-height: 200px; font-family: 'Courier New', monospace; font-size: 12px; padding: 1rem; background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border); border-radius: 8px;"></textarea>
     </div>
 
     <!-- Quick Reference -->
     <div class="editor-panel" style="margin-top: 2rem; background: var(--card-bg); padding: 1.5rem; border-radius: 8px;">
       <h3>📚 Quick Reference</h3>
-      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+      <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem;">
         <div>
-          <h4 style="color: var(--accent); margin-bottom: 0.5rem;">Images</h4>
+          <h4 style="color: var(--accent); margin-bottom: 0.5rem;">⌨️ Keyboard Shortcuts</h4>
+          <pre style="font-size: 0.875rem; background: var(--bg-primary); padding: 0.5rem; border-radius: 4px;">Ctrl+B  → Bold
+Ctrl+I  → Italic
+Ctrl+K  → Insert Link</pre>
+        </div>
+        <div>
+          <h4 style="color: var(--accent); margin-bottom: 0.5rem;">🖼️ Images</h4>
           <pre style="font-size: 0.875rem; background: var(--bg-primary); padding: 0.5rem; border-radius: 4px;">![Alt text](image-url.jpg)
 ![Diagram](../images/diagram.png)</pre>
         </div>
         <div>
-          <h4 style="color: var(--accent); margin-bottom: 0.5rem;">YouTube Videos</h4>
+          <h4 style="color: var(--accent); margin-bottom: 0.5rem;">▶️ YouTube Videos</h4>
           <pre style="font-size: 0.875rem; background: var(--bg-primary); padding: 0.5rem; border-radius: 4px;">[youtube:VIDEO_ID]
 [youtube:dQw4w9WgXcQ]</pre>
         </div>
         <div>
-          <h4 style="color: var(--accent); margin-bottom: 0.5rem;">Image with Caption</h4>
-          <pre style="font-size: 0.875rem; background: var(--bg-primary); padding: 0.5rem; border-radius: 4px;">&lt;figure&gt;
-  &lt;img src="image.jpg" alt="Description"&gt;
-  &lt;figcaption&gt;Caption here&lt;/figcaption&gt;
-&lt;/figure&gt;</pre>
+          <h4 style="color: var(--accent); margin-bottom: 0.5rem;">🧮 Math Formulas (LaTeX)</h4>
+          <pre style="font-size: 0.875rem; background: var(--bg-primary); padding: 0.5rem; border-radius: 4px;">Inline:  $E = mc^2$
+Block:   $$\frac{a}{b}$$
+Sum:     $\sum_{i=1}^{n} x_i$</pre>
         </div>
         <div>
-          <h4 style="color: var(--accent); margin-bottom: 0.5rem;">Image Gallery</h4>
-          <pre style="font-size: 0.875rem; background: var(--bg-primary); padding: 0.5rem; border-radius: 4px;">&lt;div class="image-gallery"&gt;
-  &lt;img src="img1.jpg" alt="1"&gt;
-  &lt;img src="img2.jpg" alt="2"&gt;
-&lt;/div&gt;</pre>
+          <h4 style="color: var(--accent); margin-bottom: 0.5rem;">💻 Code Blocks</h4>
+          <pre style="font-size: 0.875rem; background: var(--bg-primary); padding: 0.5rem; border-radius: 4px;">```javascript
+const x = 42;
+```</pre>
+        </div>
+        <div>
+          <h4 style="color: var(--accent); margin-bottom: 0.5rem;">📁 Save to postdocs</h4>
+          <pre style="font-size: 0.875rem; background: var(--bg-primary); padding: 0.5rem; border-radius: 4px;">Click "Save to postdocs"
+Navigate to \postdocs folder
+Files saved as .txt</pre>
         </div>
       </div>
     </div>
@@ -343,14 +695,23 @@ ${content}
         <div class="share-section">
           <h3>Share this post</h3>
           <div class="share-buttons">
-            <a href="#" class="share-btn">Twitter</a>
-            <a href="#" class="share-btn">LinkedIn</a>
-            <a href="#" class="share-btn">Facebook</a>
+            <a href="https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=https://priyanathmaji.github.io/logits/posts/${slug}.html" target="_blank" class="share-btn">Twitter</a>
+            <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://priyanathmaji.github.io/logits/posts/${slug}.html" target="_blank" class="share-btn">LinkedIn</a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u=https://priyanathmaji.github.io/logits/posts/${slug}.html" target="_blank" class="share-btn">Facebook</a>
           </div>
         </div>
+
+        <!-- Disqus Comments -->
+        <div id="disqus_thread"></div>
       </footer>
     </article>
   </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <span>© 2025 logits. All rights reserved.</span>
+    </div>
+  </footer>
 
   <script src="../script.js"><\/script>
   <script>
@@ -364,6 +725,22 @@ ${content}
       });
     });
   <\/script>
+
+  <!-- Disqus Configuration -->
+  <script>
+    var disqus_config = function () {
+      this.page.url = 'https://priyanathmaji.github.io/logits/posts/${slug}.html';
+      this.page.identifier = '${slug}';
+    };
+    
+    (function() {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://https-priyanathmaji-github-io-logits.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  <\/script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
 </body>
 </html>`;
     }
@@ -412,11 +789,34 @@ ${content}
 </article>`;
     }
 
+    // Generic copy to clipboard function with visual feedback
+    async function copyToClipboard(elementId, button) {
+      const element = document.getElementById(elementId);
+      const text = element.value;
+      
+      try {
+        await navigator.clipboard.writeText(text);
+        
+        // Visual feedback
+        const originalText = button.innerHTML;
+        button.innerHTML = '✓ Copied!';
+        button.classList.add('copied');
+        
+        setTimeout(() => {
+          button.innerHTML = originalText;
+          button.classList.remove('copied');
+        }, 2000);
+      } catch (err) {
+        // Fallback for older browsers
+        element.select();
+        document.execCommand('copy');
+        alert('Copied to clipboard!');
+      }
+    }
+
+    // Legacy function for backwards compatibility
     function copyHTML() {
-      const output = document.getElementById('htmlOutput');
-      output.select();
-      document.execCommand('copy');
-      alert('HTML copied to clipboard!');
+      copyToClipboard('htmlOutput', document.querySelector('.output-header .copy-btn'));
     }
 
     function downloadHTML() {
@@ -484,9 +884,471 @@ ${content}
       }
     }
 
-    // Load template on first visit
-    if (!document.getElementById('markdownInput').value) {
-      loadTemplate();
+    // Page starts with empty editor (no default template)
+
+    // ===== FORMATTING TOOLBAR FUNCTIONS =====
+
+    // Get textarea and manage selection
+    function getTextarea() {
+      return document.getElementById('markdownInput');
+    }
+
+    // Wrap selected text with before/after strings
+    function wrapText(before, after) {
+      const textarea = getTextarea();
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const text = textarea.value;
+      const selectedText = text.substring(start, end) || 'text';
+      
+      const newText = text.substring(0, start) + before + selectedText + after + text.substring(end);
+      textarea.value = newText;
+      
+      // Position cursor after the inserted text
+      const newCursorPos = start + before.length + selectedText.length + after.length;
+      
+      // Use setTimeout to ensure cursor position is set after DOM update
+      setTimeout(() => {
+        textarea.focus();
+        textarea.setSelectionRange(newCursorPos, newCursorPos);
+      }, 0);
+      
+      convertMarkdown();
+    }
+
+    // Insert heading at current line
+    function insertHeading(level) {
+      const textarea = getTextarea();
+      const start = textarea.selectionStart;
+      const text = textarea.value;
+      
+      // Find line start
+      let lineStart = start;
+      while (lineStart > 0 && text[lineStart - 1] !== '\n') lineStart--;
+      
+      const prefix = '#'.repeat(level) + ' ';
+      const selectedText = textarea.value.substring(textarea.selectionStart, textarea.selectionEnd) || 'Heading';
+      
+      // Remove existing heading markers
+      let lineEnd = start;
+      while (lineEnd < text.length && text[lineEnd] !== '\n') lineEnd++;
+      let lineContent = text.substring(lineStart, lineEnd).replace(/^#+\s*/, '');
+      
+      if (textarea.selectionStart !== textarea.selectionEnd) {
+        lineContent = selectedText;
+      }
+      
+      textarea.value = text.substring(0, lineStart) + prefix + lineContent + text.substring(lineEnd);
+      
+      // Position cursor at end of heading
+      const newCursorPos = lineStart + prefix.length + lineContent.length;
+      setTimeout(() => {
+        textarea.focus();
+        textarea.setSelectionRange(newCursorPos, newCursorPos);
+      }, 0);
+      
+      closeAllDropdowns();
+      convertMarkdown();
+    }
+
+    // Insert code block with language
+    function insertCodeBlock(language) {
+      const textarea = getTextarea();
+      const start = textarea.selectionStart;
+      const text = textarea.value;
+      const selectedText = text.substring(start, textarea.selectionEnd) || 'code here';
+      
+      const codeBlock = '\n```' + language + '\n' + selectedText + '\n```\n';
+      textarea.value = text.substring(0, start) + codeBlock + text.substring(textarea.selectionEnd);
+      
+      // Position cursor after the code block
+      const newCursorPos = start + codeBlock.length;
+      setTimeout(() => {
+        textarea.focus();
+        textarea.setSelectionRange(newCursorPos, newCursorPos);
+      }, 0);
+      
+      closeAllDropdowns();
+      convertMarkdown();
+    }
+
+    // Insert block math
+    function insertBlockMath() {
+      const textarea = getTextarea();
+      const start = textarea.selectionStart;
+      const text = textarea.value;
+      const selectedText = text.substring(start, textarea.selectionEnd) || 'E = mc^2';
+      
+      const mathBlock = '\n$$\n' + selectedText + '\n$$\n';
+      textarea.value = text.substring(0, start) + mathBlock + text.substring(textarea.selectionEnd);
+      
+      // Position cursor after the math block
+      const newCursorPos = start + mathBlock.length;
+      setTimeout(() => {
+        textarea.focus();
+        textarea.setSelectionRange(newCursorPos, newCursorPos);
+      }, 0);
+      
+      closeAllDropdowns();
+      convertMarkdown();
+    }
+
+    // Insert common formulas
+    function insertFormula(type) {
+      const formulas = {
+        fraction: '\\frac{numerator}{denominator}',
+        sqrt: '\\sqrt{x}',
+        sum: '\\sum_{i=1}^{n} x_i',
+        integral: '\\int_{a}^{b} f(x) \\, dx'
+      };
+      wrapText('$', '$');
+      const textarea = getTextarea();
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const text = textarea.value;
+      // Replace 'text' placeholder with formula
+      if (text.substring(start, end) === 'text') {
+        textarea.value = text.substring(0, start) + formulas[type] + text.substring(end);
+      }
+      closeAllDropdowns();
+      convertMarkdown();
+    }
+
+    // Insert link
+    function insertLink() {
+      const textarea = getTextarea();
+      const start = textarea.selectionStart;
+      const text = textarea.value;
+      const selectedText = text.substring(start, textarea.selectionEnd) || 'link text';
+      
+      const link = '[' + selectedText + '](https://example.com)';
+      textarea.value = text.substring(0, start) + link + text.substring(textarea.selectionEnd);
+      
+      // Position cursor after the link
+      const newCursorPos = start + link.length;
+      setTimeout(() => {
+        textarea.focus();
+        textarea.setSelectionRange(newCursorPos, newCursorPos);
+      }, 0);
+      
+      convertMarkdown();
+    }
+
+    // Insert image
+    function insertImage() {
+      const textarea = getTextarea();
+      const start = textarea.selectionStart;
+      const text = textarea.value;
+      const selectedText = text.substring(start, textarea.selectionEnd) || 'Alt text';
+      
+      const image = '![' + selectedText + '](../images/image.png)';
+      textarea.value = text.substring(0, start) + image + text.substring(textarea.selectionEnd);
+      
+      // Position cursor after the image
+      const newCursorPos = start + image.length;
+      setTimeout(() => {
+        textarea.focus();
+        textarea.setSelectionRange(newCursorPos, newCursorPos);
+      }, 0);
+      
+      convertMarkdown();
+    }
+
+    // Insert YouTube embed
+    function insertYouTube() {
+      const videoId = prompt('Enter YouTube Video ID (e.g., dQw4w9WgXcQ):');
+      if (videoId) {
+        const textarea = getTextarea();
+        const start = textarea.selectionStart;
+        const text = textarea.value;
+        
+        const embed = '\n[youtube:' + videoId + ']\n';
+        textarea.value = text.substring(0, start) + embed + text.substring(textarea.selectionEnd);
+        
+        // Position cursor after the embed
+        const newCursorPos = start + embed.length;
+        setTimeout(() => {
+          textarea.focus();
+          textarea.setSelectionRange(newCursorPos, newCursorPos);
+        }, 0);
+        
+        convertMarkdown();
+      }
+    }
+
+    // Insert blockquote
+    function insertBlockquote() {
+      const textarea = getTextarea();
+      const start = textarea.selectionStart;
+      const text = textarea.value;
+      const selectedText = text.substring(start, textarea.selectionEnd) || 'Quote text here';
+      
+      const lines = selectedText.split('\n').map(line => '> ' + line).join('\n');
+      const quote = '\n' + lines + '\n';
+      textarea.value = text.substring(0, start) + quote + text.substring(textarea.selectionEnd);
+      
+      // Position cursor after the blockquote
+      const newCursorPos = start + quote.length;
+      setTimeout(() => {
+        textarea.focus();
+        textarea.setSelectionRange(newCursorPos, newCursorPos);
+      }, 0);
+      
+      convertMarkdown();
+    }
+
+    // Insert list
+    function insertList(type) {
+      const textarea = getTextarea();
+      const start = textarea.selectionStart;
+      const text = textarea.value;
+      const selectedText = text.substring(start, textarea.selectionEnd);
+      
+      let listItems;
+      if (selectedText) {
+        const items = selectedText.split('\n').filter(item => item.trim());
+        listItems = items.map((item, i) => {
+          return type === 'ol' ? (i + 1) + '. ' + item : '- ' + item;
+        }).join('\n');
+      } else {
+        listItems = type === 'ol' ? '1. Item 1\n2. Item 2\n3. Item 3' : '- Item 1\n- Item 2\n- Item 3';
+      }
+      
+      const list = '\n' + listItems + '\n';
+      textarea.value = text.substring(0, start) + list + text.substring(textarea.selectionEnd);
+      
+      // Position cursor after the list
+      const newCursorPos = start + list.length;
+      setTimeout(() => {
+        textarea.focus();
+        textarea.setSelectionRange(newCursorPos, newCursorPos);
+      }, 0);
+      
+      convertMarkdown();
+    }
+
+    // Insert horizontal rule
+    function insertHorizontalRule() {
+      const textarea = getTextarea();
+      const start = textarea.selectionStart;
+      const text = textarea.value;
+      
+      const hr = '\n\n---\n\n';
+      textarea.value = text.substring(0, start) + hr + text.substring(textarea.selectionEnd);
+      
+      // Position cursor after the horizontal rule
+      const newCursorPos = start + hr.length;
+      setTimeout(() => {
+        textarea.focus();
+        textarea.setSelectionRange(newCursorPos, newCursorPos);
+      }, 0);
+      
+      convertMarkdown();
+    }
+
+    // Insert line break (HTML <br> tag)
+    function insertLineBreak() {
+      const textarea = getTextarea();
+      const start = textarea.selectionStart;
+      const text = textarea.value;
+      
+      // Insert HTML <br> tag for a line break that works in HTML output
+      const lineBreak = '<br>\n';
+      textarea.value = text.substring(0, start) + lineBreak + text.substring(textarea.selectionEnd);
+      
+      // Position cursor after the line break
+      const newCursorPos = start + lineBreak.length;
+      setTimeout(() => {
+        textarea.focus();
+        textarea.setSelectionRange(newCursorPos, newCursorPos);
+      }, 0);
+      
+      convertMarkdown();
+    }
+
+    // Apply color to selected text
+    function applyColor(color) {
+      document.getElementById('colorSwatch').style.background = color;
+      const textarea = getTextarea();
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const text = textarea.value;
+      const selectedText = text.substring(start, end) || 'colored text';
+      
+      const coloredText = '<span style="color: ' + color + ';">' + selectedText + '</span>';
+      textarea.value = text.substring(0, start) + coloredText + text.substring(end);
+      
+      // Position cursor after the colored text
+      const newCursorPos = start + coloredText.length;
+      setTimeout(() => {
+        textarea.focus();
+        textarea.setSelectionRange(newCursorPos, newCursorPos);
+      }, 0);
+      
+      convertMarkdown();
+    }
+
+    // Toggle dropdown menus
+    function toggleDropdown(menuId) {
+      const menu = document.getElementById(menuId);
+      const wasOpen = menu.classList.contains('show');
+      closeAllDropdowns();
+      if (!wasOpen) {
+        menu.classList.add('show');
+      }
+    }
+
+    function closeAllDropdowns() {
+      document.querySelectorAll('.toolbar-dropdown-menu').forEach(menu => {
+        menu.classList.remove('show');
+      });
+    }
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.toolbar-dropdown')) {
+        closeAllDropdowns();
+      }
+    });
+
+    // Keyboard shortcuts
+    document.getElementById('markdownInput').addEventListener('keydown', (e) => {
+      if (e.ctrlKey || e.metaKey) {
+        switch (e.key.toLowerCase()) {
+          case 'b':
+            e.preventDefault();
+            wrapText('**', '**');
+            break;
+          case 'i':
+            e.preventDefault();
+            wrapText('*', '*');
+            break;
+          case 'k':
+            e.preventDefault();
+            insertLink();
+            break;
+        }
+      }
+    });
+
+    // ===== SAVE/LOAD TO POSTDOCS =====
+
+    // Save markdown to postdocs folder using File System Access API
+    async function saveToPostdocs() {
+      const markdown = document.getElementById('markdownInput').value;
+      if (!markdown.trim()) {
+        alert('Nothing to save. Write some content first!');
+        return;
+      }
+      
+      // Extract title for filename
+      const titleMatch = markdown.match(/^#\s+(.+)$/m);
+      const title = titleMatch ? titleMatch[1] : 'untitled';
+      const filename = title.toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-') + '.txt';
+      
+      // Check for File System Access API support
+      if ('showSaveFilePicker' in window) {
+        try {
+          // Try to get postdocs directory handle for startIn
+          let startInDir = 'documents';
+          try {
+            // Store last used directory handle in sessionStorage reference
+            if (window.postdocsHandle) {
+              startInDir = window.postdocsHandle;
+            }
+          } catch (e) {}
+          
+          const handle = await window.showSaveFilePicker({
+            suggestedName: filename,
+            startIn: startInDir,
+            types: [{
+              description: 'Text Files',
+              accept: { 'text/plain': ['.txt'] }
+            }]
+          });
+          
+          // Remember the directory for next time
+          window.postdocsHandle = handle;
+          const writable = await handle.createWritable();
+          await writable.write(markdown);
+          await writable.close();
+          alert('✅ Saved successfully! Remember to save to the postdocs folder.');
+        } catch (err) {
+          if (err.name !== 'AbortError') {
+            console.error('Save failed:', err);
+            fallbackDownload(markdown, filename);
+          }
+        }
+      } else {
+        // Fallback for unsupported browsers
+        fallbackDownload(markdown, filename);
+      }
+    }
+
+    function fallbackDownload(content, filename) {
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+      alert('📥 File downloaded. Please move it to the postdocs folder manually.');
+    }
+
+    // Load markdown from postdocs folder
+    async function loadFromPostdocs() {
+      if ('showOpenFilePicker' in window) {
+        try {
+          // Use remembered directory if available
+          let startInDir = 'documents';
+          if (window.postdocsHandle) {
+            startInDir = window.postdocsHandle;
+          }
+          
+          const [handle] = await window.showOpenFilePicker({
+            startIn: startInDir,
+            types: [{
+              description: 'Text Files',
+              accept: { 'text/plain': ['.txt', '.md'] }
+            }],
+            multiple: false
+          });
+          
+          // Remember for next time
+          window.postdocsHandle = handle;
+          const file = await handle.getFile();
+          const content = await file.text();
+          document.getElementById('markdownInput').value = content;
+          convertMarkdown();
+          alert('✅ Loaded: ' + file.name);
+        } catch (err) {
+          if (err.name !== 'AbortError') {
+            console.error('Load failed:', err);
+            fallbackFileInput();
+          }
+        }
+      } else {
+        fallbackFileInput();
+      }
+    }
+
+    function fallbackFileInput() {
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = '.txt,.md';
+      input.onchange = async (e) => {
+        const file = e.target.files[0];
+        if (file) {
+          const content = await file.text();
+          document.getElementById('markdownInput').value = content;
+          convertMarkdown();
+          alert('✅ Loaded: ' + file.name);
+        }
+      };
+      input.click();
     }
   </script>
 </body>

@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+    
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Large Language Models - logits</title>
+  <meta name="description" content="Large Language Models">
+  <link rel="stylesheet" href="../styles.css" />
+  <!-- KaTeX for Math -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="../index.html" class="nav-brand">
+        <img src="../images/logx.PNG" alt="logits">
+        <span>logits</span>
+      </a>
+      <ul class="nav-menu">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../blog.html" class="active">Blog</a></li>
+      </ul>
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+        <span class="sun-icon">☀️</span>
+        <span class="moon-icon">🌙</span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="blog-container">
+    <article class="blog-post">
+      <a href="../blog.html" class="back-link">← Back to Blog</a>
+      
+      <header class="post-header">
+        <div class="post-meta">
+          <span class="post-date">November 11, 2025</span>
+          <span class="post-tag">Machine Learning</span>
+        </div>
+        <h1>Large Language Models</h1>
+        
+      </header>
+
+      <div class="post-content">
+
+<h2>Introduction</h2>
+<h2>Three Architectures</h2>
+<p>There are generally three architectures for Large Language models. They can be build out in many kinds of neural networks such as LSTM / RNN, Transformer, state space models (recent architectures). Most popular network type today is Transformers. In transformer, each input token is processed by a column of transformer layers. Each of these layers is composed of a series of different kinds of subnetworks.<br><br></p>
+<h3>Decoder</h3>
+<p>Input: series of tokens<br>Output: iterative generation of an output token one at a time. distribution over token that we can sample from<br>Sequence: Left to Right, predicts the next word only from prior words<br>Type: Generative model (Causal / Autoregressive)<br>Usage: Generate novel output tokens<br>GPT, Claude, Llama, Mistral<br><br></p>
+<h3>Encoder</h3>
+<p>Input: sequence of tokens<br>Output: Vector representation of each tokens<br>Sequence: Left to Right; Right to Left<br>Type: Masked Language Models, Non Generative models (non-Autoregressive)<br>Usage: used to created classifiers such as input is a text and output is a label (sentiment analysis or topic), Finetuning the model by training them on supervised data.<br>BERT, RoBERTA<br><br></p>
+<h3>Encoder-Decoder</h3>
+<p>Input: series of tokens<br>Output: series of tokens<br>Different than the decoder only model as it has much looser relationship between input tokens and output tokens. The output tokens might be very different tokens or longer / shorter than input tokens<br>Usage: Machine Translation, Speech Recognition<br><br></p>
+<h2>Decoder Models - Intuition</h2>
+<p>Using the decoder model as a <em>sentiment analysis</em>:<br><code>Input: The sentiment of the sentence &quot;The market crashed&quot; is:</code><br><code>P(&quot;positive&quot; | &quot;Input: The sentiment of the sentence &quot;The market crashed&quot; is:&quot;)</code><br><code>P(&quot;negative&quot; | &quot;Input: The sentiment of the sentence &quot;The market crashed&quot; is:&quot;)</code><br><br></p>
+<p>Using the decoder model as a <em>Question Answer</em>:<br><code> Q: Who wrote the book &quot;The Great Gatsby?&quot; A:</code><br><code> P(w | &quot;Q: Who wrote the book &quot;The Great Gatsby?&quot; A:&quot;)</code><br>We look at the token $w$ and find F. as the highest probability token.<br><code> P(w | &quot;Q: Who wrote the book &quot;The Great Gatsby?&quot; A: F.&quot;)</code><br>We look at the token $w$ and find Scott as the highest probability token.<br><code> P(w | &quot;Q: Who wrote the book &quot;The Great Gatsby?&quot; A: Scott&quot;)</code><br>We look at the token $w$ and find Fitzgerald as the highest probability token.<br><br>Using the decoder model for <em>Translation</em>:<br><code>Translate the following sentence to Chinese: &quot;Do the dishes&quot;</code><br><br></p>
+<h2>Decoder Models - Prompting</h2>
+<p>The language model are specially trained to answer questions and follow instructions. This extra training is called <strong>instruction-tuning</strong>. We take a base language model that has been trained to predict words and train it on a special dataset of instructions together with the appropriate response to each. Then when promoted, it can generate useful response. The  process of finding effective prompts for a task is known as prompt engineering. <br><br>Including some labeled examples in a prompt can improve performance. These examples are known as <em>demonstrations</em>. The task of prompting with examples is called <strong>few-shot prompting</strong>.<br><br>Choosing demonstrations by using an optimizer like DSPy increases task performance of the prompt. More examples give diminishing returns and too many examples may overfit the model. Demonstrations help to generate the task and format. Even incorrect answers for a particular demonstration may help. <br><br>The weight of the model is not updated through promoting. We change the <strong>context and activations</strong> in the network. This type of learning is called <strong>context learning</strong> where we do not update the model&#39;s parameters using gradient-based updates but improve the model performance or reduce some loss. <br><br><strong>System Prompt</strong> is a single text prompt that is the first instruction to the language model which defines the task or role for the Language model. It sets the overall tone and context. It is prepended to any user text. <br><br><code>&lt;system&gt; You are a helpful and knowledgeable assistant. Answer concisely and correctly</code> <br><br><code>&lt;user&gt;What is the capital of France?</code><br><br>User prompts are appended to the system prompts.<br><br></p>
+<h2>Token Generation and Sampling</h2>
+<p>The transformer (or decoder) generates the raw real valued numbers called <strong>logits</strong> for each token in</p>
+<p> the vocabulary. The score vector is then normalized using softmax to get a probability distribution.<br><code>y = softmax(u)</code><br>Decoding is the process of choosing the token based on the model&#39;s probability distribution. <br><br>The simplest way is to choose the token with maximum probability. This is known as <strong>Greedy decoding</strong>. Greedy decoding is quite deterministic and always result in generating the same token for a given context. An extension to greedy decoding is <strong>beam search</strong>. <br><br>To introduce diversity in the generated text, many prefer to use random sampling. </p>
+<pre><code class="language-bash">i &lt;- 1
+w_i ~ p(w)
+while w_i != EOS
+   i &lt;- i + 1
+   w_i ~ p(w_i | w_&lt;i)
+</code></pre>
+<br>
+But greedy decoding is too boring and random sampling is too random.
+
+<h3>Temperature Sampling</h3>
+<p>This sampling reshapes the probability distribution to increase the probability of the high probability tokens and decrease the probability of the low probability tokens.<br>$ \tau \epsilon (0,1)$<br>$ y = softmax(u/\tau)$<br><img src="../images/softmax.png" alt="Softmax Function"><br><br> When $\tau = 1$, we are using normal probability.<br>When $\tau$ is low, say 0.1, the ones with higher probability has higher logit value and the probability of those reach 1 and lower ones reach 0. This is same as greedy sampling.<br>When $\tau$ is high, say 10 or 100, the sampling becomes uniform.<br><br><br><img src="../images/temperature.png" alt="Temperature"></p>
+<h3>top-k</h3>
+<h3>top-p</h3>
+<h2>Training Sequence</h2>
+<p><strong>- Pretraining</strong><br>Uses pretraining data<br>Sets the parameters of the model - Trained by error backpropagation with gradient descent using Cross Entropy loss function.<br>$ L_{CE} = - \sum_{w\epsilon V} y_t[w] log{\hat{y_t}}[w] $<br>$y_t$ is the one-hot vector for the next word.<br>$\hat{y_t}$ is the probability distribution output of the model.<br><br><br>Since $y_t$ is the one-hot vector for the next word, we an simply the cross-entropy loss as:<br>$L_{CE}(\hat{y_t}, y_t) = -log \hat{y_t}[w_{t+1}]$<br><br></p>
+<p><strong>Note:</strong> We always give the model the correct history of the sequence to predict the next word and <strong>not</strong> the models output. This is called <strong>teacher forcing</strong>.</p>
+<p>The loss for each batch is the average cross-entropy over the entire sequence of negative log probabilities. The weights in the network are then adjusted to minimize this loss over the batch via gradient descent.<br><strong>- Instruction Tuning</strong><br>Instruction Data such as Label sentiment, Summarize, Translate<br><strong>- Preference Alignment</strong><br>Preference data on various response from the LM</p>
+
+      </div>
+
+      <footer class="post-footer">
+        <div class="share-section">
+          <h3>Share this post</h3>
+          <div class="share-buttons">
+            <a href="https://twitter.com/intent/tweet?text=Large%20Language%20Models&url=https://priyanathmaji.github.io/logits/posts/large-language-models.html" target="_blank" class="share-btn">Twitter</a>
+            <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://priyanathmaji.github.io/logits/posts/large-language-models.html" target="_blank" class="share-btn">LinkedIn</a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u=https://priyanathmaji.github.io/logits/posts/large-language-models.html" target="_blank" class="share-btn">Facebook</a>
+          </div>
+        </div>
+
+        <!-- Disqus Comments -->
+        <div id="disqus_thread"></div>
+      </footer>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <span>© 2025 logits. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <script src="../script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- Disqus Configuration -->
+  <script>
+    var disqus_config = function () {
+      this.page.url = 'https://priyanathmaji.github.io/logits/posts/large-language-models.html';
+      this.page.identifier = 'large-language-models';
+    };
+    
+    (function() {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://https-priyanathmaji-github-io-logits.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</body>
+</html>
