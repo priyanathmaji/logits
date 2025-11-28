@@ -1,0 +1,142 @@
+{
+  "profile": {
+    "name": "Priyanath Maji",
+    "title": "Senior Technology Architect",
+    "email": "maji.priyanath@gmail.com",
+    "github": "https://github.com/priyanathmaji",
+    "linkedin": "https://www.linkedin.com/in/priyanath/",
+    "bio": "Building scalable AI/ML platforms and distributed systems. Passionate about applying emerging technologies to solve complex problems at scale."
+  },
+  "whatIDo": [
+    {
+      "icon": "🤖",
+      "title": "AI/ML Platforms",
+      "description": "Building LLM-based systems with RLHF fine-tuning, RAG architectures, and vector databases for personalized recommendations and conversational AI."
+    },
+    {
+      "icon": "⚡",
+      "title": "Distributed Systems",
+      "description": "Designing scalable API platforms with distributed caching, async processing, auto-scaling, and real-time event-driven architectures."
+    }
+  ],
+  "skills": [
+    "Python",
+    "JavaScript",
+    ".NET",
+    "Java",
+    "C++",
+    "React",
+    "REST API",
+    "GraphQL",
+    "Machine Learning",
+    "NLP",
+    "PyTorch",
+    "LLM",
+    "AWS",
+    "Azure",
+    "Elasticsearch",
+    "MySQL",
+    "SQL Server",
+    "Oracle",
+    "Vector DB",
+    "CQRS",
+    "EDA"
+  ],
+  "projects": [
+    {
+      "title": "AI-Powered Wellness Recommendation System",
+      "company": "Health Care Service Corporation",
+      "period": "2019 - Present",
+      "description": "Developed recommendation system leveraging LLMs fine-tuned with RLHF, conversational AI chat interface, and vector knowledge database for RAG.",
+      "result": "38% increase in member enrollment.",
+      "tags": [
+        "Machine Learning",
+        "NLP",
+        "RL",
+        "Conversational AI"
+      ]
+    },
+    {
+      "title": "FHIR-Based API Integration Platform",
+      "company": "Health Care Service Corporation",
+      "period": "2019 - Present",
+      "description": "Architected scalable platform enabling real-time communication between EHR systems and insurance payors. Implemented distributed caching, async request handling, auto-scaling, and database replication with OAuth 2.0 and TLS encryption.",
+      "result": "50% reduction in turnaround time.",
+      "tags": [
+        "Distributed Systems",
+        "API Design",
+        "Cloud Architecture"
+      ]
+    },
+    {
+      "title": "Banking Customer Enquiry Classification",
+      "company": "Infosys Limited",
+      "period": "2002 - 2019",
+      "description": "Developed ML classification model using logistic regression and scikit-learn to categorize banking enquiries. Deployed via Azure Machine Learning.",
+      "result": "60% productivity increase, 80% reduction in turnaround time.",
+      "tags": [
+        "Machine Learning",
+        "Data Science",
+        "Azure ML"
+      ]
+    },
+    {
+      "title": "Problem Management Analytics Solution",
+      "company": "Infosys Limited",
+      "period": "2002 - 2019",
+      "description": "Engineered end-to-end solution automating ServiceNow ticket categorization via ML pipelines using NLP tools including SpaCy and Stanford NLP.",
+      "result": "92% accuracy, 65% reduction in manual triage time.",
+      "tags": [
+        "NLP",
+        "ML Pipelines",
+        "SpaCy"
+      ]
+    }
+  ],
+  "certifications": [
+    
+    {
+      "title": "Microsoft Azure Fundamentals (AZ-900)",
+      "issuer": "Microsoft",
+      "year": "2023"
+    },
+    {
+      "title": "Machine Learning Engineering",
+      "issuer": "Coursera / Stanford University",
+      "year": "2023"
+    },
+    
+    {
+      "title": "Deep Learning Specialization",
+      "issuer": "Coursera / deeplearning.ai",
+      "year": "2022"
+    },
+    {
+      "title": "XCS234: Reinforcement Learning",
+      "issuer": "Stanford University",
+      "year": "2025"
+    },
+    {
+      "title": "XCS224n: Natural Language Processing with Deep Learning",
+      "issuer": "Stanford University",
+      "year": "2025"
+    }
+  ],
+  "education": [
+    {
+      "degree": "Bachelor of Engineering in Electronics and Communication",
+      "institution": "Birla Institute of Technology, Ranchi, India",
+      "period": "1997 - 2001",
+      "details": "Graduated with First Class Honors. Relevant coursework: Data Structures, Algorithms, Computer Networks, Digital Signal Processing."
+    }
+  ],
+  "publications": [
+    {
+      "title": "Study of EDFA Characteristics using Genetic Algorithm",
+      "venue": "Photonics-2000, International Conference on Fiber Optics and Photonics",
+      "year": "2000",
+      "description": "Research internship applying Genetic Algorithms to Fiber Optics. Published in conference proceedings, Calcutta, pp 1081-1084.",
+      "authors": "P. Maji and Vishnu Priye"
+    }
+  ]
+}

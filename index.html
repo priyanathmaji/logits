@@ -5,6 +5,118 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>logits - Machine Learning & Software Engineering Blog</title>
   <link rel="stylesheet" href="styles.css" />
+  <style>
+    .edit-resume-btn {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      padding: 0.75rem 1.25rem;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      z-index: 1000;
+      transition: var(--transition);
+    }
+    .edit-resume-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+    }
+    .edit-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 1001;
+      justify-content: center;
+      align-items: center;
+    }
+    .edit-modal.active {
+      display: flex;
+    }
+    .edit-modal-content {
+      background: var(--bg-primary);
+      padding: 2rem;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 1200px;
+      min-width: 400px;
+      min-height: 400px;
+      max-height: 90vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      resize: both;
+      position: relative;
+    }
+    .edit-modal-content::after {
+      content: '';
+      position: absolute;
+      bottom: 4px;
+      right: 4px;
+      width: 12px;
+      height: 12px;
+      border-right: 3px solid var(--text-tertiary);
+      border-bottom: 3px solid var(--text-tertiary);
+      opacity: 0.5;
+      pointer-events: none;
+    }
+    .edit-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .edit-modal-header h2 {
+      margin: 0;
+    }
+    .edit-modal-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .edit-modal-actions button {
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: var(--transition);
+    }
+    .btn-save {
+      background: var(--accent);
+      color: white;
+      border: none;
+    }
+    .btn-cancel {
+      background: var(--card-bg);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+    }
+    .edit-textarea {
+      flex: 1;
+      width: 100%;
+      padding: 1rem;
+      font-family: 'Courier New', monospace;
+      font-size: 13px;
+      background: var(--card-bg);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      resize: none;
+      overflow: auto;
+    }
+    .loading-resume {
+      text-align: center;
+      padding: 4rem;
+      color: var(--text-tertiary);
+    }
+  </style>
 </head>
 <body>
   <nav class="navbar">
@@ -24,375 +136,267 @@
     </div>
   </nav>
 
-  <main class="minimal-container">
-    <!-- Hero Section - Resume Style -->
-    <section class="minimal-hero">
-      <div class="hero-header">
-        <div class="hero-info">
-          <h1>Priyanath Maji</h1>
-          <p class="minimal-subtitle">Senior Technology Architect</p>
-        </div>
-        <div class="hero-contact">
-          <a href="mailto:maji.priyanath@gmail.com" class="contact-link">📧 maji.priyanath@gmail.com</a>
-          <div class="social-icons">
-            <a href="https://github.com/priyanathmaji" target="_blank" class="social-icon" aria-label="GitHub">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
-              </svg>
-            </a>
-            <a href="https://www.linkedin.com/in/priyanath/" target="_blank" class="social-icon" aria-label="LinkedIn">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
-              </svg>
-            </a>
-          </div>
-        </div>
-      </div>
-      <p class="minimal-bio">Building scalable AI/ML platforms and distributed systems. Passionate about applying emerging technologies to solve complex problems at scale.</p>
-    </section>
-
-    <!-- Technical Skills Section -->
-    <section class="minimal-section">
-      <h2>What I Do</h2>
-      <p style="font-size: 1.0625rem; color: var(--text-secondary); margin-bottom: 2rem; line-height: 1.7;">
-        I architect and build production-scale AI/ML platforms and distributed systems that process millions of records daily. 
-        My work spans the full lifecycle: from model development and training to infrastructure management, deployment, and monitoring.
-      </p>
-      
-      <div class="certifications-minimal-grid" style="margin-top: 2rem;">
-        <div class="cert-minimal-card">
-          <h3>🤖 AI/ML Platforms</h3>
-          <p style="color: var(--text-secondary); font-size: 0.9375rem; line-height: 1.6; margin-top: 0.75rem;">
-            Building LLM-based systems with RLHF fine-tuning, RAG architectures, and vector databases for personalized recommendations and conversational AI.
-          </p>
-        </div>
-        
-        <div class="cert-minimal-card">
-          <h3>⚡ Distributed Systems</h3>
-          <p style="color: var(--text-secondary); font-size: 0.9375rem; line-height: 1.6; margin-top: 0.75rem;">
-            Designing scalable API platforms with distributed caching, async processing, auto-scaling, and real-time event-driven architectures.
-          </p>
-        </div>
-        
-        <div class="cert-minimal-card">
-          <h3>☁️ Cloud Architecture</h3>
-          <p style="color: var(--text-secondary); font-size: 0.9375rem; line-height: 1.6; margin-top: 0.75rem;">
-            Architecting cloud-native solutions on AWS/Azure with CI/CD pipelines, infrastructure as code, and enterprise-grade security.
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Technical Skills Section -->
-    <section class="minimal-section">
-      <h2>Technical Skills</h2>
-      <div class="minimal-skills">
-        <div class="skill-group">
-          <span class="skill-item">Python</span>
-          <span class="skill-item">JavaScript</span>
-          <span class="skill-item">.NET</span>
-          <span class="skill-item">Java</span>
-          <span class="skill-item">C++</span>
-          <span class="skill-item">React</span>
-          <span class="skill-item">REST API</span>
-          <span class="skill-item">GraphQL</span>
-          <span class="skill-item">Machine Learning</span>
-          <span class="skill-item">NLP</span>
-          <span class="skill-item">PyTorch</span>
-          <span class="skill-item">LLM</span>
-          <span class="skill-item">AWS</span>
-          <span class="skill-item">Azure</span>
-          <span class="skill-item">Elasticsearch</span>
-          <span class="skill-item">MySQL</span>
-          <span class="skill-item">SQL Server</span>
-          <span class="skill-item">Oracle</span>
-          <span class="skill-item">Vector DB</span>
-          <span class="skill-item">CQRS</span>
-          <span class="skill-item">EDA</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- Work Experience -->
-    <section class="minimal-section">
-      <h2>Key Projects & Impact</h2>
-      <div class="minimal-timeline">
-        <div class="timeline-item">
-          <div class="timeline-content">
-            <h3>AI-Powered Wellness Recommendation System</h3>
-            <p class="timeline-company">Health Care Service Corporation • 2019 - Present</p>
-            <p>Developed recommendation system leveraging LLMs fine-tuned with RLHF, conversational AI chat interface, and vector knowledge database for RAG. <strong>Result: 38% increase in member enrollment.</strong></p>
-            <div style="margin-top: 0.5rem;">
-              <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">Machine Learning</span>
-              <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">NLP</span>
-              <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">RL</span>
-              <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">Conversational AI</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="timeline-item">
-          <div class="timeline-content">
-            <h3>FHIR-Based API Integration Platform</h3>
-            <p class="timeline-company">Health Care Service Corporation • 2019 - Present</p>
-            <p>Architected scalable platform enabling real-time communication between EHR systems and insurance payors. Implemented distributed caching, async request handling, auto-scaling, and database replication with OAuth 2.0 and TLS encryption. <strong>Result: 50% reduction in turnaround time.</strong></p>
-            <div style="margin-top: 0.5rem;">
-              <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">Distributed Systems</span>
-              <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">API Design</span>
-              <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">Cloud Architecture</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="timeline-item">
-          <div class="timeline-content">
-            <h3>Banking Customer Enquiry Classification</h3>
-            <p class="timeline-company">Infosys Limited • 2002 - 2019</p>
-            <p>Developed ML classification model using logistic regression and scikit-learn to categorize banking enquiries. Deployed via Azure Machine Learning. <strong>Result: 60% productivity increase, 80% reduction in turnaround time.</strong></p>
-            <div style="margin-top: 0.5rem;">
-              <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">Machine Learning</span>
-              <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">Data Science</span>
-              <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">Azure ML</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="timeline-item">
-          <div class="timeline-content">
-            <h3>Problem Management Analytics Solution</h3>
-            <p class="timeline-company">Infosys Limited • 2002 - 2019</p>
-            <p>Engineered end-to-end solution automating ServiceNow ticket categorization via ML pipelines using NLP tools including SpaCy and Stanford NLP. <strong>Result: 92% accuracy, 65% reduction in manual triage time.</strong></p>
-            <div style="margin-top: 0.5rem;">
-              <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">NLP</span>
-              <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">ML Pipelines</span>
-              <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">SpaCy</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Previous Experience Section - Removed detailed timeline, keeping just company info -->
-    <section class="minimal-section" style="display: none;">
-      <h2>Work Experience</h2>
-      <div class="minimal-timeline">
-        <div class="timeline-item">
-          <div class="timeline-year">2019 - Present</div>
-          <div class="timeline-content">
-            <h3>Senior Technology Architect</h3>
-            <p class="timeline-company">Health Care Service Corporation</p>
-            
-            <div style="margin-top: 1rem;">
-              <h4 style="font-size: 1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">AI-Powered Wellness Recommendation System</h4>
-              <p>Developed a recommendation system for wellness products delivering personalized nudges based on member events. Designed end-to-end workflow leveraging LLMs fine-tuned with RLHF, created chat interface with conversational AI, and utilized vector knowledge database for RAG. <strong>Result: 38% increase in member enrollment.</strong></p>
-              <div style="margin-top: 0.5rem;">
-                <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">Machine Learning</span>
-                <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">NLP</span>
-                <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">RL</span>
-                <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">Conversational AI</span>
-              </div>
-              
-            </div>
-
-            <div style="margin-top: 1.5rem;">
-              <h4 style="font-size: 1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">FHIR-Based API Integration Platform</h4>
-              <p>Architected scalable, secure platform enabling real-time communication between EHR systems and insurance payors for prior authorization. Implemented distributed caching, async request handling, auto-scaling, and database replication with OAuth 2.0 and TLS encryption. <strong>Result: 50% reduction in turnaround time.</strong></p>
-              <div style="margin-top: 0.5rem;">
-                <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">Distributed Systems</span>
-                <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">API Design</span>
-                <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">Cloud Architecture</span>
-                <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">Cybersecurity</span>
-              </div>
-            </div>
-
-            <div style="margin-top: 1.5rem;">
-              <h4 style="font-size: 1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">Algorithmic Payment System for Prescription Drugs</h4>
-              <p>Designed rule-based payment system for installment-based plans with automated tracking and notifications. Integrated with pharmacy claims processing using efficient data caching and cost allocation algorithms ensuring compliance and member satisfaction.</p>
-              <div style="margin-top: 0.5rem;">
-                <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">Algorithms</span>
-                <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">Big Data</span>
-                <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">Systems Integration</span>
-              </div>
-            </div>
-
-            <div style="margin-top: 1.5rem;">
-              <h4 style="font-size: 1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">COVID-19 Compliance Enforcement System</h4>
-              <p>Developed event-driven system processing high-frequency employee badging streams in real-time. Implemented secure OAuth-based vaccination record retrieval with efficient compliance checks. <strong>Result: 98% efficiency at turnstile.</strong></p>
-              <div style="margin-top: 0.5rem;">
-                <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">Real-Time Processing</span>
-                <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">Security Protocols</span>
-                <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">Event-Driven Architecture</span>
-              </div>
-            </div>
-
-            <div style="margin-top: 1.5rem;">
-              <h4 style="font-size: 1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">Enterprise Platform Modernization</h4>
-              <p>Architected and migrated infrastructure to scalable cloud environment with on-demand VM provisioning. Established CI/CD pipelines with automated security scans. Developed BI system for real-time log analytics with heuristic anomaly detection.</p>
-              <div style="margin-top: 0.5rem;">
-                <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">Cloud Computing</span>
-                <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">Security</span>
-                <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">Data Analytics</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="timeline-item">
-          <div class="timeline-year">2002 - 2019</div>
-          <div class="timeline-content">
-            <h3>Senior Technical Lead</h3>
-            <p class="timeline-company">Infosys Limited</p>
-            
-            <div style="margin-top: 1rem;">
-              <h4 style="font-size: 1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">Banking Customer Enquiry Classification</h4>
-              <p>Developed ML classification model using logistic regression and scikit-learn to categorize banking enquiries. Deployed via Azure Machine Learning. <strong>Result: 60% productivity increase, 80% reduction in turnaround time.</strong></p>
-              <div style="margin-top: 0.5rem;">
-                <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">Machine Learning</span>
-                <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">Data Science</span>
-                <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">Azure ML</span>
-              </div>
-            </div>
-
-            <div style="margin-top: 1.5rem;">
-              <h4 style="font-size: 1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">Problem Management Analytics Solution</h4>
-              <p>Engineered end-to-end solution automating ServiceNow ticket categorization via ML pipelines. Employed NLP tools including SpaCy and Stanford NLP. <strong>Result: 92% accuracy, 65% reduction in manual triage time.</strong></p>
-              <div style="margin-top: 0.5rem;">
-                <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">NLP</span>
-                <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">ML Pipelines</span>
-                <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">SpaCy</span>
-              </div>
-            </div>
-
-            <div style="margin-top: 1.5rem;">
-              <h4 style="font-size: 1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.5rem;">Patient Stratification Algorithm</h4>
-              <p>Designed algorithm to stratify members across disease-wellness spectrum by analyzing longitudinal claims data. Leveraged big data processing and unsupervised learning (K-Means, hierarchical clustering) for targeted interventions.</p>
-              <div style="margin-top: 0.5rem;">
-                <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">Big Data</span>
-                <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">Unsupervised Learning</span>
-                <span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">Data Mining</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Certifications -->
-    <section class="minimal-section">
-      <h2>Featured Blog Posts</h2>
-      <div class="certifications-minimal-grid">
-        <div class="cert-minimal-card">
-          <h3><a href="posts/llm-fine-tuning-rlhf.html" style="color: var(--text-primary); text-decoration: none;">Fine-tuning LLMs with RLHF</a></h3>
-          <p class="cert-issuer" style="color: var(--text-secondary); font-weight: normal; margin-top: 0.75rem; line-height: 1.6;">
-            Deep dive into reinforcement learning from human feedback for aligning language models with human preferences.
-          </p>
-          <p class="cert-date">Machine Learning</p>
-        </div>
-        
-        <div class="cert-minimal-card">
-          <h3><a href="posts/rag-vector-databases.html" style="color: var(--text-primary); text-decoration: none;">Building RAG Systems with Vector Databases</a></h3>
-          <p class="cert-issuer" style="color: var(--text-secondary); font-weight: normal; margin-top: 0.75rem; line-height: 1.6;">
-            Practical guide to implementing Retrieval-Augmented Generation systems using modern vector databases.
-          </p>
-          <p class="cert-date">Machine Learning</p>
-        </div>
-        
-        <div class="cert-minimal-card">
-          <h3><a href="posts/event-driven-architecture.html" style="color: var(--text-primary); text-decoration: none;">Event-Driven Architecture</a></h3>
-          <p class="cert-issuer" style="color: var(--text-secondary); font-weight: normal; margin-top: 0.75rem; line-height: 1.6;">
-            Building scalable real-time processing systems with event-driven design patterns and best practices.
-          </p>
-          <p class="cert-date">Distributed Systems</p>
-        </div>
-      </div>
-      
-      <p style="margin-top: 2rem; text-align: center;">
-        <a href="blog.html" style="color: var(--accent); text-decoration: none; font-weight: 600; font-size: 0.9375rem;">
-          View All Blog Posts →
-        </a>
-      </p>
-    </section>
-
-    <!-- Certifications -->
-    <section class="minimal-section">
-      <h2>Certifications</h2>
-      <div class="certifications-minimal-grid">
-        
-        <div class="cert-minimal-card">
-          <h3>AWS Certified Solutions Architect</h3>
-          <p class="cert-issuer">Amazon Web Services</p>
-          <p class="cert-date">2024</p>
-        </div>
-
-        <div class="cert-minimal-card">
-          <h3>Microsoft Azure Fundamentals (AZ-900)</h3>
-          <p class="cert-issuer">Microsoft</p>
-          <p class="cert-date">2023</p>
-        </div>
-
-        <div class="cert-minimal-card">
-          <h3>Machine Learning Engineering</h3>
-          <p class="cert-issuer">Coursera / Stanford University</p>
-          <p class="cert-date">2023</p>
-        </div>
-
-        <div class="cert-minimal-card">
-          <h3>Certified Information Systems Security Professional (CISSP)</h3>
-          <p class="cert-issuer">(ISC)²</p>
-          <p class="cert-date">2022</p>
-        </div>
-
-        <div class="cert-minimal-card">
-          <h3>Professional Data Engineer</h3>
-          <p class="cert-issuer">Google Cloud</p>
-          <p class="cert-date">2023</p>
-        </div>
-
-        <div class="cert-minimal-card">
-          <h3>Deep Learning Specialization</h3>
-          <p class="cert-issuer">Coursera / deeplearning.ai</p>
-          <p class="cert-date">2022</p>
-        </div>
-
-      </div>
-    </section>
-
-    <!-- Education -->
-    <section class="minimal-section">
-      <h2>Education</h2>
-      <div class="minimal-timeline">
-        <div class="timeline-item">
-          <div class="timeline-year">1997 - 2001</div>
-          <div class="timeline-content">
-            <h3>Bachelor of Engineering in Electronics and Communication</h3>
-            <p class="timeline-company">Birla Institute of Technology, Ranchi, India</p>
-            <p>CGPA: 7.75 | Aggregate: 83.3%</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Research & Publications -->
-    <section class="minimal-section">
-      <h2>Research & Publications</h2>
-      <div class="minimal-timeline">
-        <div class="timeline-item">
-          <div class="timeline-year">2000</div>
-          <div class="timeline-content">
-            <h3>Study of EDFA Characteristics using Genetic Algorithm</h3>
-            <p class="timeline-company">Photonics-2000, International Conference on Fiber Optics and Photonics</p>
-            <p>Research internship applying Genetic Algorithms to Fiber Optics. Published in conference proceedings, Calcutta, pp 1081-1084.</p>
-            <p style="margin-top: 0.5rem;"><em>Authors: P. Maji and Vishnu Priye</em></p>
-          </div>
-        </div>
-      </div>
-    </section>
+  <main class="minimal-container" id="resumeContent">
+    <div class="loading-resume">Loading resume...</div>
   </main>
 
   <footer class="minimal-footer">
     <p>© 2025 Priyanath Maji</p>
   </footer>
 
+  <!-- Edit Button (visible only in local) -->
+  <button class="edit-resume-btn" id="editResumeBtn" style="display: none;">✏️ Edit Resume</button>
+
+  <!-- Edit Modal -->
+  <div class="edit-modal" id="editModal">
+    <div class="edit-modal-content">
+      <div class="edit-modal-header">
+        <h2>Edit Resume JSON</h2>
+        <div class="edit-modal-actions">
+          <button class="btn-cancel" onclick="closeEditModal()">Cancel</button>
+          <button class="btn-save" onclick="saveResume()">💾 Save</button>
+        </div>
+      </div>
+      <p style="color: var(--text-tertiary); font-size: 13px; margin-bottom: 1rem;">📂 D:\08102025\App\logits\logits\resume.json</p>
+      <textarea class="edit-textarea" id="resumeEditor"></textarea>
+    </div>
+  </div>
+
   <script src="script.js"></script>
+  <script>
+    let resumeData = null;
+
+    // Load resume from JSON
+    async function loadResume() {
+      try {
+        const response = await fetch('resume.json');
+        if (!response.ok) throw new Error('Could not load resume.json');
+        resumeData = await response.json();
+        renderResume();
+        showEditButton();
+      } catch (error) {
+        console.error('Error loading resume:', error);
+        document.getElementById('resumeContent').innerHTML = 
+          '<div class="loading-resume">Error loading resume. Make sure resume.json exists.</div>';
+      }
+    }
+
+    // Render resume from data
+    function renderResume() {
+      const container = document.getElementById('resumeContent');
+      const r = resumeData;
+      
+      container.innerHTML = `
+        <!-- Hero Section -->
+        <section class="minimal-hero">
+          <div class="hero-header">
+            <div class="hero-info">
+              <h1>${r.profile.name}</h1>
+              <p class="minimal-subtitle">${r.profile.title}</p>
+            </div>
+            <div class="hero-contact">
+              <a href="mailto:${r.profile.email}" class="contact-link">📧 ${r.profile.email}</a>
+              <div class="social-icons">
+                <a href="${r.profile.github}" target="_blank" class="social-icon" aria-label="GitHub">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/>
+                  </svg>
+                </a>
+                <a href="${r.profile.linkedin}" target="_blank" class="social-icon" aria-label="LinkedIn">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </div>
+          <p class="minimal-bio">${r.profile.bio}</p>
+        </section>
+
+        <!-- What I Do Section -->
+        <section class="minimal-section">
+          <h2>What I Do</h2>
+          <p style="font-size: 1.0625rem; color: var(--text-secondary); margin-bottom: 2rem; line-height: 1.7;">
+            I architect and build production-scale AI/ML platforms and distributed systems that process millions of records daily. 
+            My work spans the full lifecycle: from model development and training to infrastructure management, deployment, and monitoring.
+          </p>
+          <div class="certifications-minimal-grid" style="margin-top: 2rem;">
+            ${r.whatIDo.map(item => `
+              <div class="cert-minimal-card">
+                <h3>${item.icon} ${item.title}</h3>
+                <p style="color: var(--text-secondary); font-size: 0.9375rem; line-height: 1.6; margin-top: 0.75rem;">
+                  ${item.description}
+                </p>
+              </div>
+            `).join('')}
+          </div>
+        </section>
+
+        <!-- Technical Skills Section -->
+        <section class="minimal-section">
+          <h2>Technical Skills</h2>
+          <div class="minimal-skills">
+            <div class="skill-group">
+              ${r.skills.map(skill => `<span class="skill-item">${skill}</span>`).join('')}
+            </div>
+          </div>
+        </section>
+
+        <!-- Key Projects Section -->
+        <section class="minimal-section">
+          <h2>Key Projects & Impact</h2>
+          <div class="minimal-timeline">
+            ${r.projects.map(project => `
+              <div class="timeline-item">
+                <div class="timeline-content">
+                  <h3>${project.title}</h3>
+                  <p class="timeline-company">${project.company} • ${project.period}</p>
+                  <p>${project.description} ${project.result ? `<strong>Result: ${project.result}</strong>` : ''}</p>
+                  <div style="margin-top: 0.5rem;">
+                    ${project.tags.map(tag => `<span class="skill-item" style="font-size: 0.75rem; padding: 0.25rem 0.5rem;">${tag}</span>`).join('')}
+                  </div>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </section>
+
+        <!-- Certifications Section -->
+        <section class="minimal-section">
+          <h2>Certifications</h2>
+          <div class="certifications-minimal-grid">
+            ${r.certifications.map(cert => `
+              <div class="cert-minimal-card">
+                <h3>${cert.title}</h3>
+                <p class="cert-issuer">${cert.issuer}</p>
+                <p class="cert-date">${cert.year}</p>
+              </div>
+            `).join('')}
+          </div>
+        </section>
+
+        <!-- Education Section -->
+        <section class="minimal-section">
+          <h2>Education</h2>
+          <div class="minimal-timeline">
+            ${r.education.map(edu => `
+              <div class="timeline-item">
+                <div class="timeline-year">${edu.period}</div>
+                <div class="timeline-content">
+                  <h3>${edu.degree}</h3>
+                  <p class="timeline-company">${edu.institution}</p>
+                  <p>${edu.details}</p>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </section>
+
+        <!-- Publications Section -->
+        <section class="minimal-section">
+          <h2>Research & Publications</h2>
+          <div class="minimal-timeline">
+            ${r.publications.map(pub => `
+              <div class="timeline-item">
+                <div class="timeline-year">${pub.year}</div>
+                <div class="timeline-content">
+                  <h3>${pub.title}</h3>
+                  <p class="timeline-company">${pub.venue}</p>
+                  <p>${pub.description}</p>
+                  <p style="margin-top: 0.5rem;"><em>Authors: ${pub.authors}</em></p>
+                </div>
+              </div>
+            `).join('')}
+          </div>
+        </section>
+      `;
+    }
+
+    // Show edit button only in local environment
+    function showEditButton() {
+      const isProduction = window.location.hostname.includes('github.io');
+      if (!isProduction) {
+        document.getElementById('editResumeBtn').style.display = 'block';
+      }
+    }
+
+    // Open edit modal
+    document.getElementById('editResumeBtn').addEventListener('click', () => {
+      document.getElementById('resumeEditor').value = JSON.stringify(resumeData, null, 2);
+      document.getElementById('editModal').classList.add('active');
+    });
+
+    // Close edit modal
+    function closeEditModal() {
+      document.getElementById('editModal').classList.remove('active');
+    }
+
+    // Close modal on background click
+    document.getElementById('editModal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('editModal')) {
+        closeEditModal();
+      }
+    });
+
+    // Save resume
+    async function saveResume() {
+      const editorContent = document.getElementById('resumeEditor').value;
+      
+      try {
+        // Validate JSON
+        const newData = JSON.parse(editorContent);
+        
+        // Check for File System Access API
+        if ('showSaveFilePicker' in window) {
+          try {
+            const handle = await window.showSaveFilePicker({
+              suggestedName: 'resume.json',
+              types: [{
+                description: 'JSON Files',
+                accept: { 'application/json': ['.json'] }
+              }]
+            });
+            
+            const writable = await handle.createWritable();
+            await writable.write(JSON.stringify(newData, null, 2));
+            await writable.close();
+            
+            // Update local data and re-render
+            resumeData = newData;
+            renderResume();
+            closeEditModal();
+            alert('✅ Resume saved successfully!');
+          } catch (err) {
+            if (err.name !== 'AbortError') {
+              fallbackDownload(newData);
+            }
+          }
+        } else {
+          fallbackDownload(newData);
+        }
+      } catch (e) {
+        alert('❌ Invalid JSON: ' + e.message);
+      }
+    }
+
+    // Fallback download for browsers without File System Access API
+    function fallbackDownload(data) {
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'resume.json';
+      a.click();
+      URL.revokeObjectURL(url);
+      
+      resumeData = data;
+      renderResume();
+      closeEditModal();
+      alert('📥 Resume downloaded. Replace the existing resume.json file with this one.');
+    }
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', loadResume);
+  </script>
 </body>
 </html>
