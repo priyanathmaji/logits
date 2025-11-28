@@ -595,7 +595,7 @@ Files saved as .txt</pre>
       // Convert markdown to HTML
       let html = marked.parse(processedMarkdown);
       
-      // Display preview
+      // Display preview (full content for preview)
       preview.innerHTML = html;
       
       // Render LaTeX math in preview
@@ -607,8 +607,17 @@ Files saved as .txt</pre>
         throwOnError: false
       });
       
-      // Generate full HTML for blog post
-      const fullHTML = generateBlogPostHTML(markdown, html);
+      // For the generated HTML, remove the title (first h1) and date line from content
+      // since they appear in the header
+      let cleanedMarkdown = processedMarkdown
+        .replace(/^#\s+.+$/m, '')           // Remove first # heading (title)
+        .replace(/^Date:\s*.+$/m, '')       // Remove Date: line
+        .replace(/^\n+/, '');               // Remove leading newlines
+      
+      let cleanedHtml = marked.parse(cleanedMarkdown);
+      
+      // Generate full HTML for blog post with cleaned content
+      const fullHTML = generateBlogPostHTML(markdown, cleanedHtml);
       output.value = fullHTML;
       
       // Generate blog card

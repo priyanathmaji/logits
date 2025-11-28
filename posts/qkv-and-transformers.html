@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+    
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>QKV and Transformers - logits</title>
+  <meta name="description" content="QKV and Transformers">
+  <link rel="stylesheet" href="../styles.css" />
+  <!-- KaTeX for Math -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="../index.html" class="nav-brand">
+        <img src="../images/logx.PNG" alt="logits">
+        <span>logits</span>
+      </a>
+      <ul class="nav-menu">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../blog.html" class="active">Blog</a></li>
+      </ul>
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+        <span class="sun-icon">☀️</span>
+        <span class="moon-icon">🌙</span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="blog-container">
+    <article class="blog-post">
+      <a href="../blog.html" class="back-link">← Back to Blog</a>
+      
+      <header class="post-header">
+        <div class="post-meta">
+          <span class="post-date">November 26, 2025</span>
+          <span class="post-tag">Machine Learning</span>
+        </div>
+        <h1>QKV and Transformers</h1>
+        <p style="color: var(--text-tertiary); font-style: italic;">Part 2 of LLM Master Series</p>
+      </header>
+
+      <div class="post-content">
+<h2>Static vs Learned Embeddings</h2>
+<p><strong>word2vec</strong> represents tokens as a <span style="color: #df0c0c;"><em>static embedding</em></span>. It means that irrespective of the context, it is always represented by the same fixed vector. Each word gets one <strong>fixed vector</strong>, no matter where it appears. This vector captures <strong>global semantic relationships</strong> (&quot;king - man + woman = queen&quot;). But it cannot change based on context.<br><br>This would pose problems:<br>Example 1:<br>The chicken didn&#39;t cross the road because <strong>it</strong> was too <strong>tired</strong>.<br>The chicken didn&#39;t cross the road because <strong>it</strong> was too <strong>wide</strong>.<br><br>Example 2: (Reading left to right, we don&#39;t yet know which <strong>it</strong>,  is going to refer to<br>The chicken didn&#39;t cross the road because it ....<br><br>Example 3: (Linguistic relationship such as plurality)<br>The <strong>keys</strong> to the cabinet <strong>are</strong> on the table.<br>I walked along the <strong>pond</strong>, and noticed one of the trees along the <strong>bank</strong> (not financial institution). <br><br>These examples show that the context of a word can be quite far away in the sentence or paragraph.<br><br><em>Word2vec</em> does not encode:</p>
+<ul>
+<li>Order</li>
+<li>Syntax</li>
+<li>Relationship between nearby words</li>
+<li>Differences in meaning based on context<br><br>Every word&#39;s representation should depend on:</li>
+<li>what came before,</li>
+<li>what came after (in case of encoder / bidirectional models)</li>
+<li>how far those words are.</li>
+</ul>
+<br>
+
+<h2>Transformers - Definition</h2>
+<p>Transformers are <strong>general</strong> <em>sequence-to-sequence</em> architecture. They produce a probability distribution over the next token in language modeling.</p>
+<p><em><strong>Transformers build contextual representations of word meaning, contextual embeddings by integrating the meaning of these helpful contextual words.</strong></em></p>
+<p>In transformers, a token gets one <strong>embedding vector</strong> (semantic / content embedding) and also gets a <strong>positional embedding</strong>. These two are <strong>added together</strong> before entering the first transformer layer.<br><code>token_rep = word_embedding(token) + positional_embedding(position) </code> Adding a positional embedding helps the model to learning patters such as:<br>&quot;A verb often attends to its subject nearby&quot;<br>&quot;A closing bracket usually looks backward to an opening bracket&quot;<br><br></p>
+<h3>Why are they added and not concatenated?</h3>
+<p>Concatenating would result in</p>
+<ul>
+<li>Bigger weight matrices</li>
+<li>Separate channel for semantic vs positional information</li>
+<li>Extra Learning to fuse them later</li>
+</ul>
+<br>
+
+<h3>Why do we need positional embedding in transformers?</h3>
+<p><strong>Self attention</strong> looks at all the tokens at once and compares their vectors. Without position the attention would know only what the words are and not where they are.</p>
+<ul>
+<li>the cat sat</li>
+<li>sat cat the</li>
+<li>cat the sat<br>... all would look identical to the model.</li>
+</ul>
+<br>
+
+<h2>Attention</h2>
+<p>Attention is a <strong>core building block</strong> of transformers.<br>Everything else (feed-forward layers, embeddings etc.) exist to support or transform the attention outputs.<br>Attention computes a <span style="color: #f81616;">score </span>for each <strong>other token</strong>. It uses these scores to take a weighted sum of the other token&#39;s vectors.<br>Then it updates the token&#39;s representation (embedding vector - semantic + positional) from one layer to the next. Each layer keeps refining the token vectors with more context-aware information.<br>Multiple layers means better learning resulting in <strong>richer, deeper context</strong>.<br><code>The cat sat on the mat</code><br>The attention would change the embedding of cat. cat will <strong>attend more to</strong> sat and mat. The new embedding would now encode the information not just about the word itself but also about its role and relationships in the sentence.<br><br></p>
+<br>
+<br>
+<br>
+<br>
+      </div>
+
+      <footer class="post-footer">
+        <div class="share-section">
+          <h3>Share this post</h3>
+          <div class="share-buttons">
+            <a href="https://twitter.com/intent/tweet?text=QKV%20and%20Transformers&url=https://priyanathmaji.github.io/logits/posts/qkv-and-transformers.html" target="_blank" class="share-btn">Twitter</a>
+            <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://priyanathmaji.github.io/logits/posts/qkv-and-transformers.html" target="_blank" class="share-btn">LinkedIn</a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u=https://priyanathmaji.github.io/logits/posts/qkv-and-transformers.html" target="_blank" class="share-btn">Facebook</a>
+          </div>
+        </div>
+
+        <!-- Disqus Comments -->
+        <div id="disqus_thread"></div>
+      </footer>
+    </article>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <span>© 2025 logits. All rights reserved.</span>
+    </div>
+  </footer>
+
+  <script src="../script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- Disqus Configuration -->
+  <script>
+    var disqus_config = function () {
+      this.page.url = 'https://priyanathmaji.github.io/logits/posts/qkv-and-transformers.html';
+      this.page.identifier = 'qkv-and-transformers';
+    };
+    
+    (function() {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://https-priyanathmaji-github-io-logits.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</body>
+</html>

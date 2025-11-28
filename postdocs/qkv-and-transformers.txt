@@ -1,0 +1,69 @@
+# QKV and Transformers
+
+Date: November 26, 2025
+
+## Static vs Learned Embeddings
+**word2vec** represents tokens as a <span style="color: #df0c0c;">*static embedding*</span>. It means that irrespective of the context, it is always represented by the same fixed vector. Each word gets one **fixed vector**, no matter where it appears. This vector captures **global semantic relationships** ("king - man + woman = queen"). But it cannot change based on context.<br>
+This would pose problems:
+Example 1: 
+The chicken didn't cross the road because **it** was too **tired**.
+The chicken didn't cross the road because **it** was too **wide**.<br>
+Example 2: (Reading left to right, we don't yet know which **it**,  is going to refer to
+The chicken didn't cross the road because it ....<br>
+Example 3: (Linguistic relationship such as plurality)
+The **keys** to the cabinet **are** on the table.
+I walked along the **pond**, and noticed one of the trees along the **bank** (not financial institution). <br>
+These examples show that the context of a word can be quite far away in the sentence or paragraph.<br>
+*Word2vec* does not encode:
+- Order
+- Syntax
+- Relationship between nearby words
+- Differences in meaning based on context<br>
+Every word's representation should depend on:
+- what came before,
+- what came after (in case of encoder / bidirectional models)
+- how far those words are. 
+<br>
+
+## Transformers - Definition
+
+Transformers are **general** *sequence-to-sequence* architecture. They produce a probability distribution over the next token in language modeling.
+
+***Transformers build contextual representations of word meaning, contextual embeddings by integrating the meaning of these helpful contextual words.***
+
+In transformers, a token gets one **embedding vector** (semantic / content embedding) and also gets a **positional embedding**. These two are **added together** before entering the first transformer layer.
+`token_rep = word_embedding(token) + positional_embedding(position)
+` Adding a positional embedding helps the model to learning patters such as: 
+"A verb often attends to its subject nearby"
+"A closing bracket usually looks backward to an opening bracket"
+<br>
+### Why are they added and not concatenated?
+Concatenating would result in
+- Bigger weight matrices
+- Separate channel for semantic vs positional information
+- Extra Learning to fuse them later
+<br>
+
+### Why do we need positional embedding in transformers?
+**Self attention** looks at all the tokens at once and compares their vectors. Without position the attention would know only what the words are and not where they are.
+- the cat sat
+- sat cat the
+- cat the sat
+... all would look identical to the model.
+<br>
+
+## Attention
+Attention is a **core building block** of transformers.
+Everything else (feed-forward layers, embeddings etc.) exist to support or transform the attention outputs.
+Attention computes a <span style="color: #f81616;">score </span>for each **other token**. It uses these scores to take a weighted sum of the other token's vectors. 
+Then it updates the token's representation (embedding vector - semantic + positional) from one layer to the next. Each layer keeps refining the token vectors with more context-aware information.
+Multiple layers means better learning resulting in **richer, deeper context**.
+`The cat sat on the mat`
+The attention would change the embedding of cat. cat will **attend more to** sat and mat. The new embedding would now encode the information not just about the word itself but also about its role and relationships in the sentence.
+<br>
+
+
+<br>
+<br>
+<br>
+<br>
