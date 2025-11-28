@@ -47,7 +47,7 @@
 
 
 
-        <article class="blog-card" data-category="machine-learning">
+        <article class="blog-card" data-category="machine-learning" data-source="derivatives-for-neural-networks.txt">
           <div class="blog-meta">
             <span class="blog-date">November 4, 2025</span>
             <span class="blog-tag">Machine Learning</span>
@@ -55,9 +55,12 @@
           <h2><a href="posts/derivatives-for-neural-networks.html">Derivatives of Neural Networks</a></h2>
           <p class="blog-excerpt">This blog solves the partial derivative of a neural network with 2 features x1 and x2.
           </p>
-          <a href="posts/derivatives-for-neural-networks.html" class="read-more">Read More →</a>
+          <div class="blog-actions">
+            <a href="posts/derivatives-for-neural-networks.html" class="read-more">Read More →</a>
+            <button class="edit-btn" onclick="editPost('derivatives-for-neural-networks.txt')" title="Edit this post">✏️ Edit</button>
+          </div>
         </article>
-        <article class="blog-card" data-category="machine-learning">
+        <article class="blog-card" data-category="machine-learning" data-source="entropy-cross-entropy-and-kl-divergence.txt">
           <div class="blog-meta">
             <span class="blog-date">Nov 11, 2025</span>
             <span class="blog-tag">Machine Learning</span>
@@ -67,10 +70,13 @@
           <p class="blog-excerpt">This write-up clearly explains how entropy, cross-entropy, and KL divergence quantify
             uncertainty and difference between probability distributions. It connects these concepts to information
             theory and their practical use in machine learning and reinforcement learning.</p>
-          <a href="posts/entropy-cross-entropy-and-kl-divergence.html" class="read-more">Read More →</a>
+          <div class="blog-actions">
+            <a href="posts/entropy-cross-entropy-and-kl-divergence.html" class="read-more">Read More →</a>
+            <button class="edit-btn" onclick="editPost('entropy-cross-entropy-and-kl-divergence.txt')" title="Edit this post">✏️ Edit</button>
+          </div>
         </article>
       </div>
-      <article class="blog-card" data-category="machine-learning">
+      <article class="blog-card" data-category="machine-learning" data-source="bleu-score.txt">
         <div class="blog-meta">
           <span class="blog-date">November 21, 2025</span>
           <span class="blog-tag">Machine Learning</span>
@@ -82,9 +88,12 @@
           translations using n-gram overlap. BLEU balances precision of n-grams with a brevity penalty to discourage
           overly short translations. In this post, we walk through a step-by-step example to compute BLEU for a single
           sentence.</p>
-        <a href="posts/bleu-score.html" class="read-more">Read More →</a>
+        <div class="blog-actions">
+          <a href="posts/bleu-score.html" class="read-more">Read More →</a>
+          <button class="edit-btn" onclick="editPost('bleu-score.txt')" title="Edit this post">✏️ Edit</button>
+        </div>
       </article>
-      <article class="blog-card" data-category="machine-learning" data-series="llm">
+      <article class="blog-card" data-category="machine-learning" data-series="llm" data-source="large-language-models.txt">
         <div class="blog-meta">
           <span class="blog-date">November 11, 2025</span>
           <span class="blog-tag">Machine Learning</span>
@@ -99,9 +108,12 @@
 
         </p>
         <div class="blog-series">Part of: <a href="#" class="series-link" data-series="llm">LLM Master Series</a></div>
-        <a href="posts/large-language-models.html" class="read-more">Read More →</a>
+        <div class="blog-actions">
+          <a href="posts/large-language-models.html" class="read-more">Read More →</a>
+          <button class="edit-btn" onclick="editPost('large-language-models.txt')" title="Edit this post">✏️ Edit</button>
+        </div>
       </article>
-      <article class="blog-card" data-category="machine-learning" data-series="llm">
+      <article class="blog-card" data-category="machine-learning" data-series="llm" data-source="qkv-and-transformers.txt">
         <div class="blog-meta">
           <span class="blog-date">November 26, 2025</span>
           <span class="blog-tag">Machine Learning</span>
@@ -110,7 +122,10 @@
         <p class="blog-excerpt">Transformers are **general** *sequence-to-sequence* architecture. They produce a
           probability distribution over the next token in language modeling.</p>
         <div class="blog-series">Part of: <a href="#" class="series-link" data-series="llm">LLM Master Series</a></div>
-        <a href="posts/qkv-and-transformers.html" class="read-more">Read More →</a>
+        <div class="blog-actions">
+          <a href="posts/qkv-and-transformers.html" class="read-more">Read More →</a>
+          <button class="edit-btn" onclick="editPost('qkv-and-transformers.txt')" title="Edit this post">✏️ Edit</button>
+        </div>
       </article>
       <!-- Blog Series Section 
       <section class="blog-series-section" style="margin-top: 4rem;">
@@ -153,7 +168,70 @@
   </main>
 
   <script src="script.js"></script>
+  <style>
+    .blog-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1rem;
+    }
+    .edit-btn {
+      padding: 0.4rem 0.75rem;
+      font-size: 13px;
+      background: var(--card-bg);
+      color: var(--text-secondary);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+    }
+    .edit-btn:hover {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+  </style>
   <script>
+    // Edit post - opens blog-converter with the post content
+    async function editPost(filename) {
+      // Check if we're running on a local server or file:// protocol
+      const isLocalFile = window.location.protocol === 'file:';
+      
+      if (isLocalFile) {
+        // For file:// protocol, we can't fetch - just redirect with filename
+        // User will need to use "Load from postdocs" button in converter
+        alert('Opening blog converter. Use "Load Draft" button and select:\n\npostdocs/' + filename);
+        window.location.href = 'blog-converter.html';
+        return;
+      }
+      
+      try {
+        // Fetch the markdown source from postdocs folder
+        const response = await fetch('postdocs/' + filename);
+        if (!response.ok) {
+          throw new Error('Could not load post source');
+        }
+        const content = await response.text();
+        
+        // Store in sessionStorage and redirect to converter
+        sessionStorage.setItem('editPostContent', content);
+        sessionStorage.setItem('editPostFilename', filename);
+        window.location.href = 'blog-converter.html?edit=' + encodeURIComponent(filename);
+      } catch (error) {
+        // Fallback: just redirect and let user load manually
+        alert('Could not auto-load. Opening converter - use "Load Draft" to open:\n\npostdocs/' + filename);
+        window.location.href = 'blog-converter.html';
+      }
+    }
+
+    // Hide edit buttons in production (GitHub Pages)
+    if (window.location.hostname.includes('github.io')) {
+      document.querySelectorAll('.edit-btn').forEach(btn => btn.style.display = 'none');
+    }
+
     // Category filtering
     const categoryButtons = document.querySelectorAll('.category-btn');
     const blogCards = document.querySelectorAll('.blog-card');

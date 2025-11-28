@@ -890,10 +890,43 @@ ${content}
         document.getElementById('htmlPreview').innerHTML = '';
         document.getElementById('htmlOutput').value = '';
         document.getElementById('blogCardOutput').value = '';
+        // Clear edit mode
+        sessionStorage.removeItem('editPostContent');
+        sessionStorage.removeItem('editPostFilename');
+        history.replaceState(null, '', 'blog-converter.html');
       }
     }
 
-    // Page starts with empty editor (no default template)
+    // Check if we're in edit mode (loaded from blog.html edit button)
+    function checkEditMode() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const editFile = urlParams.get('edit');
+      
+      if (editFile && sessionStorage.getItem('editPostContent')) {
+        const content = sessionStorage.getItem('editPostContent');
+        const filename = sessionStorage.getItem('editPostFilename');
+        
+        document.getElementById('markdownInput').value = content;
+        convertMarkdown();
+        
+        // Show edit mode indicator
+        const info = document.querySelector('.template-info');
+        info.innerHTML = `
+          <h2>✏️ Editing: ${filename.replace('.txt', '')}</h2>
+          <p>Make your changes below. When done, click <strong>Save Draft</strong> to save back to postdocs folder.</p>
+          <p style="margin-top: 0.5rem;"><button onclick="exitEditMode()" style="padding: 0.4rem 0.75rem; background: var(--card-bg); border: 1px solid var(--border); border-radius: 6px; cursor: pointer;">← Back to Blog</button></p>
+        `;
+      }
+    }
+    
+    function exitEditMode() {
+      sessionStorage.removeItem('editPostContent');
+      sessionStorage.removeItem('editPostFilename');
+      window.location.href = 'blog.html';
+    }
+    
+    // Run on page load
+    checkEditMode();
 
     // ===== FORMATTING TOOLBAR FUNCTIONS =====
 
