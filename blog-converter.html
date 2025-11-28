@@ -565,11 +565,24 @@
       <div class="output-header">
         <div>
           <h2 style="margin-bottom: 0.25rem;">Blog Card HTML</h2>
-          <p style="color: var(--text-tertiary); margin: 0; font-size: 13px;">Add this to blog.html</p>
+          <p style="color: var(--text-tertiary); margin: 0; font-size: 13px;">Legacy - for static HTML (deprecated)</p>
         </div>
         <button class="copy-btn" onclick="copyToClipboard('blogCardOutput', this)">📋 Copy Card</button>
       </div>
-      <textarea id="blogCardOutput" style="width: 100%; min-height: 200px; font-family: 'Courier New', monospace; font-size: 12px; padding: 1rem; background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border); border-radius: 8px;"></textarea>
+      <textarea id="blogCardOutput" style="width: 100%; min-height: 150px; font-family: 'Courier New', monospace; font-size: 12px; padding: 1rem; background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border); border-radius: 8px;"></textarea>
+    </div>
+
+    <!-- JSON Entry for posts.json -->
+    <div class="editor-panel" style="margin-top: 2rem;">
+      <div class="output-header">
+        <div>
+          <h2 style="margin-bottom: 0.25rem;">📋 Post JSON Entry</h2>
+          <p style="color: var(--text-tertiary); margin: 0; font-size: 13px;">Add/update this in posts.json</p>
+        </div>
+        <button class="copy-btn" onclick="copyToClipboard('jsonOutput', this)">📋 Copy JSON</button>
+      </div>
+      <p class="folder-hint">📂 D:\08102025\App\logits\logits\posts.json</p>
+      <textarea id="jsonOutput" style="width: 100%; min-height: 200px; font-family: 'Courier New', monospace; font-size: 12px; padding: 1rem; background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border); border-radius: 8px;"></textarea>
     </div>
 
     <!-- Quick Reference -->
@@ -727,9 +740,65 @@ Files saved as .txt</pre>
       const fullHTML = generateBlogPostHTML(markdown, cleanedHtml);
       output.value = fullHTML;
       
-      // Generate blog card
+      // Generate blog card (legacy)
       const blogCard = generateBlogCard(markdown);
       cardOutput.value = blogCard;
+      
+      // Generate JSON entry for posts.json
+      const jsonEntry = generatePostJSON(markdown);
+      document.getElementById('jsonOutput').value = jsonEntry;
+    }
+
+    // Generate JSON entry for posts.json
+    function generatePostJSON(markdown) {
+      // Extract title
+      const titleMatch = markdown.match(/^#\s+(.+)$/m);
+      const title = titleMatch ? titleMatch[1] : 'Blog Post';
+      
+      // Create slug/id from title
+      const id = title.toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-');
+      
+      // Extract date
+      const dateMatch = markdown.match(/Date:\s*(.+)/);
+      const date = dateMatch ? dateMatch[1].trim() : new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+      
+      // Get category (just the key, not the display name)
+      const category = document.getElementById('categorySelect').value;
+      
+      // Get series info
+      const seriesInfo = getSeriesInfo();
+      
+      // Extract excerpt (first substantial paragraph)
+      const paragraphs = markdown.split('\n\n').filter(p => 
+        !p.startsWith('#') && 
+        !p.startsWith('Date:') && 
+        !p.startsWith('Tag:') &&
+        p.trim().length > 30
+      );
+      let excerpt = paragraphs[0] || 'Read more about this topic...';
+      // Clean up excerpt - remove markdown formatting
+      excerpt = excerpt
+        .replace(/\*\*(.+?)\*\*/g, '$1')  // Remove bold
+        .replace(/\*(.+?)\*/g, '$1')       // Remove italic
+        .replace(/`(.+?)`/g, '$1')         // Remove inline code
+        .replace(/\[(.+?)\]\(.+?\)/g, '$1') // Remove links, keep text
+        .trim();
+      
+      // Build JSON object (simplified - names are looked up from mappings)
+      const postEntry = {
+        id: id,
+        title: title,
+        date: date,
+        category: category,
+        excerpt: excerpt.substring(0, 250) + (excerpt.length > 250 ? '...' : ''),
+        source: id + '.txt',
+        series: seriesInfo.seriesId || null,
+        partNumber: seriesInfo.partNumber ? parseInt(seriesInfo.partNumber.replace('Part ', '')) : null
+      };
+      
+      return JSON.stringify(postEntry, null, 2);
     }
 
     function generateBlogPostHTML(markdown, content) {
@@ -1016,18 +1085,58 @@ ${content}
       const urlParams = new URLSearchParams(window.location.search);
       const editFile = urlParams.get('edit');
       
-      if (editFile && sessionStorage.getItem('editPostContent')) {
+      if (editFile) {
         const content = sessionStorage.getItem('editPostContent');
-        const filename = sessionStorage.getItem('editPostFilename');
+        const filename = sessionStorage.getItem('editPostFilename') || editFile;
+        const metadataStr = sessionStorage.getItem('editPostMetadata');
         
-        document.getElementById('markdownInput').value = content;
+        // Load content if available
+        if (content) {
+          document.getElementById('markdownInput').value = content;
+        }
+        
+        // Load metadata if available
+        if (metadataStr) {
+          try {
+            const metadata = JSON.parse(metadataStr);
+            
+            // Set category
+            if (metadata.category) {
+              document.getElementById('categorySelect').value = metadata.category;
+            }
+            
+            // Set series
+            if (metadata.series) {
+              const seriesSelect = document.getElementById('seriesSelect');
+              // Check if it's a predefined series
+              const option = seriesSelect.querySelector(`option[value="${metadata.series}"]`);
+              if (option) {
+                seriesSelect.value = metadata.series;
+              } else {
+                // Custom series
+                seriesSelect.value = 'custom';
+                document.getElementById('customSeriesInput').value = metadata.seriesName || '';
+              }
+              toggleSeriesFields();
+              
+              // Set part number
+              if (metadata.partNumber) {
+                document.getElementById('partNumberSelect').value = metadata.partNumber;
+              }
+            }
+          } catch (e) {
+            console.error('Error parsing metadata:', e);
+          }
+        }
+        
+        // Trigger conversion
         convertMarkdown();
         
         // Show edit mode indicator
         const info = document.querySelector('.template-info');
         info.innerHTML = `
           <h2>✏️ Editing: ${filename.replace('.txt', '')}</h2>
-          <p>Make your changes below. When done, click <strong>Save Draft</strong> to save back to postdocs folder.</p>
+          <p>Make your changes below. When done, click <strong>Save Draft</strong> to save to postdocs folder, then <strong>Save HTML</strong> to save to posts folder.</p>
           <p style="margin-top: 0.5rem;"><button onclick="exitEditMode()" style="padding: 0.4rem 0.75rem; background: var(--card-bg); border: 1px solid var(--border); border-radius: 6px; cursor: pointer;">← Back to Blog</button></p>
         `;
       }
@@ -1036,6 +1145,7 @@ ${content}
     function exitEditMode() {
       sessionStorage.removeItem('editPostContent');
       sessionStorage.removeItem('editPostFilename');
+      sessionStorage.removeItem('editPostMetadata');
       window.location.href = 'blog.html';
     }
     

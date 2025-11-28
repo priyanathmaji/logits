@@ -1,0 +1,66 @@
+{
+  "posts": [
+    {
+      "id": "derivatives-for-neural-networks",
+      "title": "Derivatives of Neural Networks",
+      "date": "November 4, 2025",
+      "category": "machine-learning",
+      "excerpt": "This blog solves the partial derivative of a neural network with 2 features x1 and x2.",
+      "source": "derivatives-for-neural-networks.txt",
+      "series": null,
+      "partNumber": null
+    },
+    {
+      "id": "entropy-cross-entropy-and-kl-divergence",
+      "title": "Entropy, Cross Entropy and KL Divergence",
+      "date": "November 11, 2025",
+      "category": "machine-learning",
+      "excerpt": "This write-up clearly explains how entropy, cross-entropy, and KL divergence quantify uncertainty and difference between probability distributions. It connects these concepts to information theory and their practical use in machine learning and reinforcement learning.",
+      "source": "entropy-cross-entropy-and-kl-divergence.txt",
+      "series": null,
+      "partNumber": null
+    },
+    {
+      "id": "bleu-score",
+      "title": "BLEU Score",
+      "date": "November 21, 2025",
+      "category": "machine-learning",
+      "excerpt": "BLEU (Bilingual Evaluation Understudy) is one of the most commonly used automatic evaluation metrics for Neural Machine Translation (NMT). It measures how closely a candidate translation matches a set of reference translations using n-gram overlap.",
+      "source": "bleu-score.txt",
+      "series": null,
+      "partNumber": null
+    },
+    {
+      "id": "large-language-models",
+      "title": "Large Language Models",
+      "date": "November 11, 2025",
+      "category": "natural-language",
+      "excerpt": "There are generally three architectures for Large Language models. They can be built out in many kinds of neural networks such as LSTM / RNN, Transformer, state space models. Most popular network type today is Transformers.",
+      "source": "large-language-models.txt",
+      "series": "llm",
+      "partNumber": 1
+    },
+    {
+      "id": "qkv-and-transformers",
+      "title": "QKV and Transformers",
+      "date": "November 26, 2025",
+      "category": "natural-language",
+      "excerpt": "Transformers are general sequence-to-sequence architecture. They produce a probability distribution over the next token in language modeling.",
+      "source": "qkv-and-transformers.txt",
+      "series": "llm",
+      "partNumber": 2
+    }
+  ],
+  "series": {
+    "llm": "LLM Mastery Series",
+    "transformers": "Transformers Deep Dive",
+    "ml-fundamentals": "ML Fundamentals"
+  },
+  "categories": {
+    "machine-learning": "Machine Learning",
+    "deep-learning": "Deep Learning",
+    "natural-language": "Natural Language",
+    "computer-vision": "Computer Vision",
+    "reinforcement-learning": "Reinforcement Learning"
+  }
+}

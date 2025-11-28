@@ -32,147 +32,17 @@
         <h1>Blog</h1>
         <a href="blog-converter.html" class="add-blog-btn" title="Create new blog post">+ Add Blog</a>
       </div>
-      <p class="section-description">Thoughts on Machine Learning, Software Engineering, and Technology</p>
+      <p class="section-description">Thoughts on Machine Learning, Deep Learning, and AI</p>
 
-      <!-- Category Filter -->
-      <div class="blog-categories">
+      <!-- Category Filter - populated dynamically -->
+      <div class="blog-categories" id="categoryFilters">
         <button class="category-btn active" data-category="all">All Posts</button>
-        <button class="category-btn" data-category="machine-learning">Machine Learning</button>
-        <button class="category-btn" data-category="deep-learning">Deep Learning</button>
-        <button class="category-btn" data-category="natural-language">Natural Language</button>
-        <button class="category-btn" data-category="computer-vision">Computer Vision</button>
-        <button class="category-btn" data-category="reinforcement-learning">Reinforcement Learning</button>
       </div>
 
-      <!-- Blog Grid -->
+      <!-- Blog Grid - populated dynamically -->
       <div class="blog-grid" id="blogGrid">
-
-
-
-        <article class="blog-card" data-category="machine-learning" data-source="derivatives-for-neural-networks.txt">
-          <div class="blog-meta">
-            <span class="blog-date">November 4, 2025</span>
-            <span class="blog-tag">Machine Learning</span>
-          </div>
-          <h2><a href="posts/derivatives-for-neural-networks.html">Derivatives of Neural Networks</a></h2>
-          <p class="blog-excerpt">This blog solves the partial derivative of a neural network with 2 features x1 and x2.
-          </p>
-          <div class="blog-actions">
-            <a href="posts/derivatives-for-neural-networks.html" class="read-more">Read More →</a>
-            <button class="edit-btn" onclick="editPost('derivatives-for-neural-networks.txt')" title="Edit this post">✏️
-              Edit</button>
-          </div>
-        </article>
-        <article class="blog-card" data-category="machine-learning"
-          data-source="entropy-cross-entropy-and-kl-divergence.txt">
-          <div class="blog-meta">
-            <span class="blog-date">Nov 11, 2025</span>
-            <span class="blog-tag">Machine Learning</span>
-          </div>
-          <h2><a href="posts/entropy-cross-entropy-and-kl-divergence.html">Entropy, Cross Entropy and KL Divergence</a>
-          </h2>
-          <p class="blog-excerpt">This write-up clearly explains how entropy, cross-entropy, and KL divergence quantify
-            uncertainty and difference between probability distributions. It connects these concepts to information
-            theory and their practical use in machine learning and reinforcement learning.</p>
-          <div class="blog-actions">
-            <a href="posts/entropy-cross-entropy-and-kl-divergence.html" class="read-more">Read More →</a>
-            <button class="edit-btn" onclick="editPost('entropy-cross-entropy-and-kl-divergence.txt')"
-              title="Edit this post">✏️ Edit</button>
-          </div>
-        </article>
+        <p class="loading-message">Loading posts...</p>
       </div>
-      <article class="blog-card" data-category="machine-learning" data-source="bleu-score.txt">
-        <div class="blog-meta">
-          <span class="blog-date">November 21, 2025</span>
-          <span class="blog-tag">Machine Learning</span>
-        </div>
-        <h2><a href="posts/bleu-score.html">BLEU Score</a></h2>
-        <p class="blog-excerpt">
-          BLEU (Bilingual Evaluation Understudy) is one of the most commonly used automatic evaluation metrics for
-          Neural Machine Translation (NMT). It measures how closely a candidate translation matches a set of reference
-          translations using n-gram overlap. BLEU balances precision of n-grams with a brevity penalty to discourage
-          overly short translations. In this post, we walk through a step-by-step example to compute BLEU for a single
-          sentence.</p>
-        <div class="blog-actions">
-          <a href="posts/bleu-score.html" class="read-more">Read More →</a>
-          <button class="edit-btn" onclick="editPost('bleu-score.txt')" title="Edit this post">✏️ Edit</button>
-        </div>
-      </article>
-      <article class="blog-card" data-category="natural-language" data-series="llm"
-        data-source="large-language-models.txt">
-        <div class="blog-meta">
-          <span class="blog-date">November 11, 2025</span>
-          <span class="blog-tag">Natural Language</span>
-        </div>
-        <h2><a href="posts/large-language-models.html">Large Language Models</a></h2>
-        <p class="blog-excerpt">
-          ## Three Architectures
-          There are generally three architectures for Large Language models. They can be build out in many kinds of
-          neural networks such as LSTM / RNN, Transformer, state space models (recent architectures). Most popular
-          network type today is Transformers. In transformer, each input token is processed by a column of transformer
-          layers. Each of these layers is composed of a series of different kinds of subnetworks.
-          <br>
-          ### Decoder
-        </p>
-        <div class="blog-series">Part of: <a href="#" onclick="filterBySeries('llm')">LLM Mastery Series</a></div>
-        <div class="blog-actions">
-          <a href="posts/large-language-models.html" class="read-more">Read More →</a>
-          <button class="edit-btn" onclick="editPost('large-language-models.txt')" title="Edit this post">✏️
-            Edit</button>
-        </div>
-      </article>
-      <article class="blog-card" data-category="natural-language" data-series="llm"
-        data-source="qkv-and-transformers.txt">
-        <div class="blog-meta">
-          <span class="blog-date">November 26, 2025</span>
-          <span class="blog-tag">Natural Language</span>
-        </div>
-        <h2><a href="posts/qkv-and-transformers.html">QKV and Transformers</a></h2>
-        <p class="blog-excerpt">Transformers are **general** *sequence-to-sequence* architecture. They produce a
-          probability distribution over the next token in language modeling.</p>
-        <div class="blog-series">Part of: <a href="#" onclick="filterBySeries('llm')">LLM Mastery Series</a></div>
-        <div class="blog-actions">
-          <a href="posts/qkv-and-transformers.html" class="read-more">Read More →</a>
-          <button class="edit-btn" onclick="editPost('qkv-and-transformers.txt')" title="Edit this post">✏️
-            Edit</button>
-        </div>
-      </article>
-      <!-- Blog Series Section 
-      <section class="blog-series-section" style="margin-top: 4rem;">
-        <h2>Blog Series</h2>
-        <p class="section-description">Deep dives into specific topics, organized as multi-part series</p>
-        
-        <div class="series-grid">
-          <div class="series-card" id="ml-series">
-            <h3>🤖 LLM Mastery Series</h3>
-            <p>Complete guide to working with Large Language Models in production</p>
-            <ul class="series-posts">
-              <li><a href="posts/llm-fine-tuning-rlhf.html">Part 1: Fine-tuning LLMs with RLHF</a></li>
-              <li><a href="posts/rag-vector-databases.html">Part 2: Building RAG Systems with Vector Databases</a></li>
-              <li><span class="coming-soon">Part 3: LLM Deployment and Scaling (Coming Soon)</span></li>
-            </ul>
-          </div>
-
-          <div class="series-card" id="systems-series">
-            <h3>⚙️ Distributed Systems Series</h3>
-            <p>Building reliable, scalable distributed systems</p>
-            <ul class="series-posts">
-              <li><a href="posts/designing-scalable-apis.html">Part 1: Designing Scalable API Platforms</a></li>
-              <li><a href="posts/event-driven-architecture.html">Part 2: Event-Driven Architecture Patterns</a></li>
-              <li><span class="coming-soon">Part 3: Data Consistency in Distributed Systems (Coming Soon)</span></li>
-            </ul>
-          </div>
-
-          <div class="series-card">
-            <h3>☁️ Cloud Architecture Series</h3>
-            <p>Best practices for cloud-native applications</p>
-            <ul class="series-posts">
-              <li><span class="coming-soon">Part 1: Microservices on Kubernetes (Coming Soon)</span></li>
-              <li><span class="coming-soon">Part 2: Serverless Architecture Patterns (Coming Soon)</span></li>
-            </ul>
-          </div>
-        </div>
-      </section>-->
 
     </section>
   </main>
@@ -234,18 +104,161 @@
       background: var(--accent-hover, #0056b3);
       transform: translateY(-1px);
     }
+
+    .loading-message {
+      color: var(--text-tertiary);
+      font-style: italic;
+      grid-column: 1 / -1;
+    }
   </style>
   <script>
-    // Edit post - opens blog-converter with the post content
+    // Global posts data
+    let postsData = null;
+
+    // Load posts from JSON
+    async function loadPosts() {
+      try {
+        const response = await fetch('posts.json');
+        if (!response.ok) throw new Error('Could not load posts.json');
+        postsData = await response.json();
+        
+        renderCategories();
+        renderPosts();
+        setupEventListeners();
+        hideProductionElements();
+      } catch (error) {
+        console.error('Error loading posts:', error);
+        document.getElementById('blogGrid').innerHTML = 
+          '<p class="loading-message">Error loading posts. Make sure posts.json exists.</p>';
+      }
+    }
+
+    // Render category filter buttons
+    function renderCategories() {
+      const container = document.getElementById('categoryFilters');
+      let html = '<button class="category-btn active" data-category="all">All Posts</button>';
+      
+      for (const [key, name] of Object.entries(postsData.categories)) {
+        html += `<button class="category-btn" data-category="${key}">${name}</button>`;
+      }
+      
+      container.innerHTML = html;
+    }
+
+    // Render blog posts
+    function renderPosts() {
+      const container = document.getElementById('blogGrid');
+      const isProduction = window.location.hostname.includes('github.io');
+      
+      // Sort posts by date (newest first)
+      const sortedPosts = [...postsData.posts].sort((a, b) => {
+        return new Date(b.date) - new Date(a.date);
+      });
+
+      let html = '';
+      
+      sortedPosts.forEach(post => {
+        // Look up display names from mappings
+        const categoryName = postsData.categories[post.category] || post.category;
+        const seriesName = post.series ? postsData.series[post.series] : null;
+        
+        const seriesAttr = post.series ? ` data-series="${post.series}"` : '';
+        const seriesHtml = seriesName 
+          ? `<div class="blog-series">Part of: <a href="#" class="series-link" data-series="${post.series}">${seriesName}</a></div>`
+          : '';
+        
+        const editButton = isProduction ? '' : 
+          `<button class="edit-btn" onclick="editPost('${post.source}')" title="Edit this post">✏️ Edit</button>`;
+
+        html += `
+        <article class="blog-card" data-category="${post.category}"${seriesAttr} data-source="${post.source}" data-id="${post.id}">
+          <div class="blog-meta">
+            <span class="blog-date">${post.date}</span>
+            <span class="blog-tag">${categoryName}</span>
+          </div>
+          <h2><a href="posts/${post.id}.html">${post.title}</a></h2>
+          <p class="blog-excerpt">${post.excerpt}</p>
+          ${seriesHtml}
+          <div class="blog-actions">
+            <a href="posts/${post.id}.html" class="read-more">Read More →</a>
+            ${editButton}
+          </div>
+        </article>`;
+      });
+      
+      container.innerHTML = html || '<p class="loading-message">No posts yet.</p>';
+    }
+
+    // Setup event listeners for filtering
+    function setupEventListeners() {
+      // Category filtering
+      document.querySelectorAll('.category-btn').forEach(button => {
+        button.addEventListener('click', () => {
+          const category = button.getAttribute('data-category');
+
+          // Update active button
+          document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+          button.classList.add('active');
+
+          // Filter blog posts
+          document.querySelectorAll('.blog-card').forEach(card => {
+            if (category === 'all' || card.getAttribute('data-category') === category) {
+              card.style.display = 'block';
+            } else {
+              card.style.display = 'none';
+            }
+          });
+        });
+      });
+
+      // Series filtering
+      document.querySelectorAll('.series-link').forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          filterBySeries(link.getAttribute('data-series'));
+        });
+      });
+    }
+
+    // Filter by series
+    function filterBySeries(seriesId) {
+      // Clear category button active states
+      document.querySelectorAll('.category-btn').forEach(btn => btn.classList.remove('active'));
+
+      // Filter to show only posts in this series
+      document.querySelectorAll('.blog-card').forEach(card => {
+        if (card.getAttribute('data-series') === seriesId) {
+          card.style.display = 'block';
+        } else {
+          card.style.display = 'none';
+        }
+      });
+
+      // Scroll to top of blog grid
+      document.getElementById('blogGrid').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Hide elements in production
+    function hideProductionElements() {
+      if (window.location.hostname.includes('github.io')) {
+        document.querySelectorAll('.add-blog-btn').forEach(btn => btn.style.display = 'none');
+      }
+    }
+
+    // Edit post - opens blog-converter with the post content and metadata
     async function editPost(filename) {
-      // Check if we're running on a local server or file:// protocol
       const isLocalFile = window.location.protocol === 'file:';
 
+      // Find post metadata from JSON
+      const post = postsData.posts.find(p => p.source === filename);
+
       if (isLocalFile) {
-        // For file:// protocol, we can't fetch - just redirect with filename
-        // User will need to use "Load from postdocs" button in converter
+        // Store metadata even for file:// protocol
+        if (post) {
+          sessionStorage.setItem('editPostMetadata', JSON.stringify(post));
+        }
         alert('Opening blog converter. Use "Load Draft" button and select:\n\npostdocs/' + filename);
-        window.location.href = 'blog-converter.html';
+        window.location.href = 'blog-converter.html?edit=' + encodeURIComponent(filename);
         return;
       }
 
@@ -257,70 +270,26 @@
         }
         const content = await response.text();
 
-        // Store in sessionStorage and redirect to converter
+        // Store content and metadata in sessionStorage
         sessionStorage.setItem('editPostContent', content);
         sessionStorage.setItem('editPostFilename', filename);
+        if (post) {
+          sessionStorage.setItem('editPostMetadata', JSON.stringify(post));
+        }
+        
         window.location.href = 'blog-converter.html?edit=' + encodeURIComponent(filename);
       } catch (error) {
-        // Fallback: just redirect and let user load manually
-        alert('Could not auto-load. Opening converter - use "Load Draft" to open:\n\npostdocs/' + filename);
-        window.location.href = 'blog-converter.html';
+        // Store metadata even on error
+        if (post) {
+          sessionStorage.setItem('editPostMetadata', JSON.stringify(post));
+        }
+        alert('Could not auto-load content. Opening converter - use "Load Draft" to open:\n\npostdocs/' + filename);
+        window.location.href = 'blog-converter.html?edit=' + encodeURIComponent(filename);
       }
     }
 
-    // Hide edit buttons and add blog button in production (GitHub Pages)
-    if (window.location.hostname.includes('github.io')) {
-      document.querySelectorAll('.edit-btn').forEach(btn => btn.style.display = 'none');
-      document.querySelectorAll('.add-blog-btn').forEach(btn => btn.style.display = 'none');
-    }
-
-    // Category filtering
-    const categoryButtons = document.querySelectorAll('.category-btn');
-    const blogCards = document.querySelectorAll('.blog-card');
-
-    categoryButtons.forEach(button => {
-      button.addEventListener('click', () => {
-        const category = button.getAttribute('data-category');
-
-        // Update active button
-        categoryButtons.forEach(btn => btn.classList.remove('active'));
-        button.classList.add('active');
-
-        // Filter blog posts
-        blogCards.forEach(card => {
-          if (category === 'all' || card.getAttribute('data-category') === category) {
-            card.style.display = 'block';
-          } else {
-            card.style.display = 'none';
-          }
-        });
-      });
-    });
-
-    // Series filtering - clicking on "Part of: Series Name" filters to show only that series
-    const seriesLinks = document.querySelectorAll('.series-link');
-
-    seriesLinks.forEach(link => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
-        const series = link.getAttribute('data-series');
-
-        // Clear category button active states
-        categoryButtons.forEach(btn => btn.classList.remove('active'));
-
-        // Filter to show only posts in this series
-        blogCards.forEach(card => {
-          if (card.getAttribute('data-series') === series) {
-            card.style.display = 'block';
-          } else {
-            card.style.display = 'none';
-          }
-        });
-
-        // Scroll to top of blog grid
-        document.getElementById('blogGrid').scrollIntoView({ behavior: 'smooth' });
-      });
-    });
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', loadPosts);
   </script>
 </body>
 
