@@ -37,14 +37,13 @@
       <header class="post-header">
         <div class="post-meta">
           <span class="post-date">November 11, 2025</span>
-          <span class="post-tag">Machine Learning</span>
+          <span class="post-tag">Natural Language</span>
         </div>
         <h1>Large Language Models</h1>
-        
+        <p style="color: var(--text-tertiary); font-style: italic;">Part 1 of LLM Mastery Series</p>
       </header>
 
       <div class="post-content">
-
 <h2>Introduction</h2>
 <h2>Three Architectures</h2>
 <p>There are generally three architectures for Large Language models. They can be build out in many kinds of neural networks such as LSTM / RNN, Transformer, state space models (recent architectures). Most popular network type today is Transformers. In transformer, each input token is processed by a column of transformer layers. Each of these layers is composed of a series of different kinds of subnetworks.<br><br></p>
@@ -72,13 +71,24 @@ while w_i != EOS
 But greedy decoding is too boring and random sampling is too random.
 
 <h3>Temperature Sampling</h3>
-<p>This sampling reshapes the probability distribution to increase the probability of the high probability tokens and decrease the probability of the low probability tokens.<br>$ \tau \epsilon (0,1)$<br>$ y = softmax(u/\tau)$<br><img src="../images/softmax.png" alt="Softmax Function"><br><br> When $\tau = 1$, we are using normal probability.<br>When $\tau$ is low, say 0.1, the ones with higher probability has higher logit value and the probability of those reach 1 and lower ones reach 0. This is same as greedy sampling.<br>When $\tau$ is high, say 10 or 100, the sampling becomes uniform.<br><br><br><img src="../images/temperature.png" alt="Temperature"></p>
+<p>This sampling reshapes the probability distribution to increase the probability of the high probability tokens and decrease the probability of the low probability tokens.<br>$ \tau \epsilon (0,1)$<br>$ y = softmax(u/\tau)$<br><img src="images/softmax.png" alt="Softmax Function"><br><br> When $\tau = 1$, we are using normal probability.<br>When $\tau$ is low, say 0.1, the ones with higher probability has higher logit value and the probability of those reach 1 and lower ones reach 0. This is same as greedy sampling.<br>When $\tau$ is high, say 10 or 100, the sampling becomes uniform.<br><br><br><img src="images/temperature.png" alt="Temperature"></p>
 <h3>top-k</h3>
 <h3>top-p</h3>
 <h2>Training Sequence</h2>
-<p><strong>- Pretraining</strong><br>Uses pretraining data<br>Sets the parameters of the model - Trained by error backpropagation with gradient descent using Cross Entropy loss function.<br>$ L_{CE} = - \sum_{w\epsilon V} y_t[w] log{\hat{y_t}}[w] $<br>$y_t$ is the one-hot vector for the next word.<br>$\hat{y_t}$ is the probability distribution output of the model.<br><br><br>Since $y_t$ is the one-hot vector for the next word, we an simply the cross-entropy loss as:<br>$L_{CE}(\hat{y_t}, y_t) = -log \hat{y_t}[w_{t+1}]$<br><br></p>
+<ul>
+<li>Pretraining<br>Uses pretraining data<br>Sets the parameters of the model - Trained by error backpropagation with gradient descent using Cross Entropy loss function.<br>$ L_{CE} = - \sum_{w\epsilon V} y_t[w] log{\hat{y_t}}[w] $<br>$y_t$ is the one-hot vector for the next word.<br>$\hat{y_t}$ is the probability distribution output of the model.</li>
+</ul>
+<br>
+Since $y_t$ is the one-hot vector for the next word, we an simply the cross-entropy loss as:
+$L_{CE}(\hat{y_t}, y_t) = -log \hat{y_t}[w_{t+1}]$ 
+<br>
+
 <p><strong>Note:</strong> We always give the model the correct history of the sequence to predict the next word and <strong>not</strong> the models output. This is called <strong>teacher forcing</strong>.</p>
-<p>The loss for each batch is the average cross-entropy over the entire sequence of negative log probabilities. The weights in the network are then adjusted to minimize this loss over the batch via gradient descent.<br><strong>- Instruction Tuning</strong><br>Instruction Data such as Label sentiment, Summarize, Translate<br><strong>- Preference Alignment</strong><br>Preference data on various response from the LM</p>
+<ul>
+<li>Instruction Tuning<br>Instruction Data such as Label sentiment, Summarize, Translate</li>
+<li>Preference Alignment<br>Preference data on various response from the LM</li>
+</ul>
+<p><br><br><br><br><br><br><br><br></p>
 
       </div>
 
@@ -98,10 +108,8 @@ But greedy decoding is too boring and random sampling is too random.
     </article>
   </main>
 
-  <footer class="footer">
-    <div class="footer-content">
-      <span>© 2025 logits. All rights reserved.</span>
-    </div>
+  <footer class="minimal-footer">
+    <p>© 2025 logits. All rights reserved.</p>
   </footer>
 
   <script src="../script.js"></script>

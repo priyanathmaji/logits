@@ -28,18 +28,20 @@
 
   <main class="container">
     <section class="blog-section">
-      <h1>Blog</h1>
+      <div class="blog-header">
+        <h1>Blog</h1>
+        <a href="blog-converter.html" class="add-blog-btn" title="Create new blog post">+ Add Blog</a>
+      </div>
       <p class="section-description">Thoughts on Machine Learning, Software Engineering, and Technology</p>
 
       <!-- Category Filter -->
       <div class="blog-categories">
         <button class="category-btn active" data-category="all">All Posts</button>
         <button class="category-btn" data-category="machine-learning">Machine Learning</button>
-        <button class="category-btn" data-category="software-engineering">Software Engineering</button>
-        <button class="category-btn" data-category="distributed-systems">Distributed Systems</button>
-        <button class="category-btn" data-category="cloud-architecture">Cloud Architecture</button>
-        <button class="category-btn" data-category="tutorials">Tutorials</button>
-        <button class="category-btn" data-category="career">Career & Growth</button>
+        <button class="category-btn" data-category="deep-learning">Deep Learning</button>
+        <button class="category-btn" data-category="natural-language">Natural Language</button>
+        <button class="category-btn" data-category="computer-vision">Computer Vision</button>
+        <button class="category-btn" data-category="reinforcement-learning">Reinforcement Learning</button>
       </div>
 
       <!-- Blog Grid -->
@@ -57,10 +59,12 @@
           </p>
           <div class="blog-actions">
             <a href="posts/derivatives-for-neural-networks.html" class="read-more">Read More →</a>
-            <button class="edit-btn" onclick="editPost('derivatives-for-neural-networks.txt')" title="Edit this post">✏️ Edit</button>
+            <button class="edit-btn" onclick="editPost('derivatives-for-neural-networks.txt')" title="Edit this post">✏️
+              Edit</button>
           </div>
         </article>
-        <article class="blog-card" data-category="machine-learning" data-source="entropy-cross-entropy-and-kl-divergence.txt">
+        <article class="blog-card" data-category="machine-learning"
+          data-source="entropy-cross-entropy-and-kl-divergence.txt">
           <div class="blog-meta">
             <span class="blog-date">Nov 11, 2025</span>
             <span class="blog-tag">Machine Learning</span>
@@ -72,7 +76,8 @@
             theory and their practical use in machine learning and reinforcement learning.</p>
           <div class="blog-actions">
             <a href="posts/entropy-cross-entropy-and-kl-divergence.html" class="read-more">Read More →</a>
-            <button class="edit-btn" onclick="editPost('entropy-cross-entropy-and-kl-divergence.txt')" title="Edit this post">✏️ Edit</button>
+            <button class="edit-btn" onclick="editPost('entropy-cross-entropy-and-kl-divergence.txt')"
+              title="Edit this post">✏️ Edit</button>
           </div>
         </article>
       </div>
@@ -93,38 +98,43 @@
           <button class="edit-btn" onclick="editPost('bleu-score.txt')" title="Edit this post">✏️ Edit</button>
         </div>
       </article>
-      <article class="blog-card" data-category="machine-learning" data-series="llm" data-source="large-language-models.txt">
+      <article class="blog-card" data-category="natural-language" data-series="llm"
+        data-source="large-language-models.txt">
         <div class="blog-meta">
           <span class="blog-date">November 11, 2025</span>
-          <span class="blog-tag">Machine Learning</span>
+          <span class="blog-tag">Natural Language</span>
         </div>
         <h2><a href="posts/large-language-models.html">Large Language Models</a></h2>
         <p class="blog-excerpt">
-          Three Architectures
+          ## Three Architectures
           There are generally three architectures for Large Language models. They can be build out in many kinds of
           neural networks such as LSTM / RNN, Transformer, state space models (recent architectures). Most popular
           network type today is Transformers. In transformer, each input token is processed by a column of transformer
           layers. Each of these layers is composed of a series of different kinds of subnetworks.
-
+          <br>
+          ### Decoder
         </p>
-        <div class="blog-series">Part of: <a href="#" class="series-link" data-series="llm">LLM Master Series</a></div>
+        <div class="blog-series">Part of: <a href="#" onclick="filterBySeries('llm')">LLM Mastery Series</a></div>
         <div class="blog-actions">
           <a href="posts/large-language-models.html" class="read-more">Read More →</a>
-          <button class="edit-btn" onclick="editPost('large-language-models.txt')" title="Edit this post">✏️ Edit</button>
+          <button class="edit-btn" onclick="editPost('large-language-models.txt')" title="Edit this post">✏️
+            Edit</button>
         </div>
       </article>
-      <article class="blog-card" data-category="machine-learning" data-series="llm" data-source="qkv-and-transformers.txt">
+      <article class="blog-card" data-category="natural-language" data-series="llm"
+        data-source="qkv-and-transformers.txt">
         <div class="blog-meta">
           <span class="blog-date">November 26, 2025</span>
-          <span class="blog-tag">Machine Learning</span>
+          <span class="blog-tag">Natural Language</span>
         </div>
         <h2><a href="posts/qkv-and-transformers.html">QKV and Transformers</a></h2>
         <p class="blog-excerpt">Transformers are **general** *sequence-to-sequence* architecture. They produce a
           probability distribution over the next token in language modeling.</p>
-        <div class="blog-series">Part of: <a href="#" class="series-link" data-series="llm">LLM Master Series</a></div>
+        <div class="blog-series">Part of: <a href="#" onclick="filterBySeries('llm')">LLM Mastery Series</a></div>
         <div class="blog-actions">
           <a href="posts/qkv-and-transformers.html" class="read-more">Read More →</a>
-          <button class="edit-btn" onclick="editPost('qkv-and-transformers.txt')" title="Edit this post">✏️ Edit</button>
+          <button class="edit-btn" onclick="editPost('qkv-and-transformers.txt')" title="Edit this post">✏️
+            Edit</button>
         </div>
       </article>
       <!-- Blog Series Section 
@@ -175,6 +185,7 @@
       align-items: center;
       margin-top: 1rem;
     }
+
     .edit-btn {
       padding: 0.4rem 0.75rem;
       font-size: 13px;
@@ -188,10 +199,40 @@
       align-items: center;
       gap: 0.25rem;
     }
+
     .edit-btn:hover {
       background: var(--accent);
       color: white;
       border-color: var(--accent);
+    }
+
+    .blog-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .blog-header h1 {
+      margin: 0;
+    }
+
+    .add-blog-btn {
+      padding: 0.5rem 1rem;
+      font-size: 14px;
+      font-weight: 500;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+
+    .add-blog-btn:hover {
+      background: var(--accent-hover, #0056b3);
+      transform: translateY(-1px);
     }
   </style>
   <script>
@@ -199,7 +240,7 @@
     async function editPost(filename) {
       // Check if we're running on a local server or file:// protocol
       const isLocalFile = window.location.protocol === 'file:';
-      
+
       if (isLocalFile) {
         // For file:// protocol, we can't fetch - just redirect with filename
         // User will need to use "Load from postdocs" button in converter
@@ -207,7 +248,7 @@
         window.location.href = 'blog-converter.html';
         return;
       }
-      
+
       try {
         // Fetch the markdown source from postdocs folder
         const response = await fetch('postdocs/' + filename);
@@ -215,7 +256,7 @@
           throw new Error('Could not load post source');
         }
         const content = await response.text();
-        
+
         // Store in sessionStorage and redirect to converter
         sessionStorage.setItem('editPostContent', content);
         sessionStorage.setItem('editPostFilename', filename);
@@ -227,9 +268,10 @@
       }
     }
 
-    // Hide edit buttons in production (GitHub Pages)
+    // Hide edit buttons and add blog button in production (GitHub Pages)
     if (window.location.hostname.includes('github.io')) {
       document.querySelectorAll('.edit-btn').forEach(btn => btn.style.display = 'none');
+      document.querySelectorAll('.add-blog-btn').forEach(btn => btn.style.display = 'none');
     }
 
     // Category filtering
@@ -257,15 +299,15 @@
 
     // Series filtering - clicking on "Part of: Series Name" filters to show only that series
     const seriesLinks = document.querySelectorAll('.series-link');
-    
+
     seriesLinks.forEach(link => {
       link.addEventListener('click', (e) => {
         e.preventDefault();
         const series = link.getAttribute('data-series');
-        
+
         // Clear category button active states
         categoryButtons.forEach(btn => btn.classList.remove('active'));
-        
+
         // Filter to show only posts in this series
         blogCards.forEach(card => {
           if (card.getAttribute('data-series') === series) {
@@ -274,7 +316,7 @@
             card.style.display = 'none';
           }
         });
-        
+
         // Scroll to top of blog grid
         document.getElementById('blogGrid').scrollIntoView({ behavior: 'smooth' });
       });

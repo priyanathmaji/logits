@@ -71,6 +71,7 @@
       gap: 1rem;
       margin-bottom: 1rem;
       flex-wrap: wrap;
+      align-items: center;
     }
     .controls button {
       padding: 0.5rem 1rem;
@@ -83,6 +84,26 @@
     }
     .controls button:hover {
       background: var(--accent-hover);
+    }
+    .folder-path {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      background: var(--bg-secondary);
+      padding: 0.4rem 0.75rem;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      margin: 0.5rem 0 1rem 0;
+      display: block;
+    }
+    .folder-hint {
+      color: var(--text-tertiary);
+      margin: 0 0 0.75rem 0;
+      font-size: 12px;
+      font-family: 'Courier New', monospace;
+      background: var(--bg-secondary);
+      padding: 0.4rem 0.75rem;
+      border-radius: 4px;
+      display: inline-block;
     }
     .template-info {
       background: var(--card-bg);
@@ -270,6 +291,10 @@
     .output-header h2 {
       margin-bottom: 0;
     }
+    .output-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
     .copy-btn {
       padding: 0.4rem 0.75rem;
       font-size: 13px;
@@ -368,6 +393,7 @@
       <button onclick="loadTemplate()">📄 Template</button>
       <button onclick="clearAll()">🗑️ Clear</button>
     </div>
+    <p class="folder-path">📂 D:\08102025\App\logits\logits\postdocs</p>
 
     <!-- Metadata Form -->
     <div class="editor-panel" style="margin-bottom: 2rem;">
@@ -377,24 +403,40 @@
           <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary);">Category</label>
           <select id="categorySelect" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 6px; background: var(--card-bg); color: var(--text-primary);">
             <option value="machine-learning">Machine Learning</option>
-            <option value="software-engineering">Software Engineering</option>
-            <option value="distributed-systems">Distributed Systems</option>
-            <option value="cloud-architecture">Cloud Architecture</option>
-            <option value="tutorials">Tutorials</option>
-            <option value="career">Career & Growth</option>
+            <option value="deep-learning">Deep Learning</option>
+            <option value="natural-language">Natural Language</option>
+            <option value="computer-vision">Computer Vision</option>
+            <option value="reinforcement-learning">Reinforcement Learning</option>
           </select>
         </div>
         <div>
-          <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary);">Series (Optional)</label>
-          <input type="text" id="seriesInput" placeholder="e.g., LLM Mastery Series" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 6px; background: var(--card-bg); color: var(--text-primary);">
+          <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary);">Part of a Series?</label>
+          <select id="seriesSelect" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 6px; background: var(--card-bg); color: var(--text-primary);" onchange="toggleSeriesFields()">
+            <option value="">No, standalone post</option>
+            <option value="llm">LLM Mastery Series</option>
+            <option value="transformers">Transformers Deep Dive</option>
+            <option value="ml-fundamentals">ML Fundamentals</option>
+            <option value="custom">Custom Series...</option>
+          </select>
         </div>
-        <div>
-          <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary);">Series ID (if part of series)</label>
-          <input type="text" id="seriesIdInput" placeholder="e.g., #ml-series" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 6px; background: var(--card-bg); color: var(--text-primary);">
+        <div id="customSeriesGroup" style="display: none;">
+          <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary);">Custom Series Name</label>
+          <input type="text" id="customSeriesInput" placeholder="e.g., Neural Networks 101" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 6px; background: var(--card-bg); color: var(--text-primary);">
         </div>
-        <div>
-          <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary);">Part Number (if series)</label>
-          <input type="text" id="partNumberInput" placeholder="e.g., Part 1" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 6px; background: var(--card-bg); color: var(--text-primary);">
+        <div id="partNumberGroup" style="display: none;">
+          <label style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary);">Part Number</label>
+          <select id="partNumberSelect" style="width: 100%; padding: 0.5rem; border: 1px solid var(--border); border-radius: 6px; background: var(--card-bg); color: var(--text-primary);">
+            <option value="1">Part 1</option>
+            <option value="2">Part 2</option>
+            <option value="3">Part 3</option>
+            <option value="4">Part 4</option>
+            <option value="5">Part 5</option>
+            <option value="6">Part 6</option>
+            <option value="7">Part 7</option>
+            <option value="8">Part 8</option>
+            <option value="9">Part 9</option>
+            <option value="10">Part 10</option>
+          </select>
         </div>
       </div>
     </div>
@@ -506,9 +548,15 @@
 
     <div class="editor-panel" style="margin-top: 2rem;">
       <div class="output-header">
-        <h2>Generated HTML</h2>
-        <button class="copy-btn" onclick="copyToClipboard('htmlOutput', this)">📋 Copy HTML</button>
+        <div>
+          <h2 style="margin-bottom: 0.25rem;">Generated HTML</h2>
+        </div>
+        <div class="output-actions">
+          <button class="copy-btn" onclick="copyToClipboard('htmlOutput', this)">📋 Copy HTML</button>
+          <button class="copy-btn" onclick="saveHtmlToFolder()">💾 Save HTML</button>
+        </div>
       </div>
+      <p class="folder-hint">📂 D:\08102025\App\logits\logits\posts</p>
       <textarea id="htmlOutput" style="width: 100%; min-height: 300px; font-family: 'Courier New', monospace; font-size: 12px; padding: 1rem; background: var(--card-bg); color: var(--text-primary); border: 1px solid var(--border); border-radius: 8px;"></textarea>
     </div>
 
@@ -580,6 +628,65 @@ Files saved as .txt</pre>
     // Auto-convert on input
     document.getElementById('markdownInput').addEventListener('input', convertMarkdown);
 
+    // Toggle series fields visibility
+    function toggleSeriesFields() {
+      const seriesSelect = document.getElementById('seriesSelect');
+      const customSeriesGroup = document.getElementById('customSeriesGroup');
+      const partNumberGroup = document.getElementById('partNumberGroup');
+      
+      if (seriesSelect.value === '') {
+        // No series selected
+        customSeriesGroup.style.display = 'none';
+        partNumberGroup.style.display = 'none';
+      } else if (seriesSelect.value === 'custom') {
+        // Custom series - show custom input and part number
+        customSeriesGroup.style.display = 'block';
+        partNumberGroup.style.display = 'block';
+      } else {
+        // Predefined series - hide custom input, show part number
+        customSeriesGroup.style.display = 'none';
+        partNumberGroup.style.display = 'block';
+      }
+    }
+
+    // Helper to get series info
+    function getSeriesInfo() {
+      const seriesSelect = document.getElementById('seriesSelect');
+      const seriesValue = seriesSelect.value;
+      
+      if (!seriesValue) {
+        return { series: '', seriesId: '', partNumber: '' };
+      }
+      
+      let seriesName = '';
+      let seriesId = '';
+      
+      if (seriesValue === 'custom') {
+        seriesName = document.getElementById('customSeriesInput').value;
+        seriesId = seriesName.toLowerCase().replace(/[^a-z0-9\s-]/g, '').replace(/\s+/g, '-');
+      } else {
+        seriesName = seriesSelect.selectedOptions[0].text;
+        seriesId = seriesValue;
+      }
+      
+      const partNumber = document.getElementById('partNumberSelect').value;
+      
+      return {
+        series: seriesName,
+        seriesId: seriesId,
+        partNumber: partNumber ? `Part ${partNumber}` : ''
+      };
+    }
+
+    // Add event listeners to metadata fields to trigger re-conversion
+    document.getElementById('categorySelect').addEventListener('change', convertMarkdown);
+    document.getElementById('seriesSelect').addEventListener('change', function() {
+      toggleSeriesFields();
+      convertMarkdown();
+    });
+    document.getElementById('partNumberSelect').addEventListener('change', convertMarkdown);
+    document.getElementById('customSeriesInput').addEventListener('input', convertMarkdown);
+
     function convertMarkdown() {
       const markdown = document.getElementById('markdownInput').value;
       const preview = document.getElementById('htmlPreview');
@@ -638,9 +745,10 @@ Files saved as .txt</pre>
       // Get metadata
       const category = document.getElementById('categorySelect').value;
       const categoryName = document.getElementById('categorySelect').selectedOptions[0].text;
-      const series = document.getElementById('seriesInput').value;
-      const seriesId = document.getElementById('seriesIdInput').value;
-      const partNumber = document.getElementById('partNumberInput').value;
+      const seriesInfo = getSeriesInfo();
+      const series = seriesInfo.series;
+      const seriesId = seriesInfo.seriesId;
+      const partNumber = seriesInfo.partNumber;
       
       // Extract metadata from markdown
       const dateMatch = markdown.match(/Date:\s*(.+)/);
@@ -716,10 +824,8 @@ ${content}
     </article>
   </main>
 
-  <footer class="footer">
-    <div class="footer-content">
-      <span>© 2025 logits. All rights reserved.</span>
-    </div>
+  <footer class="minimal-footer">
+    <p>© 2025 logits. All rights reserved.</p>
   </footer>
 
   <script src="../script.js"><\/script>
@@ -776,25 +882,33 @@ ${content}
       // Get metadata
       const category = document.getElementById('categorySelect').value;
       const categoryName = document.getElementById('categorySelect').selectedOptions[0].text;
-      const series = document.getElementById('seriesInput').value;
-      const seriesId = document.getElementById('seriesIdInput').value;
+      const seriesInfo = getSeriesInfo();
+      const series = seriesInfo.series;
+      const seriesId = seriesInfo.seriesId;
       
       const dateMatch = markdown.match(/Date:\s*(.+)/);
       const date = dateMatch ? dateMatch[1] : new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
       
       // Series reference
       const seriesHtml = series && seriesId
-        ? `\n          <div class="blog-series">Part of: <a href="${seriesId}">${series}</a></div>`
+        ? `\n  <div class="blog-series">Part of: <a href="#" onclick="filterBySeries('${seriesId}')">${series}</a></div>`
         : '';
       
-      return `<article class="blog-card" data-category="${category}">
+      // Data attributes
+      const seriesAttr = seriesId ? ` data-series="${seriesId}"` : '';
+      const sourceFile = slug + '.txt';
+      
+      return `<article class="blog-card" data-category="${category}"${seriesAttr} data-source="${sourceFile}">
   <div class="blog-meta">
     <span class="blog-date">${date}</span>
     <span class="blog-tag">${categoryName}</span>
   </div>
   <h2><a href="posts/${slug}.html">${title}</a></h2>
   <p class="blog-excerpt">${excerpt}</p>${seriesHtml}
-  <a href="posts/${slug}.html" class="read-more">Read More →</a>
+  <div class="blog-actions">
+    <a href="posts/${slug}.html" class="read-more">Read More →</a>
+    <button class="edit-btn" onclick="editPost('${sourceFile}')" title="Edit this post">✏️ Edit</button>
+  </div>
 </article>`;
     }
 
@@ -1338,6 +1452,69 @@ ${content}
       a.click();
       URL.revokeObjectURL(url);
       alert('📥 File downloaded. Please move it to the postdocs folder manually.');
+    }
+
+    // Save HTML to posts folder
+    async function saveHtmlToFolder() {
+      const html = document.getElementById('htmlOutput').value;
+      if (!html.trim()) {
+        alert('No HTML to save. Write some content first!');
+        return;
+      }
+      
+      // Extract title for filename from the markdown input
+      const markdown = document.getElementById('markdownInput').value;
+      const titleMatch = markdown.match(/^#\s+(.+)$/m);
+      const title = titleMatch ? titleMatch[1] : 'untitled';
+      const filename = title.toLowerCase()
+        .replace(/[^a-z0-9\s-]/g, '')
+        .replace(/\s+/g, '-') + '.html';
+      
+      // Check for File System Access API support
+      if ('showSaveFilePicker' in window) {
+        try {
+          // Try to get posts directory handle for startIn
+          let startInDir = 'documents';
+          if (window.postsHandle) {
+            startInDir = window.postsHandle;
+          }
+          
+          const handle = await window.showSaveFilePicker({
+            suggestedName: filename,
+            startIn: startInDir,
+            types: [{
+              description: 'HTML Files',
+              accept: { 'text/html': ['.html'] }
+            }]
+          });
+          
+          // Remember the directory for next time
+          window.postsHandle = handle;
+          const writable = await handle.createWritable();
+          await writable.write(html);
+          await writable.close();
+          alert('✅ HTML saved successfully! Remember to save to the posts folder.');
+        } catch (err) {
+          if (err.name !== 'AbortError') {
+            console.error('Save failed:', err);
+            fallbackHtmlDownload(html, filename);
+          }
+        }
+      } else {
+        // Fallback for unsupported browsers
+        fallbackHtmlDownload(html, filename);
+      }
+    }
+
+    function fallbackHtmlDownload(content, filename) {
+      const blob = new Blob([content], { type: 'text/html' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+      alert('📥 HTML file downloaded. Please move it to the posts folder manually.');
     }
 
     // Load markdown from postdocs folder
