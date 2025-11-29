@@ -1,6 +1,16 @@
 {
   "posts": [
     {
+  "id": "positional-embedding",
+  "title": "Positional Embedding",
+  "date": "November 28, 2025",
+  "category": "natural-language",
+  "excerpt": "Attention has no built-in notion of order. This means \n\"cat chased dog\" \nand \n\"dot chased cat\" \nwould look the same to the model without the positional info. Positional Embeddings add a sense of order to the token embedding vectors (content).",
+  "source": "positional-embedding.txt",
+  "series": "llm",
+  "partNumber": 3
+},
+    {
       "id": "derivatives-for-neural-networks",
       "title": "Derivatives of Neural Networks",
       "date": "November 4, 2025",
