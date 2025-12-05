@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="en">
+    
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>RoPE (Rotary Positional Embeddings) - logits</title>
+  <meta name="description" content="RoPE (Rotary Positional Embeddings)">
+  <link rel="stylesheet" href="../styles.css" />
+  <!-- KaTeX for Math -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="../index.html" class="nav-brand">
+        <img src="../images/logx.PNG" alt="logits">
+        <span>logits</span>
+      </a>
+      <ul class="nav-menu">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../blog.html" class="active">Blog</a></li>
+      </ul>
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+        <span class="sun-icon">☀️</span>
+        <span class="moon-icon">🌙</span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="blog-container">
+    <article class="blog-post">
+      <a href="../blog.html" class="back-link">← Back to Blog</a>
+      
+      <header class="post-header">
+        <div class="post-meta">
+          <span class="post-date">Dec 4, 2025</span>
+          <span class="post-tag">Natural Language</span>
+        </div>
+        <h1>RoPE (Rotary Positional Embeddings)</h1>
+        <p style="color: var(--text-tertiary); font-style: italic;">Part 1 of Agentic AI</p>
+      </header>
+
+      <div class="post-content">
+<h2>Introduction</h2>
+<p>In Natural Language processing (NLP), transformers model relationship between words to understand context.<br></br><span style="color: #3210da;">&gt; <strong>Transformers</strong> are a neural network architecture that uses <strong>attention</strong> to understand how words relate to each other in a sentence.</span></p>
+<p></br><strong>Attention scores</strong> determine how much each token contributes to another:</p>
+<p>To compute these scores, the model creates</p>
+<ul>
+<li>Q - queries (what each word is looking for),</li>
+<li>K - keys (what each word offers),</li>
+<li>V - values (the information of each word)</li>
+</ul>
+<pre><code>
+Queries @ Keys -&gt; Attention Weights
+Attention Weights used to weight Values
+</code></pre>
+</br>
+
+<h2>Why Positional Embedding is important along with Word Embedding?</h2>
+<p>Without positional embedding, a transformer treats a sentence like a <strong>bag of tokens</strong> - ignoring word order.<br>Without positional information, the model cant tell:<br>&quot;dog bites man&quot;<br>from<br>&quot;man bites dog&quot;<br>Since the order of words is crucial for meaning, position embeddings are added to the token embedding to give the model information about <strong>both</strong> the word identity and its position in the sequence.<br></br></p>
+<h2>Whats wrong with Fixed Position Embedding?</h2>
+<p>Fixed or learned positional embeddings assign a unique vector <strong>per position</strong>. This works well then the input sequences are less than the block size used during training. But it cannot handle longer sequences. The model doesn&#39;t know the relative distance between token but on the absolute positions.</p>
+<h2>Types of Positional Embedding</h2>
+<h3>Fixed Sinusoidal</h3>
+<p>The position embeddings are fixed like [Vaswani 2023]. They are added to the input embeddings at the bottom of the encoder or decoder stack. The positional embedding has the same dimension as the embedding and are summed. </p>
+<p>$ PE_{(pos, 2i)} = sin(pos/10000^{2i/d})$<br>$ PE_{(pos, 2i+1)} = cos(pos/10000^{2i/d})$</p>
+<p>where pos = position, i = dimension, the $\theta$ is in radians.</p>
+<p>Note:<br>$sin(0) = 0 | cos(0) =1$<br>$sin(\pi/2) = sin(1.57) = 1| cos(\pi/2) = 0$<br>$sin(\pi) = sin(3.14) = 0| cos(\pi) = -1$<br>$sin(2\pi) = sin(6.28) = 0| cost(2\pi) = $</p>
+<p><img src="../images/sinusoidal.png" alt="Alt text"><br><img src="../images/sinusoidal.png" alt="Alt text"><br><img src="../images/sincos.png" alt="Alt text"></p>
+</br>
+
+<h3>Learned Absolute</h3>
+<p>During training, position_embedding is <strong>learned</strong> just like other parameters.</p>
+<p></br>Positional embeddings are fixed per position, not per sentence. Position 0 always has the same vector, position 1 always has the same vector, etc.<br></br></p>
+<pre><code class="language-python">tok_emb = nn.Embedding(vocab_size, embed_size)
+
+## for each token in the batch(sentence) &amp; block, collect the token embedding from tok_emb
+token_embedding = tok_emb(token) # (batch_size, block_size, embed_size)
+position_embedding = nn.Parameter(torch.zeros(1, block_size, embed_size))
+x_input = token_embeddings + position_embeddings
+</code></pre>
+<h3>RoPE (Rotary Positional)</h3>
+
+      </div>
+
+      <footer class="post-footer">
+        <div class="share-section">
+          <h3>Share this post</h3>
+          <div class="share-buttons">
+            <a href="https://twitter.com/intent/tweet?text=RoPE%20(Rotary%20Positional%20Embeddings)&url=https://priyanathmaji.github.io/logits/posts/rope-rotary-positional-embeddings.html" target="_blank" class="share-btn">Twitter</a>
+            <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://priyanathmaji.github.io/logits/posts/rope-rotary-positional-embeddings.html" target="_blank" class="share-btn">LinkedIn</a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u=https://priyanathmaji.github.io/logits/posts/rope-rotary-positional-embeddings.html" target="_blank" class="share-btn">Facebook</a>
+          </div>
+        </div>
+
+        <!-- Disqus Comments -->
+        <div id="disqus_thread"></div>
+      </footer>
+    </article>
+  </main>
+
+  <footer class="minimal-footer">
+    <p>© 2025 logits. All rights reserved.</p>
+  </footer>
+
+  <script src="../script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- Disqus Configuration -->
+  <script>
+    var disqus_config = function () {
+      this.page.url = 'https://priyanathmaji.github.io/logits/posts/rope-rotary-positional-embeddings.html';
+      this.page.identifier = 'rope-rotary-positional-embeddings';
+    };
+    
+    (function() {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://https-priyanathmaji-github-io-logits.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</body>
+</html>

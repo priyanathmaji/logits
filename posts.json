@@ -1,6 +1,16 @@
 {
   "posts": [
     {
+  "id": "rope-rotary-positional-embeddings",
+  "title": "RoPE (Rotary Positional Embeddings)",
+  "date": "Dec 4, 2025",
+  "category": "natural-language",
+  "excerpt": "In Natural Language processing (NLP), transformers model relationship between words to understand context. \n</br><span style=\"color: #3210da;\">> Transformers are a neural network architecture that uses attention to understand how words relate to each...",
+  "source": "rope-rotary-positional-embeddings.txt",
+  "series": "agentic-ai",
+  "partNumber": 1
+}
+    {
   "id": "positional-embedding",
   "title": "Positional Embedding",
   "date": "November 28, 2025",
