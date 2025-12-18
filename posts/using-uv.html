@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+    
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Using UV - logits</title>
+  <meta name="description" content="Using UV">
+  <link rel="stylesheet" href="../styles.css" />
+  <!-- KaTeX for Math -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-container">
+      <a href="../index.html" class="nav-brand">
+        <img src="../images/logx.PNG" alt="logits">
+        <span>logits</span>
+      </a>
+      <ul class="nav-menu">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../blog.html" class="active">Blog</a></li>
+      </ul>
+      <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+        <span class="sun-icon">☀️</span>
+        <span class="moon-icon">🌙</span>
+      </button>
+    </div>
+  </nav>
+
+  <main class="blog-container">
+    <article class="blog-post">
+      <a href="../blog.html" class="back-link">← Back to Blog</a>
+      
+      <header class="post-header">
+        <div class="post-meta">
+          <span class="post-date">December 17, 2025</span>
+          <span class="post-tag">Machine Learning</span>
+        </div>
+        <h1>Using UV</h1>
+        
+      </header>
+
+      <div class="post-content">
+<h2>Introduction</h2>
+<p>This blog is to capture the methods of configuring uv.<br></br></p>
+<p>uv is a fast, all-in-one replacement for:</p>
+<ul>
+<li><p>pip</p>
+</li>
+<li><p>pip-tools (pip-compile)</p>
+</li>
+<li><p>virtualenv</p>
+</br>
+It is written in Rust and optimized for:
+</li>
+<li><p>Extremely fast installs</p>
+</li>
+<li><p>Reproducible environments using toml file</p>
+</li>
+<li><p>Lockfiles without complexity</p>
+</li>
+<li><p>Simple workflows</p>
+</li>
+</ul>
+</br>
+
+<h2>Step 1. Install UV</h2>
+<h3>macOS / Linux</h3>
+<pre><code class="language-bash">curl -LsSf https://astral.sh/uv/install.sh | sh
+</code></pre>
+</br>
+
+<h3>Windows (Powershell)</h3>
+<p>Open a command window and run</p>
+<pre><code class="language-bash">powershell -ExecutionPolicy ByPass -c &quot;irm https://astral.sh/uv/0.9.18/install.ps1 | iex&quot;
+</code></pre>
+</br>
+
+<h3>Verify Installation</h3>
+<pre><code class="language-bash">uv --version
+&gt;&gt; uv 0.9.18 (0cee76417 2025-12-16)
+</code></pre>
+</br>
+
+<h3>Verify uv Location (Important)</h3>
+</br>
+
+<pre><code class="language-bash">where uv
+&gt;&gt;&gt; C:\Users\admin\.local\bin\uv.exe
+
+uv run python -c &quot;import requests; print(requests.__version__)&quot;
+</code></pre>
+</br>
+
+<h2>Common Issues</h2>
+<h3>Add uv to Path Manually</h3>
+<ol>
+<li>Press Win + R</li>
+<li>Type sysdm.cpl → Enter</li>
+<li>Advanced tab → Environment Variables</li>
+<li>Under User variables → select Path → Edit</li>
+<li>Restart VS Code</li>
+</ol>
+<pre><code>| Item                 | Status                       |
+| -------------------- | ---------------------------- |
+| `uv` installation    | Successful                   |
+| PowerShell sees `uv` | Yes                          |
+| VS Code sees `uv`    | Needs restart / PATH refresh |
+| Root cause           | VS Code PATH caching         |
+</code></pre>
+</br>
+
+
+
+
+<h2>Step 2. Create a New Python Project</h2>
+<p><span style="color: #f31212;">DO NOT RUN STEP 2 if the pyproject.toml already exists.</span><br></br></p>
+<pre><code class="language-bash">mkdir my_project
+cd my_project
+uv init
+</code></pre>
+</br>
+This creates:
+
+<ul>
+<li>pyproject.toml</li>
+<li>.python-version (if Python is managed)</li>
+<li>Optional lockfile once dependencies are added</li>
+</ul>
+<p>Commit uv.lock to version control</p>
+</br>
+
+<h2>Step 3. Create and Use a Virtual Machine</h2>
+<p>Create a virtual environment</p>
+<pre><code class="language-bash">uv venv
+</code></pre>
+<br>
+
+<p><strong>Results</strong>:</p>
+<ul>
+<li>Creates .venv/</li>
+<li>Selects a compatible Python automatically</li>
+<li>Does not modify pyproject.toml</li>
+</ul>
+<p>Run inside VS Code terminal:</p>
+<pre><code class="language-bash">where python
+&gt;&gt; 
+</code></pre>
+</br>
+
+<h2>Common Issues</h2>
+<h3>Stop VS Code’s Auto-Venv Creation</h3>
+<p>In VS Code:</p>
+<ol>
+<li>Open Settings</li>
+<li>Search for:<br>python.createEnvironment</li>
+<li>Set Python › Create Environment: Auto to false</li>
+</ol>
+</br>
+
+<h3>Disable Automatic Activation in VS Code</h3>
+<p>Settings → search activateEnvironment<br>Uncheck Python › Terminal: Activate Environment</p>
+</br>
+
+<h3>RUN THE COMMANDS from the folder containing the pyproject.toml.</h3>
+</br>
+
+<h2>Step 4. Point VS Code to the uv Environment</h2>
+<p><span style="color: #ea1010;">IMPORTANT</span></p>
+<ul>
+<li>Press Ctrl + Shift + P</li>
+<li>Select Python: Select Interpreter</li>
+<li>Enter Interpreter Path</li>
+<li>Browse (locate the folder where the python.exe exists in the .venv folder created in Step 3.</li>
+<li>D:&lt;folder&gt;\assignment1-basics-main.venv\Scripts</li>
+</ul>
+<h2>Step 5. Sync Environment from pyproject.toml</h2>
+<p><span style="color: #ed0c0c;">(Very Important)</span><br></br></p>
+<pre><code class="language-bash">uv sync
+</code></pre>
+</br>
+
+<p>This will:</p>
+<ul>
+<li>Resolve dependencies</li>
+<li>Install them into .venv</li>
+<li>Create uv.lock</li>
+</ul>
+<p><span style="color: #080fdd;">Commit uv.lock. Do not commit .venv.</span></p>
+</br>
+
+<p>This is equivalent to:</p>
+<ul>
+<li>pip install -r requirements.txt</li>
+<li>but faster and deterministic</li>
+</ul>
+<h2>Step 6. Run Python Commands with uv</h2>
+<pre><code class="language-bash">uv run python main.py
+</code></pre>
+<h2>Typical Daily Workflow</h2>
+<pre><code class="language-bash">uv venv
+uv add numpy pandas
+uv run python script.py
+uv sync
+
+Add a runtime dependency
+uv add fastapi
+</code></pre>
+<p><span style="color: #ed0c0c;">Do not use pip install anymore.</span></p>
+<pre><code>| Mistake                               | Why                    |
+| ------------------------------------- | ---------------------- |
+| Mixing `pip install` and `uv add`     | Breaks reproducibility |
+| Forgetting to commit `uv.lock`        | CI drift               |
+| Activating `.venv` manually in CI     | `uv run` is safer      |
+| Running `uv init` on existing project | Overwrites metadata    |
+</code></pre>
+</br>
+
+
+<h2>Why cant we install uv using pip?</h2>
+<p>uv is not a Python package. uv is a standalone binary written in Rust, not a Python library. pip installs Python packages from PyPI.<br><strong>uv is a system-level executable</strong></p>
+<p>There is no uv wheel that contains the tool itself.<br>This is the same reason:</p>
+<ul>
+<li>docker is not installed via pip</li>
+<li>git is not installed via pip</li>
+</ul>
+</br>
+
+<pre><code>| Tool     | Category                               |
+| -------- | -------------------------------------- |
+| `python` | Language runtime                       |
+| `pip`    | Python package manager                 |
+| `uv`     | Environment + package manager (binary) |
+| `poetry` | Python app (installed via pip)         |
+</code></pre>
+</br>
+
+
+
+      </div>
+
+      <footer class="post-footer">
+        <div class="share-section">
+          <h3>Share this post</h3>
+          <div class="share-buttons">
+            <a href="https://twitter.com/intent/tweet?text=Using%20UV&url=https://priyanathmaji.github.io/logits/posts/using-uv.html" target="_blank" class="share-btn">Twitter</a>
+            <a href="https://www.linkedin.com/sharing/share-offsite/?url=https://priyanathmaji.github.io/logits/posts/using-uv.html" target="_blank" class="share-btn">LinkedIn</a>
+            <a href="https://www.facebook.com/sharer/sharer.php?u=https://priyanathmaji.github.io/logits/posts/using-uv.html" target="_blank" class="share-btn">Facebook</a>
+          </div>
+        </div>
+
+        <!-- Disqus Comments -->
+        <div id="disqus_thread"></div>
+      </footer>
+    </article>
+  </main>
+
+  <footer class="minimal-footer">
+    <p>© 2025 logits. All rights reserved.</p>
+  </footer>
+
+  <script src="../script.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      renderMathInElement(document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false}
+        ],
+        throwOnError: false
+      });
+    });
+  </script>
+
+  <!-- Disqus Configuration -->
+  <script>
+    var disqus_config = function () {
+      this.page.url = 'https://priyanathmaji.github.io/logits/posts/using-uv.html';
+      this.page.identifier = 'using-uv';
+    };
+    
+    (function() {
+      var d = document, s = d.createElement('script');
+      s.src = 'https://https-priyanathmaji-github-io-logits.disqus.com/embed.js';
+      s.setAttribute('data-timestamp', +new Date());
+      (d.head || d.body).appendChild(s);
+    })();
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</body>
+</html>

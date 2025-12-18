@@ -25,44 +25,66 @@ Attention Weights used to weight Values
 ## Why Positional Embedding is important along with Word Embedding?
 Without positional embedding, a transformer treats a sentence like a **bag of tokens** - ignoring word order.
 Without positional information, the model cant tell:
-"dog bites man"
+"cat chased dog"
 from
-"man bites dog"
+"dot chased cat"
 Since the order of words is crucial for meaning, position embeddings are added to the token embedding to give the model information about **both** the word identity and its position in the sequence.
+<span style="color: #ca074b;">"We need a positional signal to help the model understand the effect of position of tokens."</span>
+
 </br>
 
-## Whats wrong with Fixed Position Embedding?
-
-Fixed or learned positional embeddings assign a unique vector **per position**. This works well then the input sequences are less than the block size used during training. But it cannot handle longer sequences. The model doesn't know the relative distance between token but on the absolute positions.
 
 ## Types of Positional Embedding
 
-### Fixed Sinusoidal
+## Fixed Sinusoidal
 
-The position embeddings are fixed like [Vaswani 2023]. They are added to the input embeddings at the bottom of the encoder or decoder stack. The positional embedding has the same dimension as the embedding and are summed. 
+The position embeddings are fixed as mentioned in [Vaswani 2023]. They are added to the input embeddings at the bottom of the encoder or decoder stack. The positional embedding has the same dimension as the embedding and are summed. 
 
 $ PE_{(pos, 2i)} = sin(pos/10000^{2i/d})$
 $ PE_{(pos, 2i+1)} = cos(pos/10000^{2i/d})$
 
-where pos = position, i = dimension, the $\theta$ is in radians.
+where pos = position, i = frequency index (i to d/2-1)*, the $\theta$ is in radians.
+* for a 12-dimensional embedding, i goes from 0 to 5
 
 Note:
 $sin(0) = 0 | cos(0) =1$
 $sin(\pi/2) = sin(1.57) = 1| cos(\pi/2) = 0$
 $sin(\pi) = sin(3.14) = 0| cos(\pi) = -1$
-$sin(2\pi) = sin(6.28) = 0| cost(2\pi) = $
+$sin(2\pi) = sin(6.28) = 0| cos(2\pi) = 1$
+</br>
+
+> “Sine and cosine repeat every $ 2\pi $, which explains why positional vectors sometimes realign even when positions are far apart.”
+
+
+![Alt text](../images/sincos.png)
+
+
+> Because the positional encoding is made of sine and cosine waves at multiple frequencies, and those waves periodically realign (overlap) as position increases.
 
 ![Alt text](../images/sinusoidal.png)
-![Alt text](../images/sinusoidal.png)
-![Alt text](../images/sincos.png)
+![Alt text](../images/sinusoidal-2.png)
+
+Sinusoidal positional embeddings encode relative distances. 
+As you see the equidistant vector pairs have similar cosine similarity. So instead of representing positions as raw numbers, sinusoidal PEs encode them as smooth wave patterns. Differences between positions become differences in phase, so the model naturally learns relative distance.
+It calculates a metric to say difference between position 2 and 3 is same as position 3 and 4.
+</br>
+
+### Why does the PE formula has alternating sin and cos?
+</br> 
+> cos(A - B) = sin(A)sin(B) + cos(A)cos(B) 
+
+We perform dot product between the pos i and j to find cosine similarity (remember Q.K). 
+cos(A - A) = 1 
+cos(pos_a - pos_b) has a same number when the distance between the positions is same. This effectively captures the relative distance in the position of the tokens in the sentence. To simulate the dot product, they cleverly used the sin and cos trick to get the cos(A - B).
+
 
 
 </br>
 
-### Learned Absolute
-During training, position_embedding is **learned** just like other parameters.
+## Learned Absolute Embedding
+During training, position_embedding is **learned** just like other parameters. 
 
-</br>Positional embeddings are fixed per position, not per sentence. Position 0 always has the same vector, position 1 always has the same vector, etc. 
+</br>Positional embeddings are fixed per position, not per sentence. Position 0 always has the same vector, position 1 always has the same vector in all the sentences in the batch (unlike the token embeddings which can be different due to presence of different tokens at different positions in the vector). 
 </br>
 ```python
 tok_emb = nn.Embedding(vocab_size, embed_size)
@@ -72,11 +94,47 @@ token_embedding = tok_emb(token) # (batch_size, block_size, embed_size)
 position_embedding = nn.Parameter(torch.zeros(1, block_size, embed_size))
 x_input = token_embeddings + position_embeddings
 ```
+</br>
+The issue with absolute positional embedding is that the transformer won't perform well on context lengths (e.g. 1000) much larger than it was trained on (e.g. 128).
+</br>
+## Relative embeddings
+Add a vector to the attention computation
 
- 
-### RoPE (Rotary Positional)
+$e_{ij} = \frac{x_iW^Q(x_jW^K + a_{ij}^K)^T}{\sqrt{d_z}}$
+</br>
+## Whats wrong with Fixed Position Embedding?
+
+Fixed or learned positional embeddings assign a unique vector **per position**. This works well then the input sequences are less than the block size used during training. But it cannot handle longer sequences. The model doesn't know the relative distance between token but on the absolute positions.
+<span style="color: #f2075a;">"What matters is not the absolute positions of the tokens, but the distance between them."</span>
+- Fixed Sinusoidal has various cross-terms that are not relative.
+- Absolute has no relative component.
+- Relative embedding is not an inner product.
+
+</br>
+
+## RoPE (Rotary Positional) Embedding
+
+
+### Where is RoPE applied?
+
+</br>One glaring difference between all other positional embedding techniques and RoPE is that it is applied to the Q and K matrices and not to the embedding directly.
+</br>
+- Step 1 - Compute the Q and K from input embedding
+$Q = XW_Q$
+$K = XW_K$
+- Step 2 - Rotate the vectors based on the positions p
+**$Q_p = RoPE(Q,p)$**
+**$K_p = RoPE(K,p)$**
+- Step 3 - Compute attention score
+$scores_{i,j} = Q_i.K_j^T/\sqrt{d_k}$
 
 
 
+</br>
 
-
+@article{rope-paper,
+  title={RoFormer: Enhanced Transformer with Rotary Position Embedding},
+  author={Su, Jianlin and Lu, Yu and Pan, Shengfeng and Wen, Bo and Liu, Yunfeng},
+  journal={arXiv preprint arXiv:2104.09864},
+  year={2021}
+}

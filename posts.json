@@ -1,6 +1,16 @@
 {
   "posts": [
     {
+  "id": "using-uv",
+  "title": "Using UV",
+  "date": "December 17, 2025",
+  "category": "General",
+  "excerpt": "This blog is to capture the methods of configuring uv.\n</br>",
+  "source": "using-uv.txt",
+  "series": null,
+  "partNumber": null
+},
+    {
   "id": "rope-rotary-positional-embeddings",
   "title": "RoPE (Rotary Positional Embeddings)",
   "date": "Dec 4, 2025",

@@ -1,0 +1,243 @@
+# Using UV
+
+Date: December 17, 2025
+
+## Introduction
+
+This blog is to capture the methods of configuring uv.
+</br>
+
+uv is a fast, all-in-one replacement for:
+- pip
+- pip-tools (pip-compile)
+- virtualenv
+</br>
+It is written in Rust and optimized for:
+
+- Extremely fast installs
+- Reproducible environments using toml file
+- Lockfiles without complexity
+- Simple workflows
+
+</br>
+
+## Step 1. Install UV
+
+### macOS / Linux
+
+```bash
+curl -LsSf https://astral.sh/uv/install.sh | sh
+```
+
+</br>
+
+### Windows (Powershell)
+Open a command window and run
+```bash
+powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/0.9.18/install.ps1 | iex"
+```
+</br>
+
+### Verify Installation
+```bash
+uv --version
+>> uv 0.9.18 (0cee76417 2025-12-16)
+```
+</br>
+
+### Verify uv Location (Important)
+
+</br>
+
+```bash
+where uv
+>>> C:\Users\admin\.local\bin\uv.exe
+
+uv run python -c "import requests; print(requests.__version__)"
+```
+</br>
+
+## Common Issues
+
+### Add uv to Path Manually
+
+1. Press Win + R
+2. Type sysdm.cpl → Enter
+3. Advanced tab → Environment Variables
+4. Under User variables → select Path → Edit
+5. Restart VS Code
+
+```
+| Item                 | Status                       |
+| -------------------- | ---------------------------- |
+| `uv` installation    | Successful                   |
+| PowerShell sees `uv` | Yes                          |
+| VS Code sees `uv`    | Needs restart / PATH refresh |
+| Root cause           | VS Code PATH caching         |
+
+```
+
+
+</br>
+
+
+
+
+## Step 2. Create a New Python Project
+<span style="color: #f31212;">DO NOT RUN STEP 2 if the pyproject.toml already exists.</span>
+</br>
+```bash
+mkdir my_project
+cd my_project
+uv init
+```
+</br>
+This creates:
+
+- pyproject.toml
+- .python-version (if Python is managed)
+- Optional lockfile once dependencies are added
+
+Commit uv.lock to version control
+
+</br>
+
+## Step 3. Create and Use a Virtual Machine
+
+Create a virtual environment
+```bash
+uv venv
+```
+<br>
+
+**Results**:
+
+- Creates .venv/
+- Selects a compatible Python automatically
+- Does not modify pyproject.toml
+
+Run inside VS Code terminal:
+```bash
+where python
+>> 
+```
+</br>
+
+## Common Issues
+
+### Stop VS Code’s Auto-Venv Creation
+In VS Code:
+
+1. Open Settings
+2. Search for:
+python.createEnvironment
+3. Set Python › Create Environment: Auto to false
+
+</br>
+
+### Disable Automatic Activation in VS Code
+Settings → search activateEnvironment
+Uncheck Python › Terminal: Activate Environment
+
+</br>
+
+### RUN THE COMMANDS from the folder containing the pyproject.toml.
+</br>
+
+## Step 4. Point VS Code to the uv Environment
+<span style="color: #ea1010;">IMPORTANT</span>
+- Press Ctrl + Shift + P
+- Select Python: Select Interpreter
+- Enter Interpreter Path
+- Browse (locate the folder where the python.exe exists in the .venv folder created in Step 3.
+- D:\<folder>\assignment1-basics-main\.venv\Scripts
+
+
+## Step 5. Sync Environment from pyproject.toml
+<span style="color: #ed0c0c;">(Very Important)</span>
+</br>
+
+```bash
+uv sync
+```
+</br>
+
+This will:
+- Resolve dependencies
+- Install them into .venv
+- Create uv.lock
+
+<span style="color: #080fdd;">Commit uv.lock. Do not commit .venv.</span>
+
+</br>
+
+This is equivalent to:
+- pip install -r requirements.txt
+- but faster and deterministic
+
+## Step 6. Run Python Commands with uv
+
+
+```bash
+uv run python main.py
+
+```
+
+## Typical Daily Workflow
+
+
+```bash
+uv venv
+uv add numpy pandas
+uv run python script.py
+uv sync
+
+Add a runtime dependency
+uv add fastapi
+
+```
+<span style="color: #ed0c0c;">Do not use pip install anymore.</span>
+
+
+```
+| Mistake                               | Why                    |
+| ------------------------------------- | ---------------------- |
+| Mixing `pip install` and `uv add`     | Breaks reproducibility |
+| Forgetting to commit `uv.lock`        | CI drift               |
+| Activating `.venv` manually in CI     | `uv run` is safer      |
+| Running `uv init` on existing project | Overwrites metadata    |
+
+```
+
+
+
+</br>
+
+
+## Why cant we install uv using pip?
+
+uv is not a Python package. uv is a standalone binary written in Rust, not a Python library. pip installs Python packages from PyPI. 
+**uv is a system-level executable**
+
+There is no uv wheel that contains the tool itself.
+This is the same reason:
+- docker is not installed via pip
+- git is not installed via pip
+
+</br>
+
+```
+| Tool     | Category                               |
+| -------- | -------------------------------------- |
+| `python` | Language runtime                       |
+| `pip`    | Python package manager                 |
+| `uv`     | Environment + package manager (binary) |
+| `poetry` | Python app (installed via pip)         |
+
+```
+
+
+
+</br>
+
+
