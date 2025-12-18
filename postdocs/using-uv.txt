@@ -213,6 +213,17 @@ uv add fastapi
 
 </br>
 
+## Running from VS Code Notebook
+
+
+```bash
+uv add notebook ipykernel
+```
+- Open your .ipynb in VS Code
+- Click the kernel selector (top-right)
+- Select Python (inside the .venv folder)
+- VS Code will now use your .venv environment.
+
 
 ## Why cant we install uv using pip?
 

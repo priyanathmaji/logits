@@ -219,7 +219,15 @@ uv add fastapi
 </code></pre>
 </br>
 
-
+<h2>Running from VS Code Notebook</h2>
+<pre><code class="language-bash">uv add notebook ipykernel
+</code></pre>
+<ul>
+<li>Open your .ipynb in VS Code</li>
+<li>Click the kernel selector (top-right)</li>
+<li>Select Python (inside the .venv folder)</li>
+<li>VS Code will now use your .venv environment.</li>
+</ul>
 <h2>Why cant we install uv using pip?</h2>
 <p>uv is not a Python package. uv is a standalone binary written in Rust, not a Python library. pip installs Python packages from PyPI.<br><strong>uv is a system-level executable</strong></p>
 <p>There is no uv wheel that contains the tool itself.<br>This is the same reason:</p>
